@@ -1,5 +1,5 @@
 <!doctype html><html><head><meta charset=utf8><meta name="darkreader-lock"><meta name="color-scheme" content="dark light"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>GARAGE</title>
+<title>GARAGE · Marketplace</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
 /* Layout: plate masthead, section tabs (collection, my cars, ranking), a grid of minimalist collectible cards (square photo window, hairlines, rarity pip), an inline add form with a crop window, and a side sheet with the big card, photo gallery and cropper, points, visualizer and mods. */
@@ -948,6 +948,9 @@ body.zone-home #srchBtn { display: inline-flex; }
 </div>
 
 <script>
+/* Copia de prueba (Marketplace): guarda lo local aparte para no mezclarse con el GARAGE original */
+(function () { try { var P = 'gmk:', S = Storage.prototype, g = S.getItem, s = S.setItem, r = S.removeItem; S.getItem = function (k) { return g.call(this, P + k); }; S.setItem = function (k, x) { return s.call(this, P + k, x); }; S.removeItem = function (k) { return r.call(this, P + k); }; } catch (e) {} })();
+
 (function () {
   /* ================= datos base ================= */
   var RAR = [{ n: 'Común' }, { n: 'Poco común' }, { n: 'Raro' }, { n: 'Épico' }, { n: 'Legendario' }];
