@@ -707,6 +707,28 @@ body.zone-home .home-btn.tp-btn { display: inline-flex; }
 .prof-info { display: flex; flex-direction: column; gap: 6px; }
 .gal-view { max-width: 720px; }
 
+/* ---------- mercado (marketplace) ---------- */
+#mkBtn { padding: 4px 12px; }
+body.zone-home #mkBtn { display: inline-flex; }
+.mk-box { width: min(720px, 100%); }
+.mk-title { margin: 0 auto 0 0; font: 700 26px/1 var(--f-display); letter-spacing: .02em; }
+.mk-bal { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg); }
+.mk-bal b { font: 700 32px/1 var(--f-display); color: var(--accent); font-variant-numeric: tabular-nums; }
+.mk-bal span { font-size: 13px; color: var(--muted); }
+.mk-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+.mk-msg { margin: 0; padding: 8px 12px; border: 1px dashed var(--line); border-radius: 10px; }
+.mk-row { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 6px 10px; align-items: center; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+.mk-row .t { display: flex; flex-direction: column; min-width: 0; }
+.mk-row .t b { overflow-wrap: anywhere; }
+.mk-row .t span, .mk-meta { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.mk-act, .mk-form { grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.mk-form { flex-direction: column; align-items: stretch; padding-top: 6px; border-top: 1px solid var(--line); }
+.mk-act .btn, .mk-form .btn { min-height: 40px; padding: 8px 12px; font-size: 14px; }
+.mk-act input { width: 160px; min-height: 40px; }
+.mk-ch { display: flex; flex-direction: column; gap: 6px; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+.mk-ch p { margin: 0; font-size: 14px; }
+.mk-new { display: flex; flex-direction: column; gap: 10px; padding: 12px; border: 1px dashed var(--line); border-radius: 10px; }
+
 /* ---------- buscador ---------- */
 #srchBtn { padding: 4px 11px; }
 body.zone-home #srchBtn { display: inline-flex; }
@@ -728,7 +750,7 @@ body.zone-home #srchBtn { display: inline-flex; }
 <div class="app">
   <header class="mast">
     <button type="button" class="plate-brand brand" data-act="home" aria-label="GARAGE, ir al inicio"><b>GARAGE</b><small>Collect · Spot</small></button>
-    <div class="mast-r"><p class="summary" id="summary"></p><span class="tp-wrap"><button class="home-btn tp-btn" id="themeBtn" type="button" data-act="themeToggle" aria-label="Apariencia" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.9 1.4-1.9l-.4-1c-.5-1.2.4-2.6 1.7-2.6H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="7.5" cy="11" r="1.4" fill="currentColor"/><circle cx="10.5" cy="7" r="1.4" fill="currentColor"/><circle cx="15" cy="7.5" r="1.4" fill="currentColor"/></svg></button><div class="theme-pop" id="themePop" hidden></div></span><span class="lang-tog" role="group" aria-label="Idioma"><button type="button" data-act="lang" data-v="es" data-noi18n>ES</button><button type="button" data-act="lang" data-v="en" data-noi18n>EN</button></span><button class="home-btn" id="homeBtn" type="button" data-act="home" aria-label="Inicio"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 9.5V20h5v-6h3v6h5V9.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Inicio</span></button><button class="home-btn" id="srchBtn" type="button" data-srch="open" aria-label="Buscar" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><button class="acct-btn" id="acctBtn" type="button" data-act="acctToggle" aria-label="Cuenta"><i id="acctIni"></i><span id="acctLbl">Cuenta</span></button></div>
+    <div class="mast-r"><p class="summary" id="summary"></p><span class="tp-wrap"><button class="home-btn tp-btn" id="themeBtn" type="button" data-act="themeToggle" aria-label="Apariencia" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.9 1.4-1.9l-.4-1c-.5-1.2.4-2.6 1.7-2.6H17a4 4 0 0 0 4-4C21 6.6 17 3 12 3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="7.5" cy="11" r="1.4" fill="currentColor"/><circle cx="10.5" cy="7" r="1.4" fill="currentColor"/><circle cx="15" cy="7.5" r="1.4" fill="currentColor"/></svg></button><div class="theme-pop" id="themePop" hidden></div></span><span class="lang-tog" role="group" aria-label="Idioma"><button type="button" data-act="lang" data-v="es" data-noi18n>ES</button><button type="button" data-act="lang" data-v="en" data-noi18n>EN</button></span><button class="home-btn" id="homeBtn" type="button" data-act="home" aria-label="Inicio"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5M5.5 9.5V20h5v-6h3v6h5V9.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Inicio</span></button><button class="home-btn" id="mkBtn" type="button" data-mk="open" aria-label="Mercado"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14.5 9.2c-.5-.8-1.4-1.2-2.5-1.2-1.4 0-2.4.7-2.4 1.8 0 2.6 5 1.4 5 4.2 0 1.1-1.1 1.9-2.6 1.9-1.2 0-2.2-.5-2.7-1.3M12 6.5V8m0 8v1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>Mercado</span></button><button class="home-btn" id="srchBtn" type="button" data-srch="open" aria-label="Buscar" aria-expanded="false"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><button class="acct-btn" id="acctBtn" type="button" data-act="acctToggle" aria-label="Cuenta"><i id="acctIni"></i><span id="acctLbl">Cuenta</span></button></div>
   </header>
 
   <section class="home" id="home" aria-label="Inicio">
@@ -3934,6 +3956,250 @@ body.zone-home #srchBtn { display: inline-flex; }
     var n = c.children.length, i = Math.round(c.scrollLeft / Math.max(1, c.clientWidth)) + 1, cnt = c.parentElement.querySelector('.car-count');
     if (cnt) cnt.textContent = Math.min(n, i) + '/' + n;
   }, true);
+  /* ================= Mercado GARAGE (solo en la copia Marketplace) ================= */
+  var MK = { open: false, tab: 'market', data: null, msg: '', offerFor: null, seq: 0, busy: false };
+  var MK_ADMIN = 'f3amZfMHIccH5tAfq35H3qzIIV63';
+  var MK_BASE = [10, 25, 60, 150, 400];
+  var MK_ST = { open: 'Pendiente', done: 'Completado', declined: 'Rechazada', cancelled: 'Cancelada', pending: 'En revisión', ok: 'Aprobado', rejected: 'Rechazado' };
+  function mkMe() { return FB.user ? FB.user.uid : null; }
+  function mkKey(c) { return norm((c.make || '') + ' ' + (c.model || '')); }
+  function mkValue(c, D) { var n = D.models[mkKey(c)] || 1; return Math.round(MK_BASE[clamp(c.rarity | 0, 0, 4)] * (1 + 1.5 / n)); }
+  function mkHolder(c, D) { var h = D.hold[c.id]; return h ? h.holder : c._owner; }
+  function mkName(id, D) { var u = D.users[id]; return u && u.name ? '@' + u.name : '@—'; }
+  function mkVals(o) { return Object.keys(o).map(function (k) { return o[k]; }); }
+  function mkFail(m) { var e = new Error(m); e.mk = true; throw e; }
+  function mkErr(e) {
+    if (e && e.mk) return e.message;
+    if (e && e.code === 'permission-denied') return 'Firebase no lo permitió. Puede que la carta ya no esté disponible o que falten las reglas del Marketplace.';
+    return 'Algo falló. Intenta otra vez.';
+  }
+  async function mkLoad() {
+    var me = mkMe(), fs = FB.fs, admin = me === MK_ADMIN;
+    var q = [fs.collectionGroup('cars').limit(500).get(), fs.collection('mk_hold').get(), fs.collection('mk_list').get(),
+      fs.collection('mk_ch').get(), fs.collection('users').limit(300).get(),
+      fs.collection('mk_wallet').doc(me).get(),
+      fs.collection('mk_offers').where('to', '==', me).get(),
+      fs.collection('mk_offers').where('from', '==', me).get(),
+      fs.collection('mk_claim').where('uid', '==', me).get()];
+    if (admin) q.push(fs.collection('mk_wallet').get(), fs.collection('mk_claim').where('status', '==', 'pending').get());
+    var r = await Promise.all(q);
+    var od = function (x) { var o = x.data(); o.id = x.id; return o; };
+    var byTs = function (a, b) { return (b.ts || 0) - (a.ts || 0); };
+    var D = { cars: {}, models: {}, hold: {}, list: {}, ch: [], users: {}, wallet: { coins: 0, earned: 0 }, inc: [], out: [], claims: {}, wallets: {}, pending: [] };
+    r[0].docs.forEach(function (x) { var o = od(x); o._owner = x.ref.parent.parent ? x.ref.parent.parent.id : ''; try { applyRev(o); } catch (e) {} D.cars[o.id] = o; if (o.kind === 'spotted') { var k = mkKey(o); D.models[k] = (D.models[k] || 0) + 1; } });
+    r[1].docs.forEach(function (x) { D.hold[x.id] = x.data(); });
+    r[2].docs.forEach(function (x) { D.list[x.id] = od(x); });
+    D.ch = r[3].docs.map(od).sort(byTs);
+    r[4].docs.forEach(function (x) { D.users[x.id] = od(x); });
+    if (r[5].exists) D.wallet = Object.assign({ coins: 0, earned: 0 }, r[5].data());
+    D.inc = r[6].docs.map(od).sort(byTs);
+    D.out = r[7].docs.map(od).sort(byTs);
+    r[8].docs.forEach(function (x) { var o = od(x); D.claims[o.ch] = o; });
+    if (admin) { r[9].docs.forEach(function (x) { D.wallets[x.id] = x.data(); }); D.pending = r[10].docs.map(od).sort(byTs); }
+    MK.data = D;
+    return D;
+  }
+  function mkMine(D, me) { return mkVals(D.cars).filter(function (c) { return c.kind === 'spotted' && c._st === 'ok' && mkHolder(c, D) === me; }); }
+  function mkThumb(c) { return c && c.photo ? '<img class="srch-th" src="' + esc(c.photo) + '" alt="" loading="lazy">' : '<span class="srch-th"></span>'; }
+  function mkTitle(c) { return c ? esc([c.make, c.model].filter(Boolean).join(' ')) : 'Carta no disponible'; }
+  function mkLine(c, D, extra) { return '<span class="t"><b data-noi18n>' + mkTitle(c) + '</b><span>' + RAR[clamp(c.rarity | 0, 0, 4)].n + ' · ≈ ' + mkValue(c, D) + ' monedas' + (extra ? ' · ' + extra : '') + '</span></span>'; }
+  function mkDate(ts) { try { return new Date(ts).toLocaleDateString(); } catch (e) { return ''; } }
+  function mkMarketHTML(D, me) {
+    var mine = mkMine(D, me);
+    var ls = mkVals(D.list).filter(function (l) { var c = D.cars[l.id]; return c && l.holder !== me && mkHolder(c, D) === l.holder; }).sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
+    var h = '<p class="status">Cartas que otros publicaron. Ofrece monedas, una carta tuya o las dos. El valor sube con la rareza y cuando pocas personas tienen ese carro.</p>';
+    if (!ls.length) return h + '<p class="srch-empty">Todavía no hay cartas en el mercado. Publica una desde «Mis cartas».</p>';
+    return h + '<ul class="srch-list">' + ls.map(function (l) {
+      var c = D.cars[l.id], form = '';
+      if (MK.offerFor === c.id) form = '<div class="mk-form"><div class="f2"><div class="field"><label for="mkCoins">Monedas (tienes ' + (D.wallet.coins | 0) + ')</label><input type="number" id="mkCoins" min="0" step="1" inputmode="numeric" value="' + (l.price | 0) + '"></div>' +
+        '<div class="field"><label for="mkGive">Y/o una carta tuya</label><select id="mkGive"><option value="">Sin carta</option>' + mine.map(function (m) { return '<option value="' + esc(m.id) + '">' + mkTitle(m) + ' (≈ ' + mkValue(m, D) + ')</option>'; }).join('') + '</select></div></div>' +
+        '<div class="actions"><button class="btn primary" type="button" data-mk="send" data-id="' + esc(c.id) + '">Enviar oferta</button><button class="btn" type="button" data-mk="offer" data-id="">Cancelar</button></div></div>';
+      return '<li class="mk-row">' + mkThumb(c) + mkLine(c, D, (l.price ? l.price + ' monedas' : 'Solo cambio') + ' · ' + esc(mkName(l.holder, D))) +
+        (MK.offerFor === c.id ? form : '<span class="mk-act"><button class="btn" type="button" data-mk="offer" data-id="' + esc(c.id) + '">Hacer oferta</button></span>') + '</li>';
+    }).join('') + '</ul>';
+  }
+  function mkMineHTML(D, me) {
+    var mine = mkMine(D, me);
+    var h = '<p class="status">Tus cartas aprobadas por GARAGE. Las de tu garage personal y las que están en revisión no se pueden cambiar.</p>';
+    if (!mine.length) return h + '<p class="srch-empty">Todavía no tienes cartas aprobadas para el mercado.</p>';
+    return h + '<ul class="srch-list">' + mine.map(function (c) {
+      var l = D.list[c.id] && D.list[c.id].holder === me ? D.list[c.id] : null;
+      var from = c._owner !== me ? 'Vista por ' + esc(mkName(c._owner, D)) : '';
+      var act = l ? '<span class="mk-meta">En el mercado · ' + (l.price ? l.price + ' monedas' : 'solo cambio') + '</span><button class="btn" type="button" data-mk="unlist" data-id="' + esc(c.id) + '">Quitar del mercado</button>'
+        : '<label class="sr" for="mkP-' + esc(c.id) + '">Precio en monedas</label><input type="number" id="mkP-' + esc(c.id) + '" min="0" step="1" inputmode="numeric" placeholder="Precio (0 = solo cambio)"><button class="btn primary" type="button" data-mk="list" data-id="' + esc(c.id) + '">Publicar</button>';
+      return '<li class="mk-row">' + mkThumb(c) + mkLine(c, D, from) + '<span class="mk-act">' + act + '</span></li>';
+    }).join('') + '</ul>';
+  }
+  function mkOfferLine(o, D, me) {
+    var w = D.cars[o.want], g = o.give ? D.cars[o.give] : null, parts = [];
+    if (o.coins) parts.push(o.coins + ' monedas');
+    if (o.give) parts.push(g ? mkTitle(g) : 'una carta');
+    var txt = o.to === me ? esc(mkName(o.from, D)) + ' te ofrece ' + parts.join(' + ') + ' por tu ' + mkTitle(w)
+      : 'Ofreciste ' + parts.join(' + ') + ' a ' + esc(mkName(o.to, D)) + ' por su ' + mkTitle(w);
+    var act = '';
+    if (o.status === 'open' && o.to === me) act = '<span class="mk-act"><button class="btn primary" type="button" data-mk="accept" data-id="' + esc(o.id) + '">Aceptar</button><button class="btn" type="button" data-mk="decline" data-id="' + esc(o.id) + '">Rechazar</button></span>';
+    if (o.status === 'open' && o.from === me) act = '<span class="mk-act"><button class="btn" type="button" data-mk="cancel" data-id="' + esc(o.id) + '">Cancelar oferta</button></span>';
+    return '<li class="mk-row">' + mkThumb(w) + '<span class="t"><b data-noi18n>' + txt + '</b><span>' + (MK_ST[o.status] || o.status) + ' · ' + mkDate(o.ts) + '</span></span>' + act + '</li>';
+  }
+  function mkOffersHTML(D, me) {
+    var all = D.inc.concat(D.out).sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
+    var open = all.filter(function (o) { return o.status === 'open'; }), old = all.filter(function (o) { return o.status !== 'open'; }).slice(0, 15);
+    var h = '<h3 class="srch-h">Abiertas</h3>' + (open.length ? '<ul class="srch-list">' + open.map(function (o) { return mkOfferLine(o, D, me); }).join('') + '</ul>' : '<p class="srch-empty">No tienes ofertas abiertas.</p>');
+    if (old.length) h += '<h3 class="srch-h">Historial</h3><ul class="srch-list">' + old.map(function (o) { return mkOfferLine(o, D, me); }).join('') + '</ul>';
+    return h;
+  }
+  function mkChHTML(D, me) {
+    var now = Date.now(), act = D.ch.filter(function (c) { return (c.ends || 0) > now; }), mine = mkMine(D, me);
+    var h = '<p class="status">Retos de la semana. Participa con una carta tuya aprobada; GARAGE revisa y, si cumple, te da las monedas del premio.</p>';
+    if (!act.length) h += '<p class="srch-empty">No hay retos activos ahora mismo.</p>';
+    else h += '<ul class="srch-list">' + act.map(function (c) {
+      var cl = D.claims[c.id], part;
+      if (cl) part = '<span class="mk-meta">Tu participación: ' + (MK_ST[cl.status] || cl.status) + (D.cars[cl.card] ? ' · ' + mkTitle(D.cars[cl.card]) : '') + '</span>';
+      else if (!mine.length) part = '<span class="mk-meta">Necesitas una carta aprobada para participar.</span>';
+      else part = '<div class="mk-act"><label class="sr" for="mkC-' + esc(c.id) + '">Carta para el reto</label><select id="mkC-' + esc(c.id) + '">' + mine.map(function (m) { return '<option value="' + esc(m.id) + '">' + mkTitle(m) + '</option>'; }).join('') + '</select><button class="btn primary" type="button" data-mk="claim" data-id="' + esc(c.id) + '">Participar</button></div>';
+      return '<li class="mk-ch"><b data-noi18n>' + esc(c.title) + '</b>' + (c.desc ? '<p data-noi18n>' + esc(c.desc) + '</p>' : '') + '<span class="mk-meta">Premio: ' + (c.reward | 0) + ' monedas · termina ' + mkDate(c.ends) + '</span>' + part + '</li>';
+    }).join('') + '</ul>';
+    return h;
+  }
+  function mkAdminHTML(D, me) {
+    var pts = {};
+    mkVals(D.cars).forEach(function (c) { if (c.kind === 'spotted' && c._owner) pts[c._owner] = (pts[c._owner] || 0) + (cardPts(c) | 0); });
+    var rows = Object.keys(pts).map(function (uid) { var w = D.wallets[uid] || {}, e = w.earned | 0; return { uid: uid, p: pts[uid], e: e, d: pts[uid] - e }; }).filter(function (x) { return x.d > 0; });
+    var h = '<h3 class="srch-h">Acreditar monedas por cartas aprobadas</h3><p class="status">1 punto aprobado = 1 moneda. Solo se acredita la diferencia con lo que ya diste.</p>';
+    h += rows.length ? '<ul class="srch-list">' + rows.map(function (x) {
+      return '<li class="mk-row"><span class="srch-th"></span><span class="t"><b data-noi18n>' + esc(mkName(x.uid, D)) + '</b><span>' + x.p + ' pts aprobados · ya acreditado ' + x.e + '</span></span><span class="mk-act"><button class="btn primary" type="button" data-mk="credit" data-id="' + esc(x.uid) + '" data-v="' + x.d + '">Acreditar ' + x.d + ' monedas</button></span></li>';
+    }).join('') + '</ul>' : '<p class="srch-empty">Nadie tiene monedas pendientes por acreditar.</p>';
+    h += '<h3 class="srch-h">Participaciones en retos</h3>';
+    h += D.pending.length ? '<ul class="srch-list">' + D.pending.map(function (cl) {
+      var ch = D.ch.filter(function (c) { return c.id === cl.ch; })[0], car = D.cars[cl.card];
+      return '<li class="mk-row">' + mkThumb(car) + '<span class="t"><b data-noi18n>' + esc(mkName(cl.uid, D)) + ' · ' + mkTitle(car) + '</b><span data-noi18n>' + esc(ch ? ch.title : 'Reto') + ' · premio ' + ((ch && ch.reward) | 0) + '</span></span><span class="mk-act"><button class="btn primary" type="button" data-mk="clOk" data-id="' + esc(cl.id) + '">Aprobar y pagar</button><button class="btn" type="button" data-mk="clNo" data-id="' + esc(cl.id) + '">Rechazar</button></span></li>';
+    }).join('') + '</ul>' : '<p class="srch-empty">No hay participaciones pendientes.</p>';
+    h += '<h3 class="srch-h">Nuevo reto semanal</h3><div class="mk-new"><div class="field"><label for="mkChT">Título</label><input type="text" id="mkChT" maxlength="60" placeholder="Ej: Caza un convertible rojo"></div>' +
+      '<div class="field"><label for="mkChD">Descripción</label><input type="text" id="mkChD" maxlength="200" placeholder="Qué tiene que tener la carta"></div>' +
+      '<div class="f2"><div class="field"><label for="mkChR">Premio (monedas)</label><input type="number" id="mkChR" min="1" step="1" value="50"></div><div class="field"><label for="mkChN">Dura (días)</label><input type="number" id="mkChN" min="1" max="30" step="1" value="7"></div></div>' +
+      '<div class="actions"><button class="btn primary" type="button" data-mk="chNew">Crear reto</button></div></div>';
+    return h;
+  }
+  function mkRender() {
+    var box = $('#mkBody'); if (!box) return;
+    var me = mkMe(), D = MK.data;
+    if (!FB.on || !FB.fs) { box.innerHTML = '<p class="srch-empty">El mercado necesita internet.</p>'; return; }
+    if (!me) { box.innerHTML = '<p class="srch-empty">Entra a tu cuenta para usar el mercado.</p>'; return; }
+    if (!D) { box.innerHTML = (MK.msg ? '<p class="status mk-msg">' + esc(MK.msg) + '</p>' : '') + '<p class="srch-empty">Cargando…</p>'; return; }
+    var nInc = D.inc.filter(function (o) { return o.status === 'open'; }).length;
+    var tabs = [['market', 'Mercado'], ['mine', 'Mis cartas'], ['offers', 'Ofertas' + (nInc ? ' (' + nInc + ')' : '')], ['ch', 'Retos']];
+    if (me === MK_ADMIN) tabs.push(['admin', 'Admin']);
+    var h = '<div class="mk-bal"><span>Tu saldo</span><b>' + (D.wallet.coins | 0) + '</b><span>monedas GARAGE · sin dinero real</span></div>';
+    h += '<div class="mk-tabs">' + tabs.map(function (t) { return '<button type="button" class="chip" data-mk="tab" data-v="' + t[0] + '" aria-pressed="' + (MK.tab === t[0]) + '">' + t[1] + '</button>'; }).join('') + '</div>';
+    if (MK.msg) h += '<p class="status mk-msg">' + esc(MK.msg) + '</p>';
+    var f = { market: mkMarketHTML, mine: mkMineHTML, offers: mkOffersHTML, ch: mkChHTML, admin: mkAdminHTML }[MK.tab] || mkMarketHTML;
+    box.innerHTML = h + f(D, me);
+  }
+  async function mkRefresh() {
+    var s = ++MK.seq;
+    if (FB.on && FB.fs && mkMe()) { try { await mkLoad(); } catch (e) { MK.msg = 'No se pudo cargar el mercado. ' + (e && e.code === 'permission-denied' ? 'Faltan las reglas del Marketplace en Firebase.' : 'Revisa tu conexión.'); } }
+    if (s === MK.seq) mkRender();
+  }
+  function mkOpen() {
+    if (MK.open) return;
+    MK.open = true; MK.msg = ''; MK.offerFor = null;
+    var ov = document.createElement('div');
+    ov.className = 'srch-ov'; ov.id = 'mkOv';
+    ov.innerHTML = '<div class="srch-box mk-box" role="dialog" aria-modal="true" aria-label="Mercado"><div class="srch-top"><h2 class="mk-title">Mercado</h2><button class="btn" type="button" data-mk="refresh">Actualizar</button><button class="btn" type="button" data-mk="close">Cerrar</button></div><div id="mkBody"></div></div>';
+    document.body.appendChild(ov);
+    mkRender(); mkRefresh();
+  }
+  function mkClose() { var ov = $('#mkOv'); if (ov) ov.remove(); MK.open = false; }
+  async function mkAct(t) {
+    var k = t.dataset.mk, id = t.dataset.id || '';
+    if (k === 'open') return mkOpen();
+    if (k === 'close') return mkClose();
+    if (k === 'refresh') { MK.msg = ''; return mkRefresh(); }
+    if (k === 'tab') { MK.tab = t.dataset.v; MK.msg = ''; MK.offerFor = null; return mkRender(); }
+    if (k === 'offer') { MK.offerFor = id || null; MK.msg = ''; return mkRender(); }
+    var D = MK.data, me = mkMe(), fs = FB.fs, now = Date.now();
+    if (!D || !me || MK.busy) return;
+    MK.busy = true; t.disabled = true; MK.msg = '';
+    try {
+      if (k === 'send') {
+        var c = D.cars[id], coins = parseInt(($('#mkCoins') || {}).value || '0', 10), give = ($('#mkGive') || {}).value || '';
+        if (!c) mkFail('Esa carta ya no está disponible.');
+        if (!(coins >= 0)) mkFail('Pon un número de monedas válido.');
+        if (coins > (D.wallet.coins | 0)) mkFail('No tienes suficientes monedas.');
+        if (!coins && !give) mkFail('Ofrece monedas, una carta o las dos.');
+        var g = give ? D.cars[give] : null;
+        await fs.collection('mk_offers').add({ from: me, to: mkHolder(c, D), want: c.id, wantOrig: c._owner, give: give, giveOrig: g ? g._owner : '', coins: coins, status: 'open', ts: now });
+        MK.offerFor = null; MK.msg = 'Oferta enviada. Te avisamos en «Ofertas» cuando responda.';
+      } else if (k === 'list') {
+        var lc = D.cars[id], price = parseInt(($('#mkP-' + id) || {}).value || '0', 10) || 0;
+        if (!lc) mkFail('Esa carta ya no está disponible.');
+        if (price < 0) mkFail('El precio no puede ser negativo.');
+        await fs.collection('mk_list').doc(id).set({ holder: me, orig: lc._owner, price: price, make: lc.make, model: lc.model, rarity: lc.rarity | 0, ts: now });
+        MK.msg = 'Carta publicada en el mercado.';
+      } else if (k === 'unlist') {
+        await fs.collection('mk_list').doc(id).delete();
+        MK.msg = 'Carta quitada del mercado.';
+      } else if (k === 'decline' || k === 'cancel') {
+        await fs.collection('mk_offers').doc(id).update({ status: k === 'decline' ? 'declined' : 'cancelled', doneTs: now });
+      } else if (k === 'accept') {
+        var o = D.inc.filter(function (x) { return x.id === id; })[0];
+        if (!o || o.status !== 'open') mkFail('Esa oferta ya no está abierta.');
+        var b = fs.batch(), oref = fs.collection('mk_offers').doc(o.id);
+        b.update(oref, { status: 'done', doneTs: now });
+        b.set(fs.collection('mk_hold').doc(o.want), { holder: o.from, orig: o.wantOrig, offer: o.id, ts: now });
+        if (o.give) b.set(fs.collection('mk_hold').doc(o.give), { holder: o.to, orig: o.giveOrig, offer: o.id, ts: now });
+        if (o.coins > 0) {
+          var ws = await Promise.all([fs.collection('mk_wallet').doc(o.from).get(), fs.collection('mk_wallet').doc(o.to).get()]);
+          var wf = ws[0].exists ? ws[0].data() : { coins: 0, earned: 0 }, wt = ws[1].exists ? ws[1].data() : { coins: 0, earned: 0 };
+          if ((wf.coins | 0) < o.coins) mkFail('Quien te ofreció ya no tiene esas monedas.');
+          b.set(fs.collection('mk_applied').doc(o.id + '_' + o.from), { offer: o.id, uid: o.from });
+          b.set(fs.collection('mk_applied').doc(o.id + '_' + o.to), { offer: o.id, uid: o.to });
+          b.set(fs.collection('mk_wallet').doc(o.from), { coins: (wf.coins | 0) - o.coins, earned: wf.earned | 0, last: o.id, ts: now });
+          b.set(fs.collection('mk_wallet').doc(o.to), { coins: (wt.coins | 0) + o.coins, earned: wt.earned | 0, last: o.id, ts: now });
+        }
+        if (D.list[o.want]) b.delete(fs.collection('mk_list').doc(o.want));
+        if (o.give && D.list[o.give]) b.delete(fs.collection('mk_list').doc(o.give));
+        await b.commit();
+        MK.msg = '¡Cambio hecho! La carta ya es de ' + mkName(o.from, D) + '.';
+      } else if (k === 'claim') {
+        var card = ($('#mkC-' + id) || {}).value, cc = D.cars[card];
+        if (!cc) mkFail('Escoge una carta.');
+        await fs.collection('mk_claim').doc(id + '_' + me).set({ ch: id, uid: me, card: card, cardOrig: cc._owner, status: 'pending', ts: now });
+        MK.msg = 'Listo. GARAGE va a revisar tu participación.';
+      } else if (k === 'chNew' && me === MK_ADMIN) {
+        var tt = ($('#mkChT') || {}).value.trim(), rw = parseInt($('#mkChR').value, 10) || 0, dd = clamp(parseInt($('#mkChN').value, 10) || 7, 1, 30);
+        if (!tt) mkFail('Ponle un título al reto.');
+        if (rw <= 0) mkFail('El premio tiene que ser mayor que 0.');
+        await fs.collection('mk_ch').add({ title: tt.slice(0, 60), desc: ($('#mkChD').value || '').trim().slice(0, 200), reward: rw, ends: now + dd * 86400000, ts: now });
+        MK.msg = 'Reto creado.';
+      } else if (k === 'credit' && me === MK_ADMIN) {
+        var add = parseInt(t.dataset.v, 10) || 0, wr = fs.collection('mk_wallet').doc(id), ws1 = await wr.get(), w1 = ws1.exists ? ws1.data() : { coins: 0, earned: 0 };
+        await wr.set({ coins: (w1.coins | 0) + add, earned: (w1.earned | 0) + add, last: '', ts: now });
+        MK.msg = add + ' monedas acreditadas a ' + mkName(id, D) + '.';
+      } else if ((k === 'clOk' || k === 'clNo') && me === MK_ADMIN) {
+        var cl = D.pending.filter(function (x) { return x.id === id; })[0]; if (!cl) mkFail('Esa participación ya no está.');
+        var b2 = fs.batch();
+        b2.update(fs.collection('mk_claim').doc(cl.id), { status: k === 'clOk' ? 'ok' : 'rejected' });
+        if (k === 'clOk') {
+          var ch = D.ch.filter(function (x) { return x.id === cl.ch; })[0], rwd = ch ? ch.reward | 0 : 0;
+          var wr2 = fs.collection('mk_wallet').doc(cl.uid), ws2 = await wr2.get(), w2 = ws2.exists ? ws2.data() : { coins: 0, earned: 0 };
+          b2.set(wr2, { coins: (w2.coins | 0) + rwd, earned: w2.earned | 0, last: '', ts: now });
+        }
+        await b2.commit();
+        MK.msg = k === 'clOk' ? 'Participación aprobada y pagada.' : 'Participación rechazada.';
+      }
+      await mkLoad();
+    } catch (e) { MK.msg = mkErr(e); }
+    MK.busy = false;
+    mkRender();
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-mk]');
+    if (t) { e.preventDefault(); mkAct(t); return; }
+    if (MK.open && e.target.id === 'mkOv') mkClose();
+  }, true);
+  document.addEventListener('keydown', function (e) { if (MK.open && e.key === 'Escape') mkClose(); });
+
   /* ================= Buscador: perfiles y contenido ================= */
   var SR = { open: false, seq: 0, t: null, pool: null, poolTs: 0 };
   function srOpen() {
