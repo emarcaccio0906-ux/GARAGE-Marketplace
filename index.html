@@ -708,6 +708,16 @@ body.zone-home .home-btn.tp-btn { display: inline-flex; }
 .gal-view { max-width: 720px; }
 
 /* ---------- mercado (marketplace) ---------- */
+.mk-page { position: fixed; inset: 0; z-index: 55; overflow-y: auto; background: var(--bg); padding: env(safe-area-inset-top, 0px) 16px calc(48px + env(safe-area-inset-bottom, 0px)); }
+.mk-page-in { max-width: 1040px; margin: 0 auto; padding-top: 20px; display: flex; flex-direction: column; gap: 16px; }
+.mk-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.mk-h { display: flex; flex-direction: column; gap: 4px; margin-right: auto; }
+.mk-h small { font: 500 10px var(--f-mono); letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+.mk-h h2 { margin: 0; font: 700 44px/1 var(--f-display); letter-spacing: .02em; }
+.mk-page .srch-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 10px; }
+.mk-page .mk-tabs .chip { min-height: 42px; padding: 8px 16px; font-size: 15px; }
+.mk-page .mk-bal b { font-size: 40px; }
+body.mk-on { overflow: hidden; }
 .ht-mk { position: absolute; left: 50%; top: 50%; width: min(80%, 270px); height: auto; transform: translate(-50%, -50%); filter: drop-shadow(0 12px 18px rgba(0, 0, 0, .35)); }
 @media (prefers-reduced-motion: no-preference) { .ht-mk { transition: transform .35s ease; } .home-tile.market:hover .ht-mk { transform: translate(-50%, -54%) scale(1.04); } }
 @media (min-width: 900px) { .home-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
@@ -4132,16 +4142,33 @@ body.zone-home #srchBtn { display: inline-flex; }
     if (FB.on && FB.fs && mkMe()) { try { await mkLoad(); } catch (e) { MK.msg = 'No se pudo cargar el mercado. ' + (e && e.code === 'permission-denied' ? 'Faltan las reglas del Marketplace en Firebase.' : 'Revisa tu conexión.'); } }
     if (s === MK.seq) mkRender();
   }
-  function mkOpen() {
+  function mkOpen(fromHash) {
     if (MK.open) return;
-    MK.open = true; MK.msg = ''; MK.offerFor = null;
-    var ov = document.createElement('div');
-    ov.className = 'srch-ov'; ov.id = 'mkOv';
-    ov.innerHTML = '<div class="srch-box mk-box" role="dialog" aria-modal="true" aria-label="Mercado"><div class="srch-top"><h2 class="mk-title">Mercado</h2><button class="btn" type="button" data-mk="refresh">Actualizar</button><button class="btn" type="button" data-mk="close">Cerrar</button></div><div id="mkBody"></div></div>';
-    document.body.appendChild(ov);
+    MK.open = true; MK.msg = ''; MK.offerFor = null; MK.pushed = false;
+    var pg = document.createElement('div');
+    pg.className = 'mk-page'; pg.id = 'mkPage';
+    pg.setAttribute('role', 'region'); pg.setAttribute('aria-label', 'Mercado');
+    pg.innerHTML = '<div class="mk-page-in"><div class="mk-head"><button class="btn" type="button" data-mk="close">← Inicio</button><div class="mk-h"><small>Zona 03</small><h2>Mercado</h2></div><button class="btn" type="button" data-mk="refresh">Actualizar</button></div><div id="mkBody"></div></div>';
+    document.body.appendChild(pg);
+    document.body.classList.add('mk-on');
+    if (!fromHash && location.hash !== '#mercado') { try { history.pushState({ mk: 1 }, '', '#mercado'); MK.pushed = true; } catch (e) {} }
     mkRender(); mkRefresh();
+    setTimeout(function () { if (MK.open && !MK.data) mkRefresh(); }, 3000);
   }
-  function mkClose() { var ov = $('#mkOv'); if (ov) ov.remove(); MK.open = false; }
+  function mkClose(fromPop) {
+    var pg = $('#mkPage'); if (pg) pg.remove();
+    document.body.classList.remove('mk-on');
+    MK.open = false;
+    if (!fromPop && location.hash === '#mercado') {
+      try { if (MK.pushed) history.back(); else history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+    }
+    MK.pushed = false;
+  }
+  window.addEventListener('popstate', function () {
+    if (MK.open && location.hash !== '#mercado') mkClose(true);
+    else if (!MK.open && location.hash === '#mercado') mkOpen(true);
+  });
+  if (location.hash === '#mercado') setTimeout(function () { mkOpen(true); }, 1200);
   async function mkAct(t) {
     var k = t.dataset.mk, id = t.dataset.id || '';
     if (k === 'open') return mkOpen();
