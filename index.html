@@ -712,6 +712,33 @@ body.zone-home .home-btn.tp-btn { display: inline-flex; }
 body.dash-collect .home-tile.spot, body.dash-collect .home-tile.social, body.dash-collect #scBtn { display: none !important; }
 @media (min-width: 641px) { body.dash-collect .home-tile { min-height: 380px; } }
 /* ---------- social ---------- */
+.sc-img { overflow: hidden; touch-action: manipulation; }
+.sc-burst { position: absolute; left: 50%; top: 50%; width: 96px; height: 96px; margin: -48px 0 0 -48px; color: #fff; opacity: 0; transform: scale(.4); pointer-events: none; filter: drop-shadow(0 6px 18px rgba(0, 0, 0, .45)); }
+.sc-burst svg { width: 100%; height: 100%; fill: #fff; stroke: none; }
+.sc-img.pop .sc-burst { animation: scBurst .8s ease-out; }
+@keyframes scBurst { 0% { opacity: 0; transform: scale(.4); } 15% { opacity: 1; transform: scale(1.15); } 30% { transform: scale(.95); } 70% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1); } }
+.sc-ic.pop svg { animation: scPop .35s ease-out; }
+@keyframes scPop { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .sc-img.pop .sc-burst, .sc-ic.pop svg { animation: none; } }
+.sc-cmform.quick { padding: 2px 12px 0; }
+.sc-cmform.quick input { border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; min-height: 40px; padding: 6px 0; }
+.sc-post-btn { border: 0; background: none; color: var(--accent); font: 600 14px var(--f-body); cursor: pointer; padding: 0 4px; }
+.sc-mpost { display: flex; gap: 8px; align-items: center; margin-top: 4px; padding: 6px; border: 1px solid rgba(255, 255, 255, .25); border-radius: 10px; background: rgba(0, 0, 0, .15); color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.sc-mpost img { width: 56px; height: 56px; border-radius: 6px; object-fit: cover; }
+.sc-mpost > span { display: flex; flex-direction: column; min-width: 0; font-size: 13px; }
+.sc-share { align-items: stretch; justify-content: flex-end; padding: 0; }
+.sc-sheet { width: min(560px, 100%); max-height: 80vh; margin: 0 auto; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 16px 16px calc(16px + env(safe-area-inset-bottom, 0px)); border-radius: 18px 18px 0 0; background: var(--surface); color: var(--fg); }
+.sc-sh-head { display: flex; justify-content: space-between; align-items: center; }
+.sc-sh-prev { display: flex; gap: 10px; align-items: center; font-size: 14px; color: var(--muted); }
+.sc-sh-prev img { width: 52px; height: 52px; border-radius: 8px; object-fit: cover; }
+.rej-box { display: flex; flex-direction: column; gap: 8px; margin: 0 0 14px; padding: 14px; border: 1px solid var(--accent); border-radius: 14px; background: color-mix(in srgb, var(--accent) 8%, var(--surface)); }
+.rej-box > span { font-size: 13px; color: var(--muted); }
+.rej-row { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 6px 10px; align-items: center; }
+.rej-row img, .rej-ph { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; background: var(--surface-2); }
+.rej-row .t { display: flex; flex-direction: column; min-width: 0; }
+.rej-row .t span { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; }
+.rej-a { grid-column: 1 / -1; display: flex; gap: 8px; flex-wrap: wrap; }
+.rej-a .btn { min-height: 38px; padding: 6px 12px; font-size: 14px; }
 #scBtn { position: relative; padding: 4px 12px; }
 body.zone-home #scBtn { display: inline-flex; }
 .sc-badge { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--accent); color: var(--accent-fg); font: 600 11px/18px var(--f-body); text-align: center; }
@@ -780,6 +807,13 @@ body.zone-home #scBtn { display: inline-flex; }
 .sc-zoom figure { margin: 0; max-width: min(900px, 100%); display: flex; flex-direction: column; gap: 8px; }
 .sc-zoom img { max-width: 100%; max-height: 78vh; object-fit: contain; border-radius: 8px; }
 .sc-zoom figcaption { color: #fff; font-size: 14px; }
+/* ---------- reverso con mods ---------- */
+.fv-mods { display: flex; flex-direction: column; gap: 3px; margin: 8px 4px 0; padding-top: 8px; border-top: 1px solid var(--line); }
+.fv-mods-h { font: 500 10px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.fv-mod { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; line-height: 1.3; }
+.fv-mod span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fv-mod em { font: 500 11px var(--f-mono); font-style: normal; color: var(--muted); white-space: nowrap; }
+.fv-mod.none { color: var(--muted); }
 /* ---------- mercado (marketplace) ---------- */
 .mk-past { opacity: .75; }
 .mk-page { position: fixed; inset: 0; z-index: 55; overflow-y: auto; background: var(--bg); padding: env(safe-area-inset-top, 0px) 16px calc(48px + env(safe-area-inset-bottom, 0px)); }
@@ -841,6 +875,7 @@ body.zone-home #srchBtn { display: inline-flex; }
 
   <section class="home" id="home" aria-label="Inicio">
     <p class="home-kicker">¿A dónde vas hoy?</p>
+    <div id="rejBox"></div>
     <div class="home-grid">
       <button type="button" class="home-tile cards" data-act="zone" data-z="cards">
         <span class="ht-art" aria-hidden="true"><span class="ht-card c1"></span><span class="ht-card c2"></span><span class="ht-card c3"></span></span>
@@ -1669,8 +1704,7 @@ body.zone-home #srchBtn { display: inline-flex; }
     if (photoList(c).length >= 6) { setPhotoMsg('Máximo 6 fotos por carro.'); return; }
     setPhotoMsg('Preparando la foto…');
     try {
-      var sh = await shrink(f, 720), url = await toURL(sh.blob);
-      if (url.length > 200000) { sh = await shrink(f, 480); url = await toURL(sh.blob); }
+      var sh = await hiq(f, FB.user ? 340000 : 200000, [2000, 1800, 1600, 1400, 1200, 1000, 800]), url = sh.url;
       var q = qualityOf(sh.tech, null, false), qd = qdOf(sh.tech, null, false), crop = { x: 50, y: 50, z: 1 };
       var before = typeof c.q === 'number' ? c.q : -1, hadPrimary = !!c.photo;
       var newIndex = photoList(c).length;
@@ -2545,6 +2579,55 @@ body.zone-home #srchBtn { display: inline-flex; }
       im.src = u;
     });
   }
+  /* Filtro de contenido +18 (se revisa en el teléfono antes de subir cualquier foto) */
+  var NSFW = { m: null, p: null };
+  function gNsfwLoad() {
+    if (NSFW.p) return NSFW.p;
+    var B = 'https://cdn.jsdelivr.net/npm/nsfwjs@4.4.0/dist/', T = 'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js';
+    NSFW.p = (window.tf ? Promise.resolve() : loadScript(T))
+      .then(function () { return window.nsfwjs ? null : loadScript(B + 'browser/nsfwjs.min.js'); })
+      .then(function () { return loadScript(B + 'models/mobilenet_v2/model.min.js'); })
+      .then(function () { return loadScript(B + 'models/mobilenet_v2/group1-shard1of1.min.js'); })
+      .then(function () { return nsfwjs.load('MobileNetV2'); })
+      .then(function (m) { NSFW.m = m; return m; }, function (e) { NSFW.p = null; throw e; });
+    return NSFW.p;
+  }
+  async function gNsfw(canvas) {
+    try {
+      var m = await gNsfwLoad(), r = await m.classify(canvas), p = {};
+      r.forEach(function (x) { p[x.className] = x.probability; });
+      return (p.Porn || 0) + (p.Hentai || 0) > 0.55 || (p.Sexy || 0) > 0.8;
+    } catch (e) { return false; }
+  }
+  setTimeout(function () { try { gNsfwLoad().catch(function () {}); } catch (e) {} }, 15000);
+  /* Fotos en alta calidad: la resolución y calidad más altas que caben en el límite de Firebase */
+  function hiq(file, limit, sizes) {
+    return new Promise(function (res, rej) {
+      var u = URL.createObjectURL(file), im = new Image();
+      im.onload = function () {
+        URL.revokeObjectURL(u);
+        var W = im.naturalWidth, H = im.naturalHeight, tech = null, out = null;
+        var draw = function (max) {
+          var s = Math.min(1, max / Math.max(W, H)), c = document.createElement('canvas');
+          c.width = Math.max(1, Math.round(W * s)); c.height = Math.max(1, Math.round(H * s));
+          var g = c.getContext('2d'); g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+          g.drawImage(im, 0, 0, c.width, c.height);
+          return c;
+        };
+        try { tech = analyze(draw(720), W * H); } catch (e) { tech = null; }
+        for (var i = 0; i < sizes.length && !out; i++) {
+          var c = draw(sizes[i]), qs = [0.92, 0.87, 0.82, 0.76];
+          for (var j = 0; j < qs.length; j++) { var url = c.toDataURL('image/jpeg', qs[j]); if (url.length <= limit) { out = url; break; } }
+        }
+        if (!out) return rej(new Error('big'));
+        gNsfw(draw(299)).then(function (bad) { if (bad) { alert('Esta foto no se puede subir: GARAGE no permite desnudos ni contenido para adultos (+18).'); return rej(new Error('nsfw')); }
+        fetch(out).then(function (r) { return r.blob(); }).then(function (b) { res({ url: out, blob: b, tech: tech }); }, function () { res({ url: out, blob: null, tech: tech }); });
+        });
+      };
+      im.onerror = function () { URL.revokeObjectURL(u); rej(new Error('img')); };
+      im.src = u;
+    });
+  }
   function toURL(blob) {
     return new Promise(function (res, rej) { var f = new FileReader(); f.onload = function () { res(f.result); }; f.onerror = function () { rej(f.error); }; f.readAsDataURL(blob); });
   }
@@ -2565,8 +2648,7 @@ body.zone-home #srchBtn { display: inline-flex; }
   async function handleFile(f) {
     setStatus('Preparando la foto…');
     try {
-      var sh = await shrink(f, 720), blob = sh.blob, tech = sh.tech, url = await toURL(blob);
-      if (url.length > 200000) { var sh2 = await shrink(f, 480); blob = sh2.blob; url = await toURL(blob); }
+      var sh = await hiq(f, FB.user ? 340000 : 200000, [2000, 1800, 1600, 1400, 1200, 1000, 800]), blob = sh.blob, tech = sh.tech, url = sh.url;
       photo = { blob: blob, url: url, tech: tech }; lastWhy = ''; lastAI = null;
       addCrop.x = 50; addCrop.y = 50; addCrop.z = 1;
       $('#addImg').src = url; $('#addCropBox').hidden = false; $('#dropLabel').hidden = true;
@@ -2648,8 +2730,7 @@ body.zone-home #srchBtn { display: inline-flex; }
           var exList = [];
           for (var ei = 0; ei < exFiles.length; ei++) {
             try {
-              var esh = await shrink(exFiles[ei], 720), eurl = await toURL(esh.blob);
-              if (eurl.length > 200000) { esh = await shrink(exFiles[ei], 480); eurl = await toURL(esh.blob); }
+              var esh = await hiq(exFiles[ei], FB.user ? 340000 : 200000, [2000, 1800, 1600, 1400, 1200, 1000, 800]), eurl = esh.url;
               exList.push({ id: uid(), data: eurl, crop: { x: 50, y: 50, z: 1 }, q: qualityOf(esh.tech, null, false), qd: qdOf(esh.tech, null, false), ts: Date.now() + ei });
             } catch (e2) {}
           }
@@ -2917,8 +2998,7 @@ body.zone-home #srchBtn { display: inline-flex; }
       msg.textContent = 'Subiendo ' + (i + 1) + ' de ' + list.length + '…';
       try {
         var meta = await readExif(list[i]) || {};
-        var r = await shrink(list[i], FB.user ? 1400 : 1600), data = await toURL(r.blob);
-        if (FB.user && data.length > 900000) { r = await shrink(list[i], 1000); data = await toURL(r.blob); }
+        var r = await hiq(list[i], FB.user ? 880000 : 600000, [2600, 2400, 2048, 1800, 1600, 1400, 1200, 1000]), data = r.url;
         form = form || {};
         if (await phPut({ id: pids[i], acct: acct, data: data, cap: form.cap || '', cam: form.cam || meta.cam || '', lens: form.lens || meta.lens || '', set: form.set || meta.set || '', edit: form.edit || '', group: gid, gi: i, ts: Date.now() + i })) ok++;
       } catch (e) {}
@@ -3808,6 +3888,14 @@ body.zone-home #srchBtn { display: inline-flex; }
 
   /* ================= carta en grande (flota y gira) ================= */
   var fv = { id: null, flip: false, angle: 0 };
+  function fvModsHTML(c) {
+    var ms = (c.mods || []).filter(function (m) { return m && m.name; });
+    if (!ms.length) return c.kind === 'garage' ? '<span class="fv-mods"><span class="fv-mods-h">Mods</span><span class="fv-mod none">Todavía sin mods.</span></span>' : '';
+    var tot = ms.reduce(function (s, m) { return s + (+m.cost || 0); }, 0);
+    return '<span class="fv-mods"><span class="fv-mods-h">Mods · ' + ms.length + (tot ? ' · ' + usd(tot) : '') + '</span>' +
+      ms.slice(0, 7).map(function (m) { return '<span class="fv-mod"><span>' + esc(m.name) + '</span>' + (+m.cost ? '<em>' + usd(+m.cost) + '</em>' : '') + '</span>'; }).join('') +
+      (ms.length > 7 ? '<span class="fv-mod none">+' + (ms.length - 7) + ' más</span>' : '') + '</span>';
+  }
   function fvHTML(c) {
     var r = clamp(c.rarity | 0, 0, 4), sp = c.specs || {}, body = (BODYLIST.find(function (b) { return b[0] === c.body; }) || [0, '—'])[1];
     var sub = [yearOf(c), c.color || ''].filter(Boolean).join(' · ');
@@ -3838,9 +3926,10 @@ body.zone-home #srchBtn { display: inline-flex; }
         '<span class="fv-bhead"><span class="make">' + esc(c.make) + '</span><span class="model">' + esc(c.model) + '</span></span>' +
         (specs ? '<dl class="fv-specs">' + specs + '</dl>' + bars : '<span class="fv-none">Sin specs todavía. Edita la carta para agregarlos.</span>') +
         '<span class="c-bar"></span><dl class="fv-specs small">' + extra + '</dl>' +
+        fvModsHTML(c) +
       '</span>' +
       '</button></div></div>' +
-      '<span class="fv-hint2">Desliza la carta para girarla</span><div class="fv-actions"><button class="btn" type="button" data-act="home">Inicio</button><button class="btn" type="button" data-act="fvFlip">' + (fv.flip ? 'Ver frente' : 'Girar · ver specs') + '</button><button class="btn" type="button" data-act="fvClose">Cerrar</button></div>' +
+      '<span class="fv-hint2">Desliza la carta para girarla</span><div class="fv-actions"><button class="btn" type="button" data-act="home">Inicio</button><button class="btn" type="button" data-act="fvFlip">' + (fv.flip ? 'Ver frente' : 'Girar · ver specs') + '</button>' + (carById(c.id) && !c.demo ? '<button class="btn" type="button" data-fvedit="' + esc(c.id) + '">Editar fotos</button>' : '') + '' + (carById(c.id) && c._st === 'rejected' ? '<button class="btn primary" type="button" data-resub="' + esc(c.id) + '">Reenviar a revisión</button>' : '') + '<button class="btn" type="button" data-act="fvClose">Cerrar</button></div>' +
       '</div>';
   }
   function renderFv() {
@@ -4055,6 +4144,8 @@ body.zone-home #srchBtn { display: inline-flex; }
   }, true);
   /* Cartas cambiadas: salen de la colección de quien las dio (siguen en «Pasadas» del Mercado) */
   var MKH = { map: {}, unsub: null, uid: null };
+  /* Bono por subir una carta: 1–10 monedas según la calidad de la foto (se paga cuando GARAGE la aprueba) */
+  function mkBonus(c) { if (!c || c.kind !== 'spotted' || c._st !== 'ok') return 0; var q = typeof c.q === 'number' ? c.q : 50; return clamp(Math.round(q / 10), 1, 10); }
   function mkFilterCars(list) { var uid = FB.user ? FB.user.uid : null; if (!uid) return list; return list.filter(function (c) { var h = MKH.map[c.id]; return !(h && h.holder !== uid); }); }
   function mkWatchHold() {
     var uid = FB.user ? FB.user.uid : null;
@@ -4209,9 +4300,9 @@ body.zone-home #srchBtn { display: inline-flex; }
   }
   function mkAdminHTML(D, me) {
     var pts = {};
-    mkVals(D.cars).forEach(function (c) { if (c.kind === 'spotted' && c._owner) pts[c._owner] = (pts[c._owner] || 0) + (cardPts(c) | 0); });
+    mkVals(D.cars).forEach(function (c) { if (c.kind === 'spotted' && c._owner) pts[c._owner] = (pts[c._owner] || 0) + (cardPts(c) | 0) + mkBonus(c); });
     var rows = Object.keys(pts).map(function (uid) { var w = D.wallets[uid] || {}, e = w.earned | 0; return { uid: uid, p: pts[uid], e: e, d: pts[uid] - e }; }).filter(function (x) { return x.d > 0; });
-    var h = '<h3 class="srch-h">Acreditar monedas por cartas aprobadas</h3><p class="status">1 punto aprobado = 1 moneda. Se acredita solo cada vez que tienes GARAGE abierto con tu cuenta; este botón es por si quieres hacerlo ya.</p>';
+    var h = '<h3 class="srch-h">Acreditar monedas por cartas aprobadas</h3><p class="status">1 punto aprobado = 1 moneda, más un bono de 1–10 monedas por cada carta aprobada. Se acredita solo cada vez que tienes GARAGE abierto con tu cuenta; este botón es por si quieres hacerlo ya.</p>';
     h += rows.length ? '<ul class="srch-list">' + rows.map(function (x) {
       return '<li class="mk-row"><span class="srch-th"></span><span class="t"><b data-noi18n>' + esc(mkName(x.uid, D)) + '</b><span>' + x.p + ' pts aprobados · ya acreditado ' + x.e + '</span></span><span class="mk-act"><button class="btn primary" type="button" data-mk="credit" data-id="' + esc(x.uid) + '" data-v="' + x.d + '">Acreditar ' + x.d + ' monedas</button></span></li>';
     }).join('') + '</ul>' : '<p class="srch-empty">Nadie tiene monedas pendientes por acreditar.</p>';
@@ -4251,7 +4342,7 @@ body.zone-home #srchBtn { display: inline-flex; }
     try {
       var fs = FB.fs, r = await Promise.all([fs.collectionGroup('cars').limit(500).get(), fs.collection('mk_wallet').get()]);
       var pts = {}, ws = {}, now = Date.now(), b = fs.batch();
-      r[0].docs.forEach(function (x) { var o = x.data(), ow = x.ref.parent.parent ? x.ref.parent.parent.id : ''; try { applyRev(o); } catch (e) {} if (o.kind === 'spotted' && ow) pts[ow] = (pts[ow] || 0) + (cardPts(o) | 0); });
+      r[0].docs.forEach(function (x) { var o = x.data(), ow = x.ref.parent.parent ? x.ref.parent.parent.id : ''; try { applyRev(o); } catch (e) {} if (o.kind === 'spotted' && ow) pts[ow] = (pts[ow] || 0) + (cardPts(o) | 0) + mkBonus(o); });
       r[1].docs.forEach(function (x) { ws[x.id] = x.data(); });
       Object.keys(pts).forEach(function (uid) {
         var w = ws[uid] || { coins: 0, earned: 0 }, dd = pts[uid] - (w.earned | 0);
@@ -4463,8 +4554,9 @@ body.zone-home #srchBtn { display: inline-flex; }
       var key = p.kind + '_' + p.id; if (SC.counts[key]) return scPaintCounts(key);
       try {
         var r = await Promise.all([FB.fs.collection('likes').where('kind', '==', p.kind).where('target', '==', p.id).get(), FB.fs.collection('comments').where('target', '==', p.id).get()]);
-        SC.counts[key] = { l: r[0].size, c: r[1].docs.filter(function (x) { return x.data().kind === p.kind; }).length };
-      } catch (e) { SC.counts[key] = { l: 0, c: 0 }; }
+        var cms = r[1].docs.map(function (x) { return x.data(); }).filter(function (c) { return c.kind === p.kind && !scBlocked(c.from); }).sort(function (a, b) { return a.ts - b.ts; });
+        SC.counts[key] = { l: r[0].size, c: cms.length, prev: cms.slice(-2) };
+      } catch (e) { SC.counts[key] = { l: 0, c: 0, prev: [] }; }
       scPaintCounts(key);
     }));
   }
@@ -4506,7 +4598,7 @@ body.zone-home #srchBtn { display: inline-flex; }
   function scCmTxt(key) { var c = SC.counts[key]; return c && c.c ? 'Ver ' + (c.c === 1 ? 'el comentario' : 'los ' + c.c + ' comentarios') : 'Comentar'; }
   function scPaintCounts(key) {
     var l = document.getElementById('scL-' + key); if (l) l.textContent = scCountTxt(key);
-    var c = document.getElementById('scC-' + key); if (c && !SC.cm[key]) { var b = c.querySelector('.sc-more'); if (b) b.textContent = scCmTxt(key); }
+    var c = document.getElementById('scC-' + key); if (c && !SC.cm[key] && !c.contains(document.activeElement)) { var p0 = (SC.feed || []).filter(function (x) { return x.kind + '_' + x.id === key; })[0]; if (p0) c.innerHTML = scCmBlock(key, p0.kind, p0.id, p0.owner); }
   }
   function scMoreBtn(kind, id, owner, txt) { return '<button type="button" class="sc-more" data-sc="cm" data-k="' + kind + '" data-id="' + esc(id) + '" data-o="' + esc(owner) + '">' + txt + '</button>'; }
   function scCmsHTML(key, kind, id, owner) {
@@ -4515,19 +4607,26 @@ body.zone-home #srchBtn { display: inline-flex; }
     if (me) h += '<div class="sc-cmform"><label class="sr" for="scI-' + esc(key) + '">Comentario</label><input type="text" id="scI-' + esc(key) + '" data-sck="' + kind + '" data-sci="' + esc(id) + '" data-sco="' + esc(owner) + '" maxlength="300" placeholder="Agrega un comentario…" autocomplete="off"><button class="btn" type="button" data-sc="cmSend" data-k="' + kind + '" data-id="' + esc(id) + '" data-o="' + esc(owner) + '">Publicar</button></div>';
     return h + scMoreBtn(kind, id, owner, 'Ocultar comentarios');
   }
-  function scPaintCm(key, kind, id, owner) { var box = document.getElementById('scC-' + key); if (box) box.innerHTML = SC.cm[key] ? scCmsHTML(key, kind, id, owner) : scMoreBtn(kind, id, owner, scCmTxt(key)); }
+  function scPaintCm(key, kind, id, owner) { var box = document.getElementById('scC-' + key); if (box) box.innerHTML = scCmBlock(key, kind, id, owner); }
   function scPostHTML(p) {
     var me = fbMe(), u = scU(p.owner), key = p.kind + '_' + p.id, liked = scLiked(key);
-    var img = p.kind === 'card' ? ' data-sc="go" data-act="feedCard" data-id="' + esc(p.id) + '"' : ' data-sc="zoom" data-id="' + esc(key) + '"';
     return '<article class="sc-post">' +
       '<header class="sc-ph"><button type="button" class="sc-who" data-sc="user" data-id="' + esc(p.owner) + '">' + avHTML(u, u.name, 'ph-av sm') + '<b data-noi18n>@' + esc(u.name) + '</b></button><span class="sc-sub">' + scAgo(p.ts) + '</span></header>' +
-      '<div class="sc-img" data-pk="' + esc(key) + '"' + img + '><img src="' + esc(p.img) + '" alt="' + esc(p.cap || 'Foto') + '" loading="lazy">' + (p.kind === 'card' ? '<span class="sc-n">Carta</span>' : p.n > 1 ? '<span class="sc-n">1/' + p.n + '</span>' : '') + '</div>' +
+      '<div class="sc-img" data-sc="img" data-k="' + p.kind + '" data-id="' + esc(p.id) + '" data-o="' + esc(p.owner) + '"><img src="' + esc(p.img) + '" alt="' + esc(p.cap || 'Foto') + '" loading="lazy" decoding="async">' + (p.kind === 'card' ? '<span class="sc-n">Carta</span>' : p.n > 1 ? '<span class="sc-n">1/' + p.n + '</span>' : '') + '<span class="sc-burst" aria-hidden="true">' + ic(IC.heart) + '</span></div>' +
       '<div class="sc-bar"><button type="button" class="sc-ic like' + (liked ? ' on' : '') + '" data-sc="like" data-k="' + p.kind + '" data-id="' + esc(p.id) + '" data-o="' + esc(p.owner) + '" aria-label="Me gusta" aria-pressed="' + liked + '">' + ic(IC.heart) + '</button>' +
-      '<button type="button" class="sc-ic" data-sc="cm" data-k="' + p.kind + '" data-id="' + esc(p.id) + '" data-o="' + esc(p.owner) + '" aria-label="Comentarios">' + ic(IC.cmt) + '</button>' +
-      (me && p.owner !== me ? '<button type="button" class="sc-ic" data-sc="dm" data-id="' + esc(p.owner) + '" aria-label="Mandar mensaje">' + ic(IC.dm) + '</button>' : '') + '</div>' +
+      '<button type="button" class="sc-ic" data-sc="cmFocus" data-k="' + p.kind + '" data-id="' + esc(p.id) + '" data-o="' + esc(p.owner) + '" aria-label="Comentar">' + ic(IC.cmt) + '</button>' +
+      '<button type="button" class="sc-ic" data-sc="share" data-k="' + p.kind + '" data-id="' + esc(p.id) + '" aria-label="Enviar publicación">' + ic(IC.dm) + '</button></div>' +
       '<p class="sc-likes" id="scL-' + esc(key) + '">' + scCountTxt(key) + '</p>' +
       '<p class="sc-cap"><b data-noi18n>@' + esc(u.name) + '</b> <span data-noi18n>' + esc(p.cap) + '</span>' + (p.sub ? ' <span class="sc-sub" data-noi18n>· ' + esc(p.sub) + '</span>' : '') + '</p>' +
-      '<div class="sc-cms" id="scC-' + esc(key) + '">' + (SC.cm[key] ? scCmsHTML(key, p.kind, p.id, p.owner) : scMoreBtn(p.kind, p.id, p.owner, scCmTxt(key))) + '</div></article>';
+      '<div class="sc-cms" id="scC-' + esc(key) + '">' + scCmBlock(key, p.kind, p.id, p.owner) + '</div></article>';
+  }
+  function scCmBlock(key, kind, id, owner) {
+    if (SC.cm[key]) return scCmsHTML(key, kind, id, owner);
+    var c = SC.counts[key], me = fbMe(), h = '';
+    if (c && c.c > 2) h += scMoreBtn(kind, id, owner, 'Ver los ' + c.c + ' comentarios');
+    if (c && c.prev) h += c.prev.map(function (x) { return '<p class="sc-cm"><b data-noi18n>@' + esc(x.name || scU(x.from).name) + '</b> <span data-noi18n>' + esc(x.text) + '</span></p>'; }).join('');
+    if (me) h += '<div class="sc-cmform quick"><label class="sr" for="scI-' + esc(key) + '">Comentario</label><input type="text" id="scI-' + esc(key) + '" data-sck="' + kind + '" data-sci="' + esc(id) + '" data-sco="' + esc(owner) + '" maxlength="300" placeholder="Agrega un comentario…" autocomplete="off"><button class="sc-post-btn" type="button" data-sc="cmSend" data-k="' + kind + '" data-id="' + esc(id) + '" data-o="' + esc(owner) + '">Publicar</button></div>';
+    return h;
   }
   function scPersonHTML(u) {
     var me = fbMe(), f = scFollowing(u.id), fb = SC.fers[u.id];
@@ -4581,10 +4680,46 @@ body.zone-home #srchBtn { display: inline-flex; }
       return '<li class="sc-person' + (unread ? ' unread' : '') + '"><button type="button" class="sc-who" data-sc="dm" data-id="' + esc(other) + '">' + avHTML(u, u.name, 'ph-av sm') + '<span class="t"><b data-noi18n>@' + esc(u.name) + '</b><span data-noi18n>' + (t.lastFrom === me ? 'Tú: ' : '') + esc(t.last || '') + ' · ' + scAgo(t.lastTs) + '</span></span>' + (unread ? '<i class="sc-dot" aria-label="Sin leer"></i>' : '') + '</button></li>';
     }).join('') + '</ul>';
   }
+  var SC_POST_RE = /#post\/(card|photo)\/([A-Za-z0-9_-]+)/;
   function scMsgsHTML() {
     var me = fbMe();
     if (!SC.msgs.length) return '<p class="srch-empty">Todavía no hay mensajes. Escribe el primero.</p>';
-    return SC.msgs.map(function (m) { return '<div class="sc-m' + (m.from === me ? ' me' : '') + '"><span data-noi18n>' + esc(m.text) + '</span><small>' + scAgo(m.ts) + '</small></div>'; }).join('');
+    return SC.msgs.map(function (m) {
+      var mt = SC_POST_RE.exec(m.text || ''), body = esc(m.text);
+      if (mt) {
+        var p = (SC.feed || []).filter(function (x) { return x.kind === mt[1] && x.id === mt[2]; })[0];
+        var note = esc((m.text || '').replace(SC_POST_RE, '').trim());
+        body = (note ? '<span data-noi18n>' + note + '</span>' : '') + (p ? '<button type="button" class="sc-mpost" data-sc="openPost" data-k="' + p.kind + '" data-id="' + esc(p.id) + '"><img src="' + esc(p.img) + '" alt=""><span><b data-noi18n>@' + esc(scU(p.owner).name) + '</b><span data-noi18n>' + esc(p.cap || 'Publicación') + '</span></span></button>' : '<span>Publicación no disponible</span>');
+      } else body = '<span data-noi18n>' + body + '</span>';
+      return '<div class="sc-m' + (m.from === me ? ' me' : '') + '">' + body + '<small>' + scAgo(m.ts) + '</small></div>';
+    }).join('');
+  }
+  function scShareOpen(kind, id) {
+    var me = fbMe(); if (!me) return scToast('Entra a tu cuenta para enviar publicaciones.');
+    var p = (SC.feed || []).filter(function (x) { return x.kind === kind && x.id === id; })[0]; if (!p) return;
+    var us = SC.users ? Object.keys(SC.users).map(function (k) { return SC.users[k]; }).filter(function (u) { return u.id !== me && !scBlocked(u.id); }) : [];
+    us.sort(function (a, b) { var sa = (scFollowing(a.id) ? 2 : 0) + (SC.fers[a.id] ? 1 : 0), sb = (scFollowing(b.id) ? 2 : 0) + (SC.fers[b.id] ? 1 : 0); return sb - sa; });
+    var x = document.createElement('div'); x.className = 'sc-zoom sc-share'; x.id = 'scShare';
+    x.innerHTML = '<div class="sc-sheet" role="dialog" aria-modal="true" aria-label="Enviar publicación"><div class="sc-sh-head"><b>Enviar a</b><button class="btn" type="button" data-sc="shareClose">Cerrar</button></div>' +
+      '<div class="sc-sh-prev"><img src="' + esc(p.img) + '" alt=""><span data-noi18n>' + esc(p.cap || 'Publicación') + '</span></div>' +
+      '<label class="sr" for="scShNote">Mensaje</label><input type="text" id="scShNote" maxlength="300" placeholder="Escribe un mensaje (opcional)…" autocomplete="off">' +
+      '<ul class="sc-people">' + (us.length ? us.slice(0, 30).map(function (u) { return '<li class="sc-person"><span class="sc-who">' + avHTML(u, u.name, 'ph-av sm') + '<span class="t"><b data-noi18n>@' + esc(u.name) + '</b><span data-noi18n>' + esc(u.display || '') + '</span></span></span><span class="sc-pa"><button class="btn primary" type="button" data-sc="shareTo" data-id="' + esc(u.id) + '" data-k="' + kind + '" data-p="' + esc(id) + '">Enviar</button></span></li>'; }).join('') : '<p class="srch-empty">Todavía no hay a quién enviarle.</p>') + '</ul>' +
+      '<button class="btn sc-wide" type="button" data-sc="shareLink" data-k="' + kind + '" data-id="' + esc(id) + '">Compartir link de GARAGE</button></div>';
+    document.body.appendChild(x);
+  }
+  async function scShareTo(t) {
+    var me = fbMe(), to = t.dataset.id; if (!me || !to) return;
+    var note = (($('#scShNote') || {}).value || '').trim().slice(0, 300);
+    var text = (note ? note + '\n' : '') + '#post/' + t.dataset.k + '/' + t.dataset.p;
+    var tid = scTid(me, to), now = Date.now(), tref = FB.fs.collection('dm_threads').doc(tid), rd = {}; rd[me] = now;
+    t.disabled = true;
+    try {
+      var b = FB.fs.batch();
+      b.set(tref, { users: tid.split('_'), last: 'Te compartió una publicación', lastTs: now, lastFrom: me, read: rd }, { merge: true });
+      b.set(tref.collection('msgs').doc(), { from: me, text: text, ts: now });
+      await b.commit();
+      t.textContent = 'Enviado ✓';
+    } catch (e) { t.disabled = false; scToast('No se pudo enviar.'); }
   }
   function scThreadHTML() {
     var u = scU(SC.th.other);
@@ -4730,13 +4865,31 @@ body.zone-home #srchBtn { display: inline-flex; }
   }
 
   /* ---------- acciones ---------- */
+  function scOpenCard(id) {
+    if (!FEED.cars[id]) return;
+    if (!state.zone) state.zone = 'cards';
+    scClose();
+    var b = document.createElement('button'); b.hidden = true; b.dataset.act = 'feedCard'; b.dataset.id = id; document.body.appendChild(b); b.click(); b.remove();
+  }
+  function scImgTap(t) {
+    var key = t.dataset.k + '_' + t.dataset.id;
+    if (SC.tapT && SC.tapKey === key) {
+      clearTimeout(SC.tapT); SC.tapT = null; SC.tapKey = null;
+      t.classList.remove('pop'); void t.offsetWidth; t.classList.add('pop');
+      var lb = t.closest('.sc-post') && t.closest('.sc-post').querySelector('.like');
+      if (lb && !lb.classList.contains('on')) scLike(lb);
+      return;
+    }
+    SC.tapKey = key;
+    SC.tapT = setTimeout(function () { SC.tapT = null; SC.tapKey = null; if (t.dataset.k === 'card') scOpenCard(t.dataset.id); else scZoom(key); }, 260);
+  }
   async function scLike(t) {
     if (!fbMe()) return scToast('Entra a tu cuenta para dar me gusta.');
     var kind = t.dataset.k, id = t.dataset.id, key = kind + '_' + id, was = scLiked(key);
     await fbToggleLike(kind, id, t.dataset.o);
     var now = scLiked(key);
     if (now !== was && SC.counts[key]) SC.counts[key].l = Math.max(0, SC.counts[key].l + (now ? 1 : -1));
-    t.classList.toggle('on', now); t.setAttribute('aria-pressed', String(now));
+    t.classList.toggle('on', now); t.setAttribute('aria-pressed', String(now)); if (now) { t.classList.remove('pop'); void t.offsetWidth; t.classList.add('pop'); }
     scPaintCounts(key);
   }
   async function scToggleCm(kind, id, owner) {
@@ -4758,7 +4911,7 @@ body.zone-home #srchBtn { display: inline-flex; }
     try {
       await FB.fs.collection('comments').add({ from: me, name: FB.prof.name, kind: kind, target: id, owner: owner, text: text, ts: Date.now() });
       if (SC.cm[key] && SC.cm[key].list) SC.cm[key].list.push({ from: me, name: FB.prof.name, kind: kind, text: text, ts: Date.now() });
-      if (SC.counts[key]) SC.counts[key].c++;
+      if (SC.counts[key]) { SC.counts[key].c++; (SC.counts[key].prev = SC.counts[key].prev || []).push({ from: me, name: FB.prof.name, text: text, ts: Date.now() }); SC.counts[key].prev = SC.counts[key].prev.slice(-2); }
     } catch (e) { inp.value = text; scToast('No se pudo comentar. Intenta otra vez.'); }
     scPaintCm(key, kind, id, owner);
   }
@@ -4787,6 +4940,13 @@ body.zone-home #srchBtn { display: inline-flex; }
     if (k === 'mode') { SC.mode = t.dataset.v; SC.n = 12; return scRender(); }
     if (k === 'moreFeed') { SC.n += 12; return scRender(); }
     if (k === 'push') return pushEnable();
+    if (k === 'img') return scImgTap(t);
+    if (k === 'cmFocus') { var ki = document.getElementById('scI-' + t.dataset.k + '_' + id); if (ki) ki.focus(); else scToggleCm(t.dataset.k, id, t.dataset.o); return; }
+    if (k === 'share') return scShareOpen(t.dataset.k, id);
+    if (k === 'shareTo') return scShareTo(t);
+    if (k === 'shareClose') { var sx = $('#scShare'); if (sx) sx.remove(); return; }
+    if (k === 'shareLink') { var url = location.origin + location.pathname + '#social'; try { if (navigator.share) await navigator.share({ title: 'GARAGE', text: 'Mira esto en GARAGE', url: url }); else { await navigator.clipboard.writeText(url); scToast('Link copiado.'); } } catch (x) {} return; }
+    if (k === 'openPost') { var sx2 = $('#scShare'); if (sx2) sx2.remove(); if (t.dataset.k === 'card') return scOpenCard(id); return scZoom('photo_' + id); }
     if (k === 'like') return scLike(t);
     if (k === 'cm') return scToggleCm(t.dataset.k, id, t.dataset.o);
     if (k === 'cmSend') return scCmSend(t.dataset.k, id, t.dataset.o);
@@ -4802,7 +4962,7 @@ body.zone-home #srchBtn { display: inline-flex; }
   document.addEventListener('click', function (e) {
     var t = e.target.closest('[data-sc]');
     if (t) { scAct(t, e); return; }
-    if (e.target.id === 'scZoom') e.target.remove();
+    if (e.target.id === 'scZoom' || e.target.id === 'scShare') e.target.remove();
   }, true);
   document.addEventListener('dblclick', function (e) {
     var im = e.target.closest('.sc-img'); if (!im) return;
@@ -4815,7 +4975,7 @@ body.zone-home #srchBtn { display: inline-flex; }
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && e.target.id === 'scText') { e.preventDefault(); scSend(); }
     else if (e.key === 'Enter' && e.target.dataset && e.target.dataset.sck) { e.preventDefault(); scCmSend(e.target.dataset.sck, e.target.dataset.sci, e.target.dataset.sco); }
-    else if (e.key === 'Escape') { var z = $('#scZoom'); if (z) z.remove(); else if (SC.open && !SC.th) scClose(); }
+    else if (e.key === 'Escape') { var z = $('#scZoom') || $('#scShare'); if (z) z.remove(); else if (SC.open && !SC.th) scClose(); }
   });
 
   /* ================= Dashboard: Clásico (4 zonas), Social (estilo Instagram) o Collect (cartas + Mercado) ================= */
@@ -4874,6 +5034,41 @@ body.zone-home #srchBtn { display: inline-flex; }
     if (SC.open && SC.tab === 'prof') scRender();
   }
   setTimeout(function () { if (pushOn() && fbMe()) pushToken(true).catch(function () {}); }, 9000);
+
+  /* ================= Editar fotos desde la carta y cartas rechazadas ================= */
+  function gOpenSheet(id, photo) {
+    fv.id = null; fv.car = null; fv.flip = false; try { renderFv(); } catch (e) {}
+    if (!state.zone) state.zone = 'cards';
+    var b = document.createElement('button'); b.hidden = true; b.dataset.act = 'open'; b.dataset.id = id; document.body.appendChild(b); b.click();
+    if (photo) { b.dataset.act = 'photoOpen'; b.click(); }
+    b.remove();
+  }
+  async function gResubmit(id) {
+    var c = carById(id), uid = FB.user ? FB.user.uid : null;
+    if (!c) return;
+    if (!uid || active !== 'cloud') return alert('Entra a tu cuenta para reenviar la carta.');
+    try {
+      await FB.fs.collection('users').doc(uid).collection('cars').doc(id).update({ rev: firebase.firestore.FieldValue.delete() });
+      gRejSig = ''; gRejPaint();
+    } catch (e) { alert('No se pudo reenviar. Intenta otra vez.'); }
+  }
+  var gRejSig = '';
+  function gRejPaint() {
+    var box = $('#rejBox'); if (!box) return;
+    var rej = (state.cars || []).filter(function (c) { return c && c._st === 'rejected' && !c.demo; });
+    var sig = rej.map(function (c) { return c.id + (c.rev && c.rev.note || ''); }).join('|');
+    if (sig === gRejSig) return; gRejSig = sig;
+    box.innerHTML = rej.length ? '<div class="rej-box"><b>' + (rej.length === 1 ? 'GARAGE te devolvió 1 carta' : 'GARAGE te devolvió ' + rej.length + ' cartas') + '</b><span>Arréglala y reenvíala para que la revisen otra vez.</span>' +
+      rej.map(function (c) { return '<div class="rej-row">' + (c.photo ? '<img src="' + esc(c.photo) + '" alt="">' : '<span class="rej-ph"></span>') + '<span class="t"><b data-noi18n>' + esc([c.make, c.model].filter(Boolean).join(' ')) + '</b><span data-noi18n>' + esc(c.rev && c.rev.note ? 'Motivo: ' + c.rev.note : 'Sin motivo escrito.') + '</span></span><span class="rej-a"><button class="btn" type="button" data-gopen="' + esc(c.id) + '">Editar</button><button class="btn primary" type="button" data-resub="' + esc(c.id) + '">Reenviar a revisión</button></span></div>'; }).join('') + '</div>' : '';
+  }
+  setInterval(gRejPaint, 2000);
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-fvedit],[data-gopen],[data-resub]'); if (!t) return;
+    e.preventDefault();
+    if (t.dataset.fvedit) gOpenSheet(t.dataset.fvedit, true);
+    else if (t.dataset.gopen) gOpenSheet(t.dataset.gopen, false);
+    else if (t.dataset.resub) { t.disabled = true; t.textContent = 'Enviando…'; gResubmit(t.dataset.resub); }
+  }, true);
 
   /* ================= Buscador: perfiles y contenido ================= */
   var SR = { open: false, seq: 0, t: null, pool: null, poolTs: 0 };
