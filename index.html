@@ -4065,7 +4065,7 @@ body.zone-home #srchBtn { display: inline-flex; }
     var pts = {};
     mkVals(D.cars).forEach(function (c) { if (c.kind === 'spotted' && c._owner) pts[c._owner] = (pts[c._owner] || 0) + (cardPts(c) | 0); });
     var rows = Object.keys(pts).map(function (uid) { var w = D.wallets[uid] || {}, e = w.earned | 0; return { uid: uid, p: pts[uid], e: e, d: pts[uid] - e }; }).filter(function (x) { return x.d > 0; });
-    var h = '<h3 class="srch-h">Acreditar monedas por cartas aprobadas</h3><p class="status">1 punto aprobado = 1 moneda. Solo se acredita la diferencia con lo que ya diste.</p>';
+    var h = '<h3 class="srch-h">Acreditar monedas por cartas aprobadas</h3><p class="status">1 punto aprobado = 1 moneda. Se acredita solo cada vez que tienes GARAGE abierto con tu cuenta; este botón es por si quieres hacerlo ya.</p>';
     h += rows.length ? '<ul class="srch-list">' + rows.map(function (x) {
       return '<li class="mk-row"><span class="srch-th"></span><span class="t"><b data-noi18n>' + esc(mkName(x.uid, D)) + '</b><span>' + x.p + ' pts aprobados · ya acreditado ' + x.e + '</span></span><span class="mk-act"><button class="btn primary" type="button" data-mk="credit" data-id="' + esc(x.uid) + '" data-v="' + x.d + '">Acreditar ' + x.d + ' monedas</button></span></li>';
     }).join('') + '</ul>' : '<p class="srch-empty">Nadie tiene monedas pendientes por acreditar.</p>';
@@ -4095,8 +4095,32 @@ body.zone-home #srchBtn { display: inline-flex; }
     var f = { market: mkMarketHTML, mine: mkMineHTML, offers: mkOffersHTML, ch: mkChHTML, admin: mkAdminHTML }[MK.tab] || mkMarketHTML;
     box.innerHTML = h + f(D, me);
   }
+  /* Monedas automáticas: cuando el admin tiene GARAGE abierto, acredita solo los puntos aprobados (1 punto = 1 moneda) */
+  var MK_AUTO = { t: 0, busy: false };
+  async function mkAutoCredit(force) {
+    if (mkMe() !== MK_ADMIN || !FB.on || !FB.fs || MK_AUTO.busy) return 0;
+    if (!force && Date.now() - MK_AUTO.t < 120000) return 0;
+    MK_AUTO.busy = true; MK_AUTO.t = Date.now();
+    var n = 0;
+    try {
+      var fs = FB.fs, r = await Promise.all([fs.collectionGroup('cars').limit(500).get(), fs.collection('mk_wallet').get()]);
+      var pts = {}, ws = {}, now = Date.now(), b = fs.batch();
+      r[0].docs.forEach(function (x) { var o = x.data(), ow = x.ref.parent.parent ? x.ref.parent.parent.id : ''; try { applyRev(o); } catch (e) {} if (o.kind === 'spotted' && ow) pts[ow] = (pts[ow] || 0) + (cardPts(o) | 0); });
+      r[1].docs.forEach(function (x) { ws[x.id] = x.data(); });
+      Object.keys(pts).forEach(function (uid) {
+        var w = ws[uid] || { coins: 0, earned: 0 }, dd = pts[uid] - (w.earned | 0);
+        if (dd > 0) { b.set(fs.collection('mk_wallet').doc(uid), { coins: (w.coins | 0) + dd, earned: (w.earned | 0) + dd, last: '', ts: now }); n++; }
+      });
+      if (n) await b.commit();
+    } catch (e) { n = 0; }
+    MK_AUTO.busy = false;
+    return n;
+  }
+  setTimeout(function () { mkAutoCredit(true); }, 8000);
+  setInterval(function () { mkAutoCredit(false); }, 60000);
   async function mkRefresh() {
     var s = ++MK.seq;
+    if (mkMe() === MK_ADMIN) await mkAutoCredit(true);
     if (FB.on && FB.fs && mkMe()) { try { await mkLoad(); } catch (e) { MK.msg = 'No se pudo cargar el mercado. ' + (e && e.code === 'permission-denied' ? 'Faltan las reglas del Marketplace en Firebase.' : 'Revisa tu conexión.'); } }
     if (s === MK.seq) mkRender();
   }
