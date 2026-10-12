@@ -781,6 +781,7 @@ body.zone-home #scBtn { display: inline-flex; }
 .sc-zoom img { max-width: 100%; max-height: 78vh; object-fit: contain; border-radius: 8px; }
 .sc-zoom figcaption { color: #fff; font-size: 14px; }
 /* ---------- mercado (marketplace) ---------- */
+.mk-past { opacity: .75; }
 .mk-page { position: fixed; inset: 0; z-index: 55; overflow-y: auto; background: var(--bg); padding: env(safe-area-inset-top, 0px) 16px calc(48px + env(safe-area-inset-bottom, 0px)); }
 .mk-page-in { max-width: 1040px; margin: 0 auto; padding-top: 20px; display: flex; flex-direction: column; gap: 16px; }
 .mk-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
@@ -3173,6 +3174,7 @@ body.zone-home #srchBtn { display: inline-flex; }
     state.cars = []; ph.loadedFor = null;
     FB.carsUnsub = col.onSnapshot(function (snap) {
       state.cars = snap.docs.map(function (d) { var o = d.data() || {}; o.id = d.id; return applyRev(o); }).sort(function (a, b) { return (a.ts || 0) - (b.ts || 0); });
+      FB.rawCars = state.cars; state.cars = mkFilterCars(state.cars);
       if (state.sel && !state.cars.some(function (x) { return x.id === state.sel; })) closeSheet();
       fbSyncStats(); render();
     }, function () {});
@@ -4051,11 +4053,27 @@ body.zone-home #srchBtn { display: inline-flex; }
     var n = c.children.length, i = Math.round(c.scrollLeft / Math.max(1, c.clientWidth)) + 1, cnt = c.parentElement.querySelector('.car-count');
     if (cnt) cnt.textContent = Math.min(n, i) + '/' + n;
   }, true);
+  /* Cartas cambiadas: salen de la colección de quien las dio (siguen en «Pasadas» del Mercado) */
+  var MKH = { map: {}, unsub: null, uid: null };
+  function mkFilterCars(list) { var uid = FB.user ? FB.user.uid : null; if (!uid) return list; return list.filter(function (c) { var h = MKH.map[c.id]; return !(h && h.holder !== uid); }); }
+  function mkWatchHold() {
+    var uid = FB.user ? FB.user.uid : null;
+    if (MKH.uid === uid) return;
+    if (MKH.unsub) { MKH.unsub(); MKH.unsub = null; }
+    MKH.uid = uid; MKH.map = {};
+    if (!uid || !FB.fs) return;
+    MKH.unsub = FB.fs.collection('mk_hold').where('orig', '==', uid).onSnapshot(function (s) {
+      MKH.map = {}; s.docs.forEach(function (x) { MKH.map[x.id] = x.data(); });
+      if (FB.rawCars && active === 'cloud') { state.cars = mkFilterCars(FB.rawCars); try { render(); } catch (e) {} }
+    }, function () {});
+  }
+  setInterval(mkWatchHold, 3000);
+
   /* ================= Mercado GARAGE (solo en la copia Marketplace) ================= */
   var MK = { open: false, tab: 'market', data: null, msg: '', offerFor: null, seq: 0, busy: false };
   var MK_ADMIN = 'f3amZfMHIccH5tAfq35H3qzIIV63';
   var MK_BASE = [10, 25, 60, 150, 400];
-  var MK_ST = { open: 'Pendiente', done: 'Completado', declined: 'Rechazada', cancelled: 'Cancelada', pending: 'En revisión', ok: 'Aprobado', rejected: 'Rechazado' };
+  var MK_ST = { open: 'Pendiente', done: 'Completado', declined: 'Rechazada', cancelled: 'Cancelada', countered: 'Contraofertada', pending: 'En revisión', ok: 'Aprobado', rejected: 'Rechazado' };
   function mkMe() { return FB.user ? FB.user.uid : null; }
   function mkKey(c) { return norm((c.make || '') + ' ' + (c.model || '')); }
   function mkValue(c, D) { var n = D.models[mkKey(c)] || 1; return Math.round(MK_BASE[clamp(c.rarity | 0, 0, 4)] * (1 + 1.5 / n)); }
@@ -4099,49 +4117,82 @@ body.zone-home #srchBtn { display: inline-flex; }
   function mkTitle(c) { return c ? esc([c.make, c.model].filter(Boolean).join(' ')) : 'Carta no disponible'; }
   function mkLine(c, D, extra) { return '<span class="t"><b data-noi18n>' + mkTitle(c) + '</b><span>' + RAR[clamp(c.rarity | 0, 0, 4)].n + ' · ≈ ' + mkValue(c, D) + ' monedas' + (extra ? ' · ' + extra : '') + '</span></span>'; }
   function mkDate(ts) { try { return new Date(ts).toLocaleDateString(); } catch (e) { return ''; } }
+  function mkCardsOf(D, uid) { return mkVals(D.cars).filter(function (c) { return c.kind === 'spotted' && c._st === 'ok' && mkHolder(c, D) === uid; }); }
+  function mkOpt(list, D, sel) { return '<option value="">Sin carta</option>' + list.map(function (m) { return '<option value="' + esc(m.id) + '"' + (m.id === sel ? ' selected' : '') + '>' + mkTitle(m) + ' (≈ ' + mkValue(m, D) + ')</option>'; }).join(''); }
+  function mkAskForm(c, D, me, price) {
+    return '<div class="mk-form"><p class="status">Pides <b data-noi18n>' + mkTitle(c) + '</b> a ' + esc(mkName(mkHolder(c, D), D)) + '. Ofrece una carta tuya, monedas o las dos.</p>' +
+      '<div class="f2"><div class="field"><label for="mkGive">Tu carta a cambio</label><select id="mkGive">' + mkOpt(mkMine(D, me), D, '') + '</select></div>' +
+      '<div class="field"><label for="mkCoins">Monedas (tienes ' + (D.wallet.coins | 0) + ')</label><input type="number" id="mkCoins" min="0" step="1" inputmode="numeric" value="' + (price | 0) + '"></div></div>' +
+      '<div class="actions"><button class="btn primary" type="button" data-mk="send" data-id="' + esc(c.id) + '">Enviar oferta</button><button class="btn" type="button" data-mk="offer" data-id="">Cancelar</button></div></div>';
+  }
   function mkMarketHTML(D, me) {
-    var mine = mkMine(D, me);
     var ls = mkVals(D.list).filter(function (l) { var c = D.cars[l.id]; return c && l.holder !== me && mkHolder(c, D) === l.holder; }).sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
+    var listed = {}; ls.forEach(function (l) { listed[l.id] = 1; });
+    var row = function (c, extra, price, label) {
+      return '<li class="mk-row">' + mkThumb(c) + mkLine(c, D, extra) + (MK.offerFor === c.id ? mkAskForm(c, D, me, price) : '<span class="mk-act"><button class="btn" type="button" data-mk="offer" data-id="' + esc(c.id) + '">' + label + '</button></span>') + '</li>';
+    };
     var h = '<p class="status">Cartas que otros publicaron. Ofrece monedas, una carta tuya o las dos. El valor sube con la rareza y cuando pocas personas tienen ese carro.</p>';
-    if (!ls.length) return h + '<p class="srch-empty">Todavía no hay cartas en el mercado. Publica una desde «Mis cartas».</p>';
-    return h + '<ul class="srch-list">' + ls.map(function (l) {
-      var c = D.cars[l.id], form = '';
-      if (MK.offerFor === c.id) form = '<div class="mk-form"><div class="f2"><div class="field"><label for="mkCoins">Monedas (tienes ' + (D.wallet.coins | 0) + ')</label><input type="number" id="mkCoins" min="0" step="1" inputmode="numeric" value="' + (l.price | 0) + '"></div>' +
-        '<div class="field"><label for="mkGive">Y/o una carta tuya</label><select id="mkGive"><option value="">Sin carta</option>' + mine.map(function (m) { return '<option value="' + esc(m.id) + '">' + mkTitle(m) + ' (≈ ' + mkValue(m, D) + ')</option>'; }).join('') + '</select></div></div>' +
-        '<div class="actions"><button class="btn primary" type="button" data-mk="send" data-id="' + esc(c.id) + '">Enviar oferta</button><button class="btn" type="button" data-mk="offer" data-id="">Cancelar</button></div></div>';
-      return '<li class="mk-row">' + mkThumb(c) + mkLine(c, D, (l.price ? l.price + ' monedas' : 'Solo cambio') + ' · ' + esc(mkName(l.holder, D))) +
-        (MK.offerFor === c.id ? form : '<span class="mk-act"><button class="btn" type="button" data-mk="offer" data-id="' + esc(c.id) + '">Hacer oferta</button></span>') + '</li>';
-    }).join('') + '</ul>';
+    h += ls.length ? '<ul class="srch-list">' + ls.map(function (l) { return row(D.cars[l.id], (l.price ? l.price + ' monedas' : 'Solo cambio') + ' · ' + esc(mkName(l.holder, D)), l.price, 'Hacer oferta'); }).join('') + '</ul>' : '<p class="srch-empty">Todavía nadie ha publicado cartas.</p>';
+    var others = mkVals(D.cars).filter(function (c) { var hd = mkHolder(c, D); return c.kind === 'spotted' && c._st === 'ok' && hd !== me && !listed[c.id] && !(FB.blocks && FB.blocks[hd]); }).sort(function (a, b) { return mkValue(b, D) - mkValue(a, D); }).slice(0, 40);
+    h += '<h3 class="srch-h">Pedir cartas de otros</h3><p class="status">También puedes pedir cualquier carta aprobada de otra persona, aunque no la haya publicado.</p>';
+    h += others.length ? '<ul class="srch-list">' + others.map(function (c) { return row(c, esc(mkName(mkHolder(c, D), D)), 0, 'Pedir carta'); }).join('') + '</ul>' : '<p class="srch-empty">No hay más cartas para pedir.</p>';
+    return h;
   }
   function mkMineHTML(D, me) {
     var mine = mkMine(D, me);
-    var h = '<p class="status">Tus cartas aprobadas por GARAGE. Las de tu garage personal y las que están en revisión no se pueden cambiar.</p>';
+    var h = '<p class="status">Las cartas que tienes ahora. Las de tu garage personal y las que están en revisión no se pueden cambiar. Las que cambies pasan a «Pasadas».</p>';
     if (!mine.length) return h + '<p class="srch-empty">Todavía no tienes cartas aprobadas para el mercado.</p>';
     return h + '<ul class="srch-list">' + mine.map(function (c) {
       var l = D.list[c.id] && D.list[c.id].holder === me ? D.list[c.id] : null;
-      var from = c._owner !== me ? 'Vista por ' + esc(mkName(c._owner, D)) : '';
+      var from = c._owner !== me ? 'Recibida · vista por ' + esc(mkName(c._owner, D)) : '';
       var act = l ? '<span class="mk-meta">En el mercado · ' + (l.price ? l.price + ' monedas' : 'solo cambio') + '</span><button class="btn" type="button" data-mk="unlist" data-id="' + esc(c.id) + '">Quitar del mercado</button>'
         : '<label class="sr" for="mkP-' + esc(c.id) + '">Precio en monedas</label><input type="number" id="mkP-' + esc(c.id) + '" min="0" step="1" inputmode="numeric" placeholder="Precio (0 = solo cambio)"><button class="btn primary" type="button" data-mk="list" data-id="' + esc(c.id) + '">Publicar</button>';
       return '<li class="mk-row">' + mkThumb(c) + mkLine(c, D, from) + '<span class="mk-act">' + act + '</span></li>';
     }).join('') + '</ul>';
   }
+  function mkSide(D, cid, n) { var p = []; if (cid) p.push(D.cars[cid] ? mkTitle(D.cars[cid]) : 'una carta'); if (n) p.push(n + ' monedas'); return p.join(' + ') || 'nada'; }
+  function mkCounterForm(o, D, me) {
+    return '<div class="mk-form"><p class="status">Arma tu contraoferta para ' + esc(mkName(o.from, D)) + '. La oferta original se cierra y le llega la tuya.</p>' +
+      '<div class="f2"><div class="field"><label for="mkCtGive">Tú das: carta</label><select id="mkCtGive">' + mkOpt(mkMine(D, me), D, o.want) + '</select></div>' +
+      '<div class="field"><label for="mkCtCoins">Tú das: monedas (tienes ' + (D.wallet.coins | 0) + ')</label><input type="number" id="mkCtCoins" min="0" step="1" inputmode="numeric" value="' + (o.back | 0) + '"></div></div>' +
+      '<div class="f2"><div class="field"><label for="mkCtWant">Le pides: carta</label><select id="mkCtWant">' + mkOpt(mkCardsOf(D, o.from), D, o.give) + '</select></div>' +
+      '<div class="field"><label for="mkCtBack">Le pides: monedas</label><input type="number" id="mkCtBack" min="0" step="1" inputmode="numeric" value="' + (o.coins | 0) + '"></div></div>' +
+      '<div class="actions"><button class="btn primary" type="button" data-mk="counterSend" data-id="' + esc(o.id) + '">Enviar contraoferta</button><button class="btn" type="button" data-mk="counter" data-id="">Cancelar</button></div></div>';
+  }
   function mkOfferLine(o, D, me) {
-    var w = D.cars[o.want], g = o.give ? D.cars[o.give] : null, parts = [];
-    if (o.coins) parts.push(o.coins + ' monedas');
-    if (o.give) parts.push(g ? mkTitle(g) : 'una carta');
-    var txt = o.to === me ? esc(mkName(o.from, D)) + ' te ofrece ' + parts.join(' + ') + ' por tu ' + mkTitle(w)
-      : 'Ofreciste ' + parts.join(' + ') + ' a ' + esc(mkName(o.to, D)) + ' por su ' + mkTitle(w);
+    var a = mkSide(D, o.give, o.coins | 0), b = mkSide(D, o.want, o.back | 0);
+    var txt = o.to === me ? esc(mkName(o.from, D)) + ' te ofrece <b>' + a + '</b> y te pide <b>' + b + '</b>'
+      : 'Ofreciste <b>' + a + '</b> a ' + esc(mkName(o.to, D)) + ' y pediste <b>' + b + '</b>';
+    if (o.counterOf) txt = '↩ Contraoferta · ' + txt;
     var act = '';
-    if (o.status === 'open' && o.to === me) act = '<span class="mk-act"><button class="btn primary" type="button" data-mk="accept" data-id="' + esc(o.id) + '">Aceptar</button><button class="btn" type="button" data-mk="decline" data-id="' + esc(o.id) + '">Rechazar</button></span>';
+    if (o.status === 'open' && o.to === me) act = MK.counterFor === o.id ? mkCounterForm(o, D, me) : '<span class="mk-act"><button class="btn primary" type="button" data-mk="accept" data-id="' + esc(o.id) + '">Aceptar</button><button class="btn" type="button" data-mk="counter" data-id="' + esc(o.id) + '">Contraofertar</button><button class="btn" type="button" data-mk="decline" data-id="' + esc(o.id) + '">Rechazar</button></span>';
     if (o.status === 'open' && o.from === me) act = '<span class="mk-act"><button class="btn" type="button" data-mk="cancel" data-id="' + esc(o.id) + '">Cancelar oferta</button></span>';
-    return '<li class="mk-row">' + mkThumb(w) + '<span class="t"><b data-noi18n>' + txt + '</b><span>' + (MK_ST[o.status] || o.status) + ' · ' + mkDate(o.ts) + '</span></span>' + act + '</li>';
+    var th = o.to === me ? (o.give ? D.cars[o.give] : D.cars[o.want]) : (o.want ? D.cars[o.want] : D.cars[o.give]);
+    return '<li class="mk-row">' + mkThumb(th) + '<span class="t"><b data-noi18n>' + txt + '</b><span>' + (MK_ST[o.status] || o.status) + ' · ' + mkDate(o.ts) + '</span></span>' + act + '</li>';
   }
   function mkOffersHTML(D, me) {
     var all = D.inc.concat(D.out).sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
-    var open = all.filter(function (o) { return o.status === 'open'; }), old = all.filter(function (o) { return o.status !== 'open'; }).slice(0, 15);
-    var h = '<h3 class="srch-h">Abiertas</h3>' + (open.length ? '<ul class="srch-list">' + open.map(function (o) { return mkOfferLine(o, D, me); }).join('') + '</ul>' : '<p class="srch-empty">No tienes ofertas abiertas.</p>');
-    if (old.length) h += '<h3 class="srch-h">Historial</h3><ul class="srch-list">' + old.map(function (o) { return mkOfferLine(o, D, me); }).join('') + '</ul>';
+    var inc = all.filter(function (o) { return o.status === 'open' && o.to === me; }), out = all.filter(function (o) { return o.status === 'open' && o.from === me; }), old = all.filter(function (o) { return o.status !== 'open'; }).slice(0, 20);
+    var ul = function (l) { return '<ul class="srch-list">' + l.map(function (o) { return mkOfferLine(o, D, me); }).join('') + '</ul>'; };
+    var h = '<h3 class="srch-h">Recibidas</h3>' + (inc.length ? ul(inc) : '<p class="srch-empty">No tienes ofertas por responder.</p>');
+    h += '<h3 class="srch-h">Enviadas</h3>' + (out.length ? ul(out) : '<p class="srch-empty">No tienes ofertas enviadas abiertas.</p>');
+    if (old.length) h += '<h3 class="srch-h">Historial</h3>' + ul(old);
     return h;
+  }
+  function mkPastHTML(D, me) {
+    var seen = {}, past = [];
+    D.inc.concat(D.out).filter(function (o) { return o.status === 'done'; }).sort(function (a, b) { return (b.doneTs || b.ts || 0) - (a.doneTs || a.ts || 0); }).forEach(function (o) {
+      var gave = o.from === me ? o.give : o.want, got = o.from === me ? o.want : o.give, to = o.from === me ? o.to : o.from;
+      if (!gave || seen[gave]) return; seen[gave] = 1;
+      var c = D.cars[gave]; if (!c || mkHolder(c, D) === me) return;
+      past.push({ c: c, to: to, ts: o.doneTs || o.ts, got: got, coins: o.from === me ? (o.back | 0) : (o.coins | 0) });
+    });
+    var h = '<p class="status">Cartas que ya cambiaste. Ya no están en tu colección, pero aquí queda el registro.</p>';
+    if (!past.length) return h + '<p class="srch-empty">Todavía no has cambiado ninguna carta.</p>';
+    return h + '<ul class="srch-list">' + past.map(function (p) {
+      var por = [p.got ? (D.cars[p.got] ? mkTitle(D.cars[p.got]) : 'una carta') : '', p.coins ? p.coins + ' monedas' : ''].filter(Boolean).join(' + ');
+      return '<li class="mk-row mk-past">' + mkThumb(p.c) + '<span class="t"><b data-noi18n>' + mkTitle(p.c) + '</b><span>Cambiada a ' + esc(mkName(p.to, D)) + ' · ' + mkDate(p.ts) + (por ? ' · por ' + por : '') + '</span></span></li>';
+    }).join('') + '</ul>';
   }
   function mkChHTML(D, me) {
     var now = Date.now(), act = D.ch.filter(function (c) { return (c.ends || 0) > now; }), mine = mkMine(D, me);
@@ -4181,13 +4232,13 @@ body.zone-home #srchBtn { display: inline-flex; }
     if (!FB.on || !FB.fs) { box.innerHTML = '<p class="srch-empty">El mercado necesita internet.</p>'; return; }
     if (!me) { box.innerHTML = '<p class="srch-empty">Entra a tu cuenta para usar el mercado.</p>'; return; }
     if (!D) { box.innerHTML = (MK.msg ? '<p class="status mk-msg">' + esc(MK.msg) + '</p>' : '') + '<p class="srch-empty">Cargando…</p>'; return; }
-    var nInc = D.inc.filter(function (o) { return o.status === 'open'; }).length;
-    var tabs = [['market', 'Mercado'], ['mine', 'Mis cartas'], ['offers', 'Ofertas' + (nInc ? ' (' + nInc + ')' : '')], ['ch', 'Retos']];
+    var nInc = D.inc.filter(function (o) { return o.status === 'open' && o.to === me; }).length;
+    var tabs = [['market', 'Mercado'], ['mine', 'Mis cartas'], ['offers', 'Ofertas' + (nInc ? ' (' + nInc + ')' : '')], ['past', 'Pasadas'], ['ch', 'Retos']];
     if (me === MK_ADMIN) tabs.push(['admin', 'Admin']);
     var h = '<div class="mk-bal"><span>Tu saldo</span><b>' + (D.wallet.coins | 0) + '</b><span>monedas GARAGE · sin dinero real</span></div>';
     h += '<div class="mk-tabs">' + tabs.map(function (t) { return '<button type="button" class="chip" data-mk="tab" data-v="' + t[0] + '" aria-pressed="' + (MK.tab === t[0]) + '">' + t[1] + '</button>'; }).join('') + '</div>';
     if (MK.msg) h += '<p class="status mk-msg">' + esc(MK.msg) + '</p>';
-    var f = { market: mkMarketHTML, mine: mkMineHTML, offers: mkOffersHTML, ch: mkChHTML, admin: mkAdminHTML }[MK.tab] || mkMarketHTML;
+    var f = { market: mkMarketHTML, mine: mkMineHTML, offers: mkOffersHTML, past: mkPastHTML, ch: mkChHTML, admin: mkAdminHTML }[MK.tab] || mkMarketHTML;
     box.innerHTML = h + f(D, me);
   }
   /* Monedas automáticas: cuando el admin tiene GARAGE abierto, acredita solo los puntos aprobados (1 punto = 1 moneda) */
@@ -4259,14 +4310,32 @@ body.zone-home #srchBtn { display: inline-flex; }
     MK.busy = true; t.disabled = true; MK.msg = '';
     try {
       if (k === 'send') {
-        var c = D.cars[id], coins = parseInt(($('#mkCoins') || {}).value || '0', 10), give = ($('#mkGive') || {}).value || '';
+        var c = D.cars[id], coins = parseInt(($('#mkCoins') || {}).value || '0', 10) || 0, give = ($('#mkGive') || {}).value || '';
         if (!c) mkFail('Esa carta ya no está disponible.');
-        if (!(coins >= 0)) mkFail('Pon un número de monedas válido.');
+        if (coins < 0) mkFail('Pon un número de monedas válido.');
         if (coins > (D.wallet.coins | 0)) mkFail('No tienes suficientes monedas.');
-        if (!coins && !give) mkFail('Ofrece monedas, una carta o las dos.');
+        if (!coins && !give) mkFail('Ofrece una carta tuya, monedas o las dos.');
         var g = give ? D.cars[give] : null;
-        await fs.collection('mk_offers').add({ from: me, to: mkHolder(c, D), want: c.id, wantOrig: c._owner, give: give, giveOrig: g ? g._owner : '', coins: coins, status: 'open', ts: now });
-        MK.offerFor = null; MK.msg = 'Oferta enviada. Te avisamos en «Ofertas» cuando responda.';
+        await fs.collection('mk_offers').add({ from: me, to: mkHolder(c, D), want: c.id, wantOrig: c._owner, give: give, giveOrig: g ? g._owner : '', coins: coins, back: 0, status: 'open', ts: now });
+        MK.offerFor = null; MK.msg = 'Oferta enviada. La respuesta te sale en «Ofertas».';
+      } else if (k === 'counter') {
+        MK.counterFor = id || null; MK.busy = false; t.disabled = false; return mkRender();
+      } else if (k === 'counterSend') {
+        var oc = D.inc.filter(function (x) { return x.id === id; })[0];
+        if (!oc || oc.status !== 'open') mkFail('Esa oferta ya no está abierta.');
+        var cg = ($('#mkCtGive') || {}).value || '', cw = ($('#mkCtWant') || {}).value || '';
+        var cc = parseInt(($('#mkCtCoins') || {}).value || '0', 10) || 0, cb = parseInt(($('#mkCtBack') || {}).value || '0', 10) || 0;
+        if (cc < 0 || cb < 0) mkFail('Las monedas no pueden ser negativas.');
+        if (cc > 0 && cb > 0) { var net = cc - cb; cc = Math.max(0, net); cb = Math.max(0, -net); }
+        if (cc > (D.wallet.coins | 0)) mkFail('No tienes suficientes monedas.');
+        if (!cg && !cc) mkFail('Tienes que dar algo: una carta tuya o monedas.');
+        if (!cw && !cb) mkFail('Tienes que pedir algo: una carta o monedas.');
+        var gc = cg ? D.cars[cg] : null, wc = cw ? D.cars[cw] : null;
+        var nref = fs.collection('mk_offers').doc(), b0 = fs.batch();
+        b0.update(fs.collection('mk_offers').doc(oc.id), { status: 'countered', doneTs: now });
+        b0.set(nref, { from: me, to: oc.from, give: cg, giveOrig: gc ? gc._owner : '', want: cw, wantOrig: wc ? wc._owner : '', coins: cc, back: cb, status: 'open', ts: now, counterOf: oc.id });
+        await b0.commit();
+        MK.counterFor = null; MK.msg = 'Contraoferta enviada a ' + mkName(oc.from, D) + '.';
       } else if (k === 'list') {
         var lc = D.cars[id], price = parseInt(($('#mkP-' + id) || {}).value || '0', 10) || 0;
         if (!lc) mkFail('Esa carta ya no está disponible.');
@@ -4281,23 +4350,26 @@ body.zone-home #srchBtn { display: inline-flex; }
       } else if (k === 'accept') {
         var o = D.inc.filter(function (x) { return x.id === id; })[0];
         if (!o || o.status !== 'open') mkFail('Esa oferta ya no está abierta.');
+        var oc0 = o.coins | 0, ob0 = o.back | 0;
         var b = fs.batch(), oref = fs.collection('mk_offers').doc(o.id);
         b.update(oref, { status: 'done', doneTs: now });
-        b.set(fs.collection('mk_hold').doc(o.want), { holder: o.from, orig: o.wantOrig, offer: o.id, ts: now });
+        if (o.want) b.set(fs.collection('mk_hold').doc(o.want), { holder: o.from, orig: o.wantOrig, offer: o.id, ts: now });
         if (o.give) b.set(fs.collection('mk_hold').doc(o.give), { holder: o.to, orig: o.giveOrig, offer: o.id, ts: now });
-        if (o.coins > 0) {
+        if (oc0 > 0 || ob0 > 0) {
           var ws = await Promise.all([fs.collection('mk_wallet').doc(o.from).get(), fs.collection('mk_wallet').doc(o.to).get()]);
           var wf = ws[0].exists ? ws[0].data() : { coins: 0, earned: 0 }, wt = ws[1].exists ? ws[1].data() : { coins: 0, earned: 0 };
-          if ((wf.coins | 0) < o.coins) mkFail('Quien te ofreció ya no tiene esas monedas.');
+          var nf = (wf.coins | 0) - oc0 + ob0, nt = (wt.coins | 0) + oc0 - ob0;
+          if (nf < 0) mkFail('Quien te ofreció ya no tiene esas monedas.');
+          if (nt < 0) mkFail('No tienes suficientes monedas para aceptar.');
           b.set(fs.collection('mk_applied').doc(o.id + '_' + o.from), { offer: o.id, uid: o.from });
           b.set(fs.collection('mk_applied').doc(o.id + '_' + o.to), { offer: o.id, uid: o.to });
-          b.set(fs.collection('mk_wallet').doc(o.from), { coins: (wf.coins | 0) - o.coins, earned: wf.earned | 0, last: o.id, ts: now });
-          b.set(fs.collection('mk_wallet').doc(o.to), { coins: (wt.coins | 0) + o.coins, earned: wt.earned | 0, last: o.id, ts: now });
+          b.set(fs.collection('mk_wallet').doc(o.from), { coins: nf, earned: wf.earned | 0, last: o.id, ts: now });
+          b.set(fs.collection('mk_wallet').doc(o.to), { coins: nt, earned: wt.earned | 0, last: o.id, ts: now });
         }
-        if (D.list[o.want]) b.delete(fs.collection('mk_list').doc(o.want));
+        if (o.want && D.list[o.want]) b.delete(fs.collection('mk_list').doc(o.want));
         if (o.give && D.list[o.give]) b.delete(fs.collection('mk_list').doc(o.give));
         await b.commit();
-        MK.msg = '¡Cambio hecho! La carta ya es de ' + mkName(o.from, D) + '.';
+        MK.msg = '¡Cambio hecho! Lo que diste pasó a «Pasadas» y lo que recibiste está en «Mis cartas».';
       } else if (k === 'claim') {
         var card = ($('#mkC-' + id) || {}).value, cc = D.cars[card];
         if (!cc) mkFail('Escoge una carta.');
