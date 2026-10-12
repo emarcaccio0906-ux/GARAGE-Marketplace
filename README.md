@@ -1,21 +1,36 @@
-# GARAGE
+# GARAGE · Marketplace
 
-**EN** — A car app: collect cars you spot on the street (photo → card with rarity and points), keep a personal garage with your own cars and mods, and try ideas in the mod visualizer.
+**Spot · Trade · Collect**
 
-**ES** — App de carros: colecciona carros que ves en la calle (foto → carta con rareza y puntos), lleva tu garage personal con tus carros y mods, y prueba ideas en el visualizador.
+**ES** — Copia de prueba de GARAGE con **Mercado**: colecciona carros que ves en la calle, cambia cartas con otros, gana monedas GARAGE y completa retos semanales.
 
-**Demo:** https://emarcaccio0906-ux.github.io/GARAGE-Car-Spotting/
+**EN** — Test copy of GARAGE with a **Marketplace**: collect cars you spot on the street, trade cards with others, earn GARAGE coins and complete weekly challenges.
+
+**App:** https://emarcaccio0906-ux.github.io/GARAGE-Marketplace/
+**Mercado directo / Market direct link:** https://emarcaccio0906-ux.github.io/GARAGE-Marketplace/#mercado
+
+> GARAGE original (sin Mercado): https://emarcaccio0906-ux.github.io/GARAGE-Car-Spotting/
 
 ---
 
-## English
-
-- Single page (`index.html`), no build step.
-- On GitHub Pages, cards are saved in the browser (local accounts + export/import a backup).
-- AI identification, Radar, People and Ranking only work in the version published on Claude, because they use the Claude account.
-
 ## Español
 
-- Es una sola página (`index.html`), sin build.
-- En GitHub Pages las cartas se guardan en el navegador (cuentas locales + exportar/importar copia).
-- Identificación con IA, Radar, Gente y Ranking solo funcionan en la versión publicada en Claude, porque usan la cuenta de Claude.
+- Una sola página (`index.html`), sin build. Se publica con GitHub Pages.
+- Cuentas con Google o correo (Firebase). Usa las mismas cuentas y cartas que el GARAGE original.
+- **Mercado (Zona 03):**
+  - **Monedas GARAGE** (sin dinero real): 1 punto de carta aprobada = 1 moneda.
+  - **Valor de cada carta:** sube con la rareza y cuando pocas personas tienen ese carro.
+  - **Publicar e intercambiar cartas:** ofrece monedas, una carta tuya o las dos.
+  - **Retos semanales** con premio en monedas, revisados por GARAGE.
+- Solo se pueden cambiar cartas **aprobadas**.
+
+## English
+
+- Single page (`index.html`), no build step. Hosted on GitHub Pages.
+- Google or email accounts (Firebase). Shares accounts and cards with the original GARAGE.
+- **Market (Zone 03):**
+  - **GARAGE coins** (no real money): 1 approved card point = 1 coin.
+  - **Card value:** goes up with rarity and when few people own that car.
+  - **List and trade cards:** offer coins, one of your cards, or both.
+  - **Weekly challenges** with coin rewards, reviewed by GARAGE.
+- Only **approved** cards can be traded.
