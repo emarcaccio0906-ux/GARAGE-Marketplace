@@ -1,0 +1,11 @@
+{
+  "name": "garage-functions",
+  "description": "Servidor de GARAGE · Marketplace: notificaciones push y monedas automáticas",
+  "private": true,
+  "main": "index.js",
+  "engines": { "node": "22" },
+  "dependencies": {
+    "firebase-admin": "^13.0.0",
+    "firebase-functions": "^6.1.0"
+  }
+}
