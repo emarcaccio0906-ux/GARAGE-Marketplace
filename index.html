@@ -4154,6 +4154,9 @@ body.zone-home #srchBtn { display: inline-flex; }
   var MKH = { map: {}, unsub: null, uid: null };
   /* Bono por subir una carta: 1–10 monedas según la calidad de la foto (se paga cuando GARAGE la aprueba) */
   function mkBonus(c) { if (!c || c.kind !== 'spotted' || c._st !== 'ok') return 0; var q = typeof c.q === 'number' ? c.q : 50; return clamp(Math.round(q / 10), 1, 10); }
+  /* Monedas por carta aprobada: 1–10 por la calidad de la foto + extra por rareza (Común 0 · Poco común 1 · Raro 3 · Épico 6 · Legendario 10) */
+  var MK_RAR_COINS = [0, 1, 3, 6, 10];
+  function mkEarn(c) { if (!c || c.kind !== 'spotted' || c._st !== 'ok') return 0; return MK_RAR_COINS[clamp(c.rarity | 0, 0, 4)] + mkBonus(c); }
   function mkFilterCars(list) { var uid = FB.user ? FB.user.uid : null; if (!uid) return list; return list.filter(function (c) { var h = MKH.map[c.id]; return !(h && h.holder !== uid); }); }
   function mkWatchHold() {
     var uid = FB.user ? FB.user.uid : null;
@@ -4171,7 +4174,7 @@ body.zone-home #srchBtn { display: inline-flex; }
   /* ================= Mercado GARAGE (solo en la copia Marketplace) ================= */
   var MK = { open: false, tab: 'market', data: null, msg: '', offerFor: null, seq: 0, busy: false };
   var MK_ADMIN = 'f3amZfMHIccH5tAfq35H3qzIIV63';
-  var MK_BASE = [10, 25, 60, 150, 400];
+  var MK_BASE = [3, 6, 12, 25, 60];
   var MK_ST = { open: 'Pendiente', done: 'Completado', declined: 'Rechazada', cancelled: 'Cancelada', countered: 'Contraofertada', pending: 'En revisión', ok: 'Aprobado', rejected: 'Rechazado' };
   function mkMe() { return FB.user ? FB.user.uid : null; }
   function mkKey(c) { return norm((c.make || '') + ' ' + (c.model || '')); }
@@ -4308,9 +4311,9 @@ body.zone-home #srchBtn { display: inline-flex; }
   }
   function mkAdminHTML(D, me) {
     var pts = {};
-    mkVals(D.cars).forEach(function (c) { if (c.kind === 'spotted' && c._owner) pts[c._owner] = (pts[c._owner] || 0) + (cardPts(c) | 0) + mkBonus(c); });
+    mkVals(D.cars).forEach(function (c) { if (c.kind === 'spotted' && c._owner) pts[c._owner] = (pts[c._owner] || 0) + mkEarn(c); });
     var rows = Object.keys(pts).map(function (uid) { var w = D.wallets[uid] || {}, e = w.earned | 0; return { uid: uid, p: pts[uid], e: e, d: pts[uid] - e }; }).filter(function (x) { return x.d > 0; });
-    var h = '<h3 class="srch-h">Acreditar monedas por cartas aprobadas</h3><p class="status">1 punto aprobado = 1 moneda, más un bono de 1–10 monedas por cada carta aprobada. Se acredita solo cada vez que tienes GARAGE abierto con tu cuenta; este botón es por si quieres hacerlo ya.</p>';
+    var h = '<h3 class="srch-h">Acreditar monedas por cartas aprobadas</h3><p class="status">Cada carta aprobada da 1–10 monedas según la calidad de la foto, más un extra por rareza (Común 0, Poco común 1, Raro 3, Épico 6, Legendario 10). Se acredita solo cada vez que tienes GARAGE abierto con tu cuenta; este botón es por si quieres hacerlo ya.</p>';
     h += rows.length ? '<ul class="srch-list">' + rows.map(function (x) {
       return '<li class="mk-row"><span class="srch-th"></span><span class="t"><b data-noi18n>' + esc(mkName(x.uid, D)) + '</b><span>' + x.p + ' pts aprobados · ya acreditado ' + x.e + '</span></span><span class="mk-act"><button class="btn primary" type="button" data-mk="credit" data-id="' + esc(x.uid) + '" data-v="' + x.d + '">Acreditar ' + x.d + ' monedas</button></span></li>';
     }).join('') + '</ul>' : '<p class="srch-empty">Nadie tiene monedas pendientes por acreditar.</p>';
@@ -4350,7 +4353,7 @@ body.zone-home #srchBtn { display: inline-flex; }
     try {
       var fs = FB.fs, r = await Promise.all([fs.collectionGroup('cars').limit(500).get(), fs.collection('mk_wallet').get()]);
       var pts = {}, ws = {}, now = Date.now(), b = fs.batch();
-      r[0].docs.forEach(function (x) { var o = x.data(), ow = x.ref.parent.parent ? x.ref.parent.parent.id : ''; try { applyRev(o); } catch (e) {} if (o.kind === 'spotted' && ow) pts[ow] = (pts[ow] || 0) + (cardPts(o) | 0) + mkBonus(o); });
+      r[0].docs.forEach(function (x) { var o = x.data(), ow = x.ref.parent.parent ? x.ref.parent.parent.id : ''; try { applyRev(o); } catch (e) {} if (o.kind === 'spotted' && ow) pts[ow] = (pts[ow] || 0) + mkEarn(o); });
       r[1].docs.forEach(function (x) { ws[x.id] = x.data(); });
       Object.keys(pts).forEach(function (uid) {
         var w = ws[uid] || { coins: 0, earned: 0 }, dd = pts[uid] - (w.earned | 0);
