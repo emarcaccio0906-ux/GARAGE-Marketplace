@@ -712,6 +712,27 @@ body.zone-home .home-btn.tp-btn { display: inline-flex; }
 body.dash-collect .home-tile.spot, body.dash-collect .home-tile.social, body.dash-collect #scBtn { display: none !important; }
 @media (min-width: 641px) { body.dash-collect .home-tile { min-height: 380px; } }
 /* ---------- social ---------- */
+.nw-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.nw-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.nw-ft { font: 700 22px/1 var(--f-display); }
+.nw-imgrow { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.nw-imgrow img { width: 72px; height: 72px; border-radius: 10px; object-fit: cover; }
+.nw-img { aspect-ratio: 16 / 9; background: var(--surface-2); }
+.nw-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.nw-body { display: flex; flex-direction: column; gap: 8px; padding: 4px 12px 0; }
+.nw-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.nw-tag { padding: 2px 8px; border: 1px solid var(--line); border-radius: 999px; font: 500 11px var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.nw-tag.off { border-color: var(--accent); color: var(--accent); }
+.nw-tag.rejected { border-color: var(--accent); color: var(--accent); }
+.nw-title { font: 700 24px/1.1 var(--f-display); overflow-wrap: anywhere; }
+.nw-meet { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-radius: 10px; background: var(--surface-2); font-size: 14px; }
+.nw-meet a { color: var(--accent); }
+.nw-text { margin: 0; font-size: 15px; line-height: 1.5; overflow-wrap: anywhere; }
+.nw-link { align-self: flex-start; text-decoration: none; min-height: 38px; padding: 6px 12px; font-size: 14px; }
+.nw-go { margin-left: auto; min-height: 38px; padding: 6px 14px; font-size: 14px; }
+.nw-go.on { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.nw-adm { display: flex; flex-direction: column; gap: 8px; padding: 0 12px; }
+.nw-post.past { opacity: .7; }
 .ph-imgact { justify-content: center; }
 .ie-box { z-index: 90; align-items: stretch; justify-content: flex-start; overflow-y: auto; padding: 0; }
 .ie-sheet { width: min(640px, 100%); margin: 0 auto; display: flex; flex-direction: column; gap: 12px; padding: max(14px, env(safe-area-inset-top, 0px)) 16px calc(20px + env(safe-area-inset-bottom, 0px)); background: var(--surface); color: var(--fg); min-height: 100%; }
@@ -4313,7 +4334,7 @@ body.zone-home #srchBtn { display: inline-flex; }
     var pts = {};
     mkVals(D.cars).forEach(function (c) { if (c.kind === 'spotted' && c._owner) pts[c._owner] = (pts[c._owner] || 0) + mkEarn(c); });
     var rows = Object.keys(pts).map(function (uid) { var w = D.wallets[uid] || {}, e = w.earned | 0; return { uid: uid, p: pts[uid], e: e, d: pts[uid] - e }; }).filter(function (x) { return x.d > 0; });
-    var h = '<h3 class="srch-h">Acreditar monedas por cartas aprobadas</h3><p class="status">Cada carta aprobada da 1–10 monedas según la calidad de la foto, más un extra por rareza (Común 0, Poco común 1, Raro 3, Épico 6, Legendario 10). Se acredita solo cada vez que tienes GARAGE abierto con tu cuenta; este botón es por si quieres hacerlo ya.</p>';
+    var h = '<div class="actions"><button class="btn" type="button" data-mk="recalc">Recalcular todos los saldos</button></div>' + '<h3 class="srch-h">Acreditar monedas por cartas aprobadas</h3><p class="status">Cada carta aprobada da 1–10 monedas según la calidad de la foto, más un extra por rareza (Común 0, Poco común 1, Raro 3, Épico 6, Legendario 10). Se acredita solo cada vez que tienes GARAGE abierto con tu cuenta; este botón es por si quieres hacerlo ya.</p>';
     h += rows.length ? '<ul class="srch-list">' + rows.map(function (x) {
       return '<li class="mk-row"><span class="srch-th"></span><span class="t"><b data-noi18n>' + esc(mkName(x.uid, D)) + '</b><span>' + x.p + ' pts aprobados · ya acreditado ' + x.e + '</span></span><span class="mk-act"><button class="btn primary" type="button" data-mk="credit" data-id="' + esc(x.uid) + '" data-v="' + x.d + '">Acreditar ' + x.d + ' monedas</button></span></li>';
     }).join('') + '</ul>' : '<p class="srch-empty">Nadie tiene monedas pendientes por acreditar.</p>';
@@ -4351,10 +4372,11 @@ body.zone-home #srchBtn { display: inline-flex; }
     MK_AUTO.busy = true; MK_AUTO.t = Date.now();
     var n = 0;
     try {
-      var fs = FB.fs, r = await Promise.all([fs.collectionGroup('cars').limit(500).get(), fs.collection('mk_wallet').get()]);
+      var fs = FB.fs, r = await Promise.all([fs.collectionGroup('cars').limit(500).get(), fs.collection('mk_wallet').get(), fs.collection('news').where('status', '==', 'ok').get().catch(function () { return { docs: [] }; })]);
       var pts = {}, ws = {}, now = Date.now(), b = fs.batch();
       r[0].docs.forEach(function (x) { var o = x.data(), ow = x.ref.parent.parent ? x.ref.parent.parent.id : ''; try { applyRev(o); } catch (e) {} if (o.kind === 'spotted' && ow) pts[ow] = (pts[ow] || 0) + mkEarn(o); });
       r[1].docs.forEach(function (x) { ws[x.id] = x.data(); });
+      r[2].docs.forEach(function (x) { var n = x.data(); if (n.from) pts[n.from] = (pts[n.from] || 0) + nwCoins(n); });
       Object.keys(pts).forEach(function (uid) {
         var w = ws[uid] || { coins: 0, earned: 0 }, dd = pts[uid] - (w.earned | 0);
         if (dd > 0) { b.set(fs.collection('mk_wallet').doc(uid), { coins: (w.coins | 0) + dd, earned: (w.earned | 0) + dd, last: '', ts: now }); n++; }
@@ -4483,6 +4505,8 @@ body.zone-home #srchBtn { display: inline-flex; }
         if (rw <= 0) mkFail('El premio tiene que ser mayor que 0.');
         await fs.collection('mk_ch').add({ title: tt.slice(0, 60), desc: ($('#mkChD').value || '').trim().slice(0, 200), reward: rw, ends: now + dd * 86400000, ts: now });
         MK.msg = 'Reto creado.';
+      } else if (k === 'recalc' && me === MK_ADMIN) {
+        MK.msg = await mkRecalc();
       } else if (k === 'credit' && me === MK_ADMIN) {
         var add = parseInt(t.dataset.v, 10) || 0, wr = fs.collection('mk_wallet').doc(id), ws1 = await wr.get(), w1 = ws1.exists ? ws1.data() : { coins: 0, earned: 0 };
         await wr.set({ coins: (w1.coins | 0) + add, earned: (w1.earned | 0) + add, last: '', ts: now });
@@ -4656,7 +4680,8 @@ body.zone-home #srchBtn { display: inline-flex; }
   /* ---------- pestañas ---------- */
   function scFeedHTML() {
     var me = fbMe(), all = SC.feed || [], list = SC.mode === 'follow' ? all.filter(function (p) { return p.owner === me || scFollowing(p.owner); }) : all;
-    var h = '<div class="mk-tabs"><button type="button" class="chip" data-sc="mode" data-v="all" aria-pressed="' + (SC.mode !== 'follow') + '">Para ti</button><button type="button" class="chip" data-sc="mode" data-v="follow" aria-pressed="' + (SC.mode === 'follow') + '">Siguiendo</button></div>';
+    var h = '<div class="mk-tabs">' + [['all', 'Para ti'], ['follow', 'Siguiendo'], ['news', 'Noticias']].map(function (m) { return '<button type="button" class="chip" data-sc="mode" data-v="' + m[0] + '" aria-pressed="' + ((SC.mode || 'all') === m[0]) + '">' + m[1] + '</button>'; }).join('') + '</div>';
+    if (SC.mode === 'news') return h + nwHTML();
     if (!SC.feed) return h + '<p class="srch-empty">Cargando…</p>';
     if (!list.length) return h + '<p class="srch-empty">' + (SC.mode === 'follow' ? 'Las personas que sigues todavía no han publicado. Busca gente en la lupa.' : 'Todavía no hay publicaciones.') + '</p>';
     var show = list.slice(0, SC.n);
@@ -4948,7 +4973,8 @@ body.zone-home #srchBtn { display: inline-flex; }
     e.preventDefault();
     if (k === 'tab') { if (t.dataset.v === 'prof') { SC.prof = null; SC.plist = ''; } return scGo(t.dataset.v); }
     if (k === 'refresh') { SC.feed = null; SC.counts = {}; SC.usersTs = 0; SC.pstats = {}; return scGo(SC.tab); }
-    if (k === 'mode') { SC.mode = t.dataset.v; SC.n = 12; return scRender(); }
+    if (k === 'mode') { SC.mode = t.dataset.v; SC.n = 12; scRender(); if (SC.mode === 'news') { await nwLoad(); scRender(); } return; }
+    if (k.indexOf('nw') === 0) return nwAct(t, k, id);
     if (k === 'moreFeed') { SC.n += 12; return scRender(); }
     if (k === 'push') return pushEnable();
     if (k === 'img') return scImgTap(t);
@@ -5173,6 +5199,162 @@ body.zone-home #srchBtn { display: inline-flex; }
     var f = e.target.files[0]; e.target.value = '';
     try { var r = await hiq(f, FB.user ? 880000 : 600000, [2600, 2200, 1800, 1400, 1100]); ieOpen(r.url, FB.user ? 880000 : 600000, iePhotoSave(id)); } catch (x) { if (!x || x.message !== 'nsfw') alert('No se pudo usar esa foto.'); }
   });
+
+  /* ================= Noticias (Social): car meets, noticias, mods y avisos de GARAGE ================= */
+  var NW = { list: null, mine: [], pend: [], cat: 'all', form: false, edit: null, img: '', busy: false, go: {}, goN: {}, lk: {}, lkN: {}, cms: {}, open: {} };
+  var NW_CAT = [['all', 'Todo'], ['meet', 'Car meets'], ['news', 'Noticias'], ['mod', 'Mods y tips'], ['garage', 'GARAGE']];
+  function nwCatName(c) { var x = NW_CAT.filter(function (y) { return y[0] === c; })[0]; return x ? x[1] : ''; }
+  function nwCoins(n) { if (!n || n.status !== 'ok') return 0; return 2 + (n.img ? 1 : 0) + (n.link ? 1 : 0) + ((n.text || '').length >= 120 ? 1 : 0); }
+  function nwWhen(ts) { try { return new Date(ts).toLocaleString(LANG === 'en' ? 'en-US' : 'es', { weekday: 'short', day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' }); } catch (e) { return ''; } }
+  async function nwLoad() {
+    var me = fbMe(), admin = me === MK_ADMIN, fs = FB.fs; if (!fs) return;
+    var od = function (x) { var o = x.data(); o.id = x.id; return o; }, none = { docs: [] }, safe = function (p) { return p.catch(function () { return none; }); };
+    var r = await Promise.all([safe(fs.collection('news').where('status', '==', 'ok').limit(150).get()), me ? safe(fs.collection('news').where('from', '==', me).get()) : none, admin ? safe(fs.collection('news').where('status', '==', 'pending').get()) : none,
+      safe(fs.collection('news_go').limit(1000).get()), safe(fs.collection('news_likes').limit(1000).get()), safe(fs.collection('news_cmts').limit(1000).get())]);
+    if (!SC.users) { try { await scUsers(); } catch (e) {} }
+    NW.list = r[0].docs.map(od).filter(function (n) { return !scBlocked(n.from); });
+    NW.mine = r[1].docs.map(od); NW.pend = r[2].docs.map(od);
+    NW.go = {}; NW.goN = {}; r[3].docs.forEach(function (x) { var g = x.data(); NW.goN[g.news] = (NW.goN[g.news] || 0) + 1; if (g.uid === me) NW.go[g.news] = 1; });
+    NW.lk = {}; NW.lkN = {}; r[4].docs.forEach(function (x) { var g = x.data(); NW.lkN[g.news] = (NW.lkN[g.news] || 0) + 1; if (g.uid === me) NW.lk[g.news] = 1; });
+    NW.cms = {}; r[5].docs.forEach(function (x) { var c = od(x); if (scBlocked(c.from)) return; (NW.cms[c.news] = NW.cms[c.news] || []).push(c); });
+    Object.keys(NW.cms).forEach(function (k) { NW.cms[k].sort(function (a, b) { return a.ts - b.ts; }); });
+  }
+  function nwFormHTML() {
+    var me = fbMe(), e = NW.edit || {}, cat = e.cat || 'meet', admin = me === MK_ADMIN;
+    var cats = NW_CAT.filter(function (c) { return c[0] !== 'all' && (c[0] !== 'garage' || admin); });
+    var dt = e.when ? new Date(e.when - new Date(e.when).getTimezoneOffset() * 60000).toISOString().slice(0, 16) : '';
+    return '<div class="nw-form" id="nwForm"><b class="nw-ft">' + (NW.edit ? 'Editar publicación' : 'Nueva publicación') + '</b>' +
+      '<div class="field"><label for="nwCat">Categoría</label><select id="nwCat">' + cats.map(function (c) { return '<option value="' + c[0] + '"' + (c[0] === cat ? ' selected' : '') + '>' + c[1] + '</option>'; }).join('') + '</select></div>' +
+      '<div class="field"><label for="nwTitle">Título</label><input type="text" id="nwTitle" maxlength="100" placeholder="Ej: Car meet en Doral este sábado" value="' + esc(e.title || '') + '"></div>' +
+      '<div class="field"><label for="nwText">Texto</label><textarea id="nwText" maxlength="1000" rows="4" placeholder="Cuéntalo con tus palabras">' + esc(e.text || '') + '</textarea></div>' +
+      '<div class="f2 nw-meetf"><div class="field"><label for="nwWhen">Fecha y hora (car meets)</label><input type="datetime-local" id="nwWhen" value="' + dt + '"></div><div class="field"><label for="nwPlace">Lugar (car meets)</label><input type="text" id="nwPlace" maxlength="120" placeholder="Dirección o lugar" value="' + esc(e.place || '') + '"></div></div>' +
+      '<div class="field"><label for="nwLink">Link a la fuente (opcional)</label><input type="url" id="nwLink" maxlength="300" placeholder="https://…" value="' + esc(e.link || '') + '"></div>' +
+      '<div class="field"><span class="lbl">Foto (opcional)</span><div class="nw-imgrow"><img id="nwPrev" alt=""' + (NW.img ? ' src="' + esc(NW.img) + '"' : ' hidden') + '><label class="btn">' + (NW.img ? 'Cambiar foto' : 'Subir foto') + '<input class="sr" type="file" accept="image/*" data-nwimg="1"></label>' + (NW.img ? '<button class="btn" type="button" data-sc="nwImgDel">Quitar</button>' : '') + '</div></div>' +
+      '<p class="status">' + (admin ? 'Como admin, se publica de una.' : 'GARAGE la revisa antes de publicarla. Si la aprueban ganas 2–5 monedas. No copies artículos completos: resume y pon el link.') + '</p>' +
+      '<div class="actions"><button class="btn primary" type="button" data-sc="nwSave">' + (NW.edit ? 'Guardar y reenviar' : 'Publicar') + '</button><button class="btn" type="button" data-sc="nwCancel">Cancelar</button></div></div>';
+  }
+  function nwCardHTML(n, mode) {
+    var me = fbMe(), u = scU(n.from), off = n.cat === 'garage' || n.from === MK_ADMIN, past = n.cat === 'meet' && n.when && n.when < Date.now() - 6 * 3600000;
+    var cms = NW.cms[n.id] || [], h = '<article class="sc-post nw-post' + (past ? ' past' : '') + '">';
+    h += '<header class="sc-ph"><button type="button" class="sc-who" data-sc="user" data-id="' + esc(n.from) + '">' + avHTML(u, u.name, 'ph-av sm') + '<b data-noi18n>@' + esc(u.name) + '</b></button><span class="sc-sub">' + scAgo(n.ts) + '</span></header>';
+    if (n.img) h += '<div class="nw-img"><img src="' + esc(n.img) + '" alt="" loading="lazy" decoding="async"></div>';
+    h += '<div class="nw-body"><div class="nw-tags"><span class="nw-tag">' + nwCatName(n.cat) + '</span>' + (off ? '<span class="nw-tag off">GARAGE · Oficial</span>' : '') + (n.pinned ? '<span class="nw-tag">Fijada</span>' : '') + (past ? '<span class="nw-tag">Ya pasó</span>' : '') + (mode === 'mine' ? '<span class="nw-tag ' + n.status + '">' + ({ pending: 'En revisión', ok: 'Publicada', rejected: 'Rechazada' }[n.status] || '') + '</span>' : '') + '</div>';
+    h += '<b class="nw-title" data-noi18n>' + esc(n.title) + '</b>';
+    if (n.cat === 'meet' && (n.when || n.place)) h += '<div class="nw-meet">' + (n.when ? '<span><b>Cuándo:</b> ' + esc(nwWhen(n.when)) + '</span>' : '') + (n.place ? '<span><b>Dónde:</b> <span data-noi18n>' + esc(n.place) + '</span> · <a href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(n.place) + '" target="_blank" rel="noopener">Ver en el mapa ↗</a></span>' : '') + '</div>';
+    if (n.text) h += '<p class="nw-text" data-noi18n>' + esc(n.text).replace(/\n/g, '<br>') + '</p>';
+    if (n.link) h += '<a class="btn nw-link" href="' + esc(n.link) + '" target="_blank" rel="noopener nofollow">Leer en la fuente ↗</a>';
+    if (mode === 'mine' && n.status === 'rejected' && n.note) h += '<p class="status err" data-noi18n>Motivo: ' + esc(n.note) + '</p>';
+    h += '</div>';
+    if (mode === 'review') {
+      h += '<div class="nw-adm"><label class="sr" for="nwNote-' + esc(n.id) + '">Nota para quien la publicó</label><input type="text" id="nwNote-' + esc(n.id) + '" maxlength="200" placeholder="Nota si la rechazas (opcional)"><div class="actions"><button class="btn primary" type="button" data-sc="nwOk" data-id="' + esc(n.id) + '">Aprobar</button><button class="btn" type="button" data-sc="nwNo" data-id="' + esc(n.id) + '">Rechazar</button></div></div>';
+    } else if (mode === 'mine') {
+      h += '<div class="nw-adm actions"><button class="btn" type="button" data-sc="nwEdit" data-id="' + esc(n.id) + '">Editar' + (n.status === 'rejected' ? ' y reenviar' : '') + '</button><button class="btn" type="button" data-sc="nwDel" data-id="' + esc(n.id) + '">Borrar</button></div>';
+    } else {
+      var lk = !!NW.lk[n.id];
+      h += '<div class="sc-bar"><button type="button" class="sc-ic like' + (lk ? ' on' : '') + '" data-sc="nwLike" data-id="' + esc(n.id) + '" aria-label="Me gusta" aria-pressed="' + lk + '">' + ic(IC.heart) + '</button><button type="button" class="sc-ic" data-sc="nwCm" data-id="' + esc(n.id) + '" aria-label="Comentarios">' + ic(IC.cmt) + '</button><button type="button" class="sc-ic" data-sc="nwShare" data-id="' + esc(n.id) + '" aria-label="Compartir">' + ic(IC.dm) + '</button>' +
+        (n.cat === 'meet' && !past ? '<button type="button" class="btn nw-go' + (NW.go[n.id] ? ' on' : '') + '" data-sc="nwGo" data-id="' + esc(n.id) + '" aria-pressed="' + !!NW.go[n.id] + '">' + (NW.go[n.id] ? 'Voy ✓' : 'Voy') + ' · ' + (NW.goN[n.id] || 0) + '</button>' : '') + '</div>';
+      h += '<p class="sc-likes">' + (NW.lkN[n.id] ? NW.lkN[n.id] + ' me gusta' : '') + '</p>';
+      if (NW.open[n.id]) {
+        h += '<div class="sc-cms">' + (cms.length ? cms.map(function (c) { return '<p class="sc-cm"><b data-noi18n>@' + esc(c.name || scU(c.from).name) + '</b> <span data-noi18n>' + esc(c.text) + '</span> <span class="sc-sub">' + scAgo(c.ts) + '</span></p>'; }).join('') : '<p class="sc-sub" style="padding:0 12px">Todavía no hay comentarios.</p>') +
+          (me ? '<div class="sc-cmform quick"><label class="sr" for="nwI-' + esc(n.id) + '">Comentario</label><input type="text" id="nwI-' + esc(n.id) + '" data-nwc="' + esc(n.id) + '" maxlength="300" placeholder="Agrega un comentario…" autocomplete="off"><button class="sc-post-btn" type="button" data-sc="nwCmSend" data-id="' + esc(n.id) + '">Publicar</button></div>' : '') + '</div>';
+      } else if (cms.length) h += '<div class="sc-cms"><button type="button" class="sc-more" data-sc="nwCm" data-id="' + esc(n.id) + '">Ver ' + (cms.length === 1 ? 'el comentario' : 'los ' + cms.length + ' comentarios') + '</button></div>';
+    }
+    return h + '</article>';
+  }
+  function nwHTML() {
+    var me = fbMe(), admin = me === MK_ADMIN;
+    var h = '<div class="nw-top"><div class="mk-tabs">' + NW_CAT.map(function (c) { return '<button type="button" class="chip" data-sc="nwCatF" data-v="' + c[0] + '" aria-pressed="' + (NW.cat === c[0]) + '">' + c[1] + '</button>'; }).join('') + '</div>' + (me ? '<button class="btn primary" type="button" data-sc="nwNew">+ Publicar</button>' : '') + '</div>';
+    if (NW.form) h += nwFormHTML();
+    if (!NW.list) return h + '<p class="srch-empty">Cargando…</p>';
+    if (admin && NW.pend.length) h += '<h3 class="srch-h">Por revisar (' + NW.pend.length + ')</h3><div class="sc-feed">' + NW.pend.map(function (n) { return nwCardHTML(n, 'review'); }).join('') + '</div>';
+    var mineOpen = NW.mine.filter(function (n) { return n.status !== 'ok'; });
+    if (mineOpen.length) h += '<h3 class="srch-h">Tus publicaciones</h3><div class="sc-feed">' + mineOpen.map(function (n) { return nwCardHTML(n, 'mine'); }).join('') + '</div>';
+    var now = Date.now(), list = NW.list.filter(function (n) { return NW.cat === 'all' || n.cat === NW.cat; });
+    list.sort(function (a, b) {
+      if (!!b.pinned !== !!a.pinned) return b.pinned ? 1 : -1;
+      var am = a.cat === 'meet' && a.when > now, bm = b.cat === 'meet' && b.when > now;
+      if (am && bm) return a.when - b.when;
+      if (am !== bm) return am ? -1 : 1;
+      return (b.ts || 0) - (a.ts || 0);
+    });
+    h += list.length ? '<div class="sc-feed">' + list.map(function (n) { return nwCardHTML(n, n.from === me ? 'own' : 'view'); }).join('') + '</div>' : '<p class="srch-empty">Todavía no hay publicaciones aquí. ¡Sé el primero!</p>';
+    return h;
+  }
+  async function nwAct(t, k, id) {
+    var me = fbMe(), fs = FB.fs, now = Date.now(), admin = me === MK_ADMIN;
+    if (k === 'nwCatF') { NW.cat = t.dataset.v; return scRender(); }
+    if (k === 'nwNew') { if (!me) return scToast('Entra a tu cuenta para publicar.'); NW.form = !NW.form; NW.edit = null; NW.img = ''; scRender(); var ti = $('#nwTitle'); if (ti) ti.focus(); return; }
+    if (k === 'nwCancel') { NW.form = false; NW.edit = null; NW.img = ''; return scRender(); }
+    if (k === 'nwImgDel') { NW.img = ''; var keep = nwKeep(); scRender(); nwRestore(keep); return; }
+    if (k === 'nwEdit') { var e0 = NW.mine.filter(function (n) { return n.id === id; })[0]; if (!e0) return; NW.form = true; NW.edit = e0; NW.img = e0.img || ''; scRender(); var f0 = $('#nwForm'); if (f0) f0.scrollIntoView({ block: 'start' }); return; }
+    if (!me || NW.busy) return;
+    NW.busy = true;
+    try {
+      if (k === 'nwSave') {
+        var cat = $('#nwCat').value, title = $('#nwTitle').value.trim(), text = $('#nwText').value.trim(), link = $('#nwLink').value.trim(), place = $('#nwPlace').value.trim(), wv = $('#nwWhen').value;
+        if (title.length < 3) throw new Error('Ponle un título (mínimo 3 letras).');
+        if (link && !/^https:\/\//i.test(link)) throw new Error('El link tiene que empezar con https://');
+        if (cat === 'meet' && !wv) throw new Error('Pon la fecha y hora del car meet.');
+        var doc = { from: me, cat: cat, title: title.slice(0, 100), text: text.slice(0, 1000), link: link.slice(0, 300), img: NW.img || '', when: wv ? new Date(wv).getTime() : 0, place: place.slice(0, 120), status: admin ? 'ok' : 'pending', note: '', pinned: NW.edit ? !!NW.edit.pinned && admin : false, ts: NW.edit ? (NW.edit.ts || now) : now };
+        if (NW.edit) { doc.edited = now; await fs.collection('news').doc(NW.edit.id).set(doc); } else await fs.collection('news').add(doc);
+        NW.form = false; NW.edit = null; NW.img = '';
+        scToast(admin ? 'Publicado.' : 'Enviado. GARAGE lo revisa y te avisamos.');
+      } else if (k === 'nwDel') {
+        if (!confirm('¿Borrar esta publicación?')) { NW.busy = false; return; }
+        await fs.collection('news').doc(id).delete();
+      } else if ((k === 'nwOk' || k === 'nwNo' || k === 'nwPin') && admin) {
+        var up = k === 'nwOk' ? { status: 'ok', note: '' } : k === 'nwNo' ? { status: 'rejected', note: (($('#nwNote-' + id) || {}).value || '').trim().slice(0, 200) } : null;
+        if (up) await fs.collection('news').doc(id).update(up);
+      } else if (k === 'nwLike' || k === 'nwGo') {
+        var col = k === 'nwLike' ? 'news_likes' : 'news_go', mp = k === 'nwLike' ? NW.lk : NW.go, cn = k === 'nwLike' ? NW.lkN : NW.goN, ref = fs.collection(col).doc(id + '_' + me);
+        if (mp[id]) { await ref.delete(); delete mp[id]; cn[id] = Math.max(0, (cn[id] || 1) - 1); }
+        else { await ref.set({ news: id, uid: me, ts: now }); mp[id] = 1; cn[id] = (cn[id] || 0) + 1; }
+        NW.busy = false; return scRender();
+      } else if (k === 'nwCm') { NW.open[id] = !NW.open[id]; NW.busy = false; scRender(); var ci = document.getElementById('nwI-' + id); if (ci) ci.focus(); return; }
+      else if (k === 'nwCmSend') { await nwCmSend(id); NW.busy = false; return; }
+      else if (k === 'nwShare') {
+        var n = (NW.list || []).filter(function (x) { return x.id === id; })[0], url = location.origin + location.pathname + '#social';
+        try { if (navigator.share) await navigator.share({ title: n ? n.title : 'GARAGE', text: n ? n.title : '', url: url }); else { await navigator.clipboard.writeText((n ? n.title + ' · ' : '') + url); scToast('Link copiado.'); } } catch (x) {}
+        NW.busy = false; return;
+      }
+      await nwLoad();
+    } catch (e) { scToast(e && e.message && !e.code ? e.message : (e && e.code === 'permission-denied' ? 'Firebase no lo permitió. Revisa que estén publicadas las reglas de Noticias.' : 'Algo falló. Intenta otra vez.')); }
+    NW.busy = false;
+    scRender();
+  }
+  async function nwCmSend(id) {
+    var me = fbMe(), inp = document.getElementById('nwI-' + id); if (!me || !inp) return;
+    var text = inp.value.trim().slice(0, 300); if (!text) return; inp.value = '';
+    try {
+      var c = { news: id, from: me, name: FB.prof.name, text: text, ts: Date.now() };
+      await FB.fs.collection('news_cmts').add(c);
+      (NW.cms[id] = NW.cms[id] || []).push(c); scRender(); var i2 = document.getElementById('nwI-' + id); if (i2) i2.focus();
+    } catch (e) { inp.value = text; scToast('No se pudo comentar.'); }
+  }
+  function nwKeep() { var o = {}; ['nwCat', 'nwTitle', 'nwText', 'nwLink', 'nwPlace', 'nwWhen'].forEach(function (k) { var el = $('#' + k); if (el) o[k] = el.value; }); return o; }
+  function nwRestore(o) { Object.keys(o).forEach(function (k) { var el = $('#' + k); if (el) el.value = o[k]; }); }
+  document.addEventListener('change', async function (e) {
+    if (!e.target.dataset || !e.target.dataset.nwimg || !e.target.files || !e.target.files[0]) return;
+    var f = e.target.files[0]; e.target.value = '';
+    try { var r = await hiq(f, 340000, [2000, 1600, 1300, 1000, 800]); var keep = nwKeep(); NW.img = r.url; scRender(); nwRestore(keep); }
+    catch (x) { if (!x || x.message !== 'nsfw') scToast('No se pudo usar esa foto.'); }
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Enter' && e.target.dataset && e.target.dataset.nwc) { e.preventDefault(); nwCmSend(e.target.dataset.nwc); } });
+  /* Recalcular saldos con el sistema de monedas actual (cartas aprobadas + noticias), respetando cambios y premios */
+  async function mkRecalc() {
+    var fs = FB.fs, r = await Promise.all([fs.collectionGroup('cars').limit(500).get(), fs.collection('mk_wallet').get(), fs.collection('news').where('status', '==', 'ok').get().catch(function () { return { docs: [] }; })]);
+    var pts = {}, ws = {}, now = Date.now(), b = fs.batch(), n = 0;
+    r[0].docs.forEach(function (x) { var o = x.data(), ow = x.ref.parent.parent ? x.ref.parent.parent.id : ''; try { applyRev(o); } catch (e) {} if (o.kind === 'spotted' && ow) pts[ow] = (pts[ow] || 0) + mkEarn(o); });
+    r[2].docs.forEach(function (x) { var nn = x.data(); if (nn.from) pts[nn.from] = (pts[nn.from] || 0) + nwCoins(nn); });
+    r[1].docs.forEach(function (x) { ws[x.id] = x.data(); });
+    Object.keys(Object.assign({}, pts, ws)).forEach(function (uid) {
+      var w = ws[uid] || { coins: 0, earned: 0 }, ne = pts[uid] || 0, nc = Math.max(0, (w.coins | 0) - (w.earned | 0) + ne);
+      if (nc !== (w.coins | 0) || ne !== (w.earned | 0)) { b.set(fs.collection('mk_wallet').doc(uid), { coins: nc, earned: ne, last: '', ts: now }); n++; }
+    });
+    if (n) await b.commit();
+    MK_AUTO.t = Date.now();
+    return n ? 'Saldos recalculados (' + n + ' cuentas).' : 'Los saldos ya estaban al día.';
+  }
 
   /* ================= Buscador: perfiles y contenido ================= */
   var SR = { open: false, seq: 0, t: null, pool: null, poolTs: 0 };
