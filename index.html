@@ -712,6 +712,13 @@ body.zone-home .home-btn.tp-btn { display: inline-flex; }
 body.dash-collect .home-tile.spot, body.dash-collect .home-tile.social, body.dash-collect #scBtn { display: none !important; }
 @media (min-width: 641px) { body.dash-collect .home-tile { min-height: 380px; } }
 /* ---------- social ---------- */
+.ph-imgact { justify-content: center; }
+.ie-box { z-index: 90; align-items: stretch; justify-content: flex-start; overflow-y: auto; padding: 0; }
+.ie-sheet { width: min(640px, 100%); margin: 0 auto; display: flex; flex-direction: column; gap: 12px; padding: max(14px, env(safe-area-inset-top, 0px)) 16px calc(20px + env(safe-area-inset-bottom, 0px)); background: var(--surface); color: var(--fg); min-height: 100%; }
+.ie-title { font: 700 26px/1 var(--f-display); }
+.ie-stage { display: grid; place-items: center; padding: 10px; border-radius: 12px; background: #000; min-height: 200px; }
+.ie-stage canvas { max-width: 100%; max-height: 52vh; height: auto; display: block; }
+.ie-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 .sc-img { overflow: hidden; touch-action: manipulation; }
 .sc-burst { position: absolute; left: 50%; top: 50%; width: 96px; height: 96px; margin: -48px 0 0 -48px; color: #fff; opacity: 0; transform: scale(.4); pointer-events: none; filter: drop-shadow(0 6px 18px rgba(0, 0, 0, .45)); }
 .sc-burst svg { width: 100%; height: 100%; fill: #fff; stroke: none; }
@@ -2869,6 +2876,7 @@ body.zone-home #srchBtn { display: inline-flex; }
     var sib = x.group ? groupPhotos(ph.photos).find(function (gr) { return gr.id === x.group; }) : null;
     var strip = sib && sib.photos.length > 1 ? '<div class="up-thumbs">' + sib.photos.map(function (y) { return '<button type="button" class="thumb" data-act="phOpen" data-id="' + esc(y.id) + '" aria-pressed="' + (y.id === x.id) + '"><img src="' + esc(y.data) + '" alt=""></button>'; }).join('') + '</div>' : '';
     root.innerHTML = '<div class="scrim" data-act="phClose"></div><div class="ph-light" role="dialog" aria-modal="true" aria-label="Foto"><img src="' + esc(x.data) + '" alt="' + esc(x.cap || 'Foto') + '">' + strip +
+      '<div class="actions ph-imgact"><button class="btn" type="button" data-imged="' + esc(x.id) + '">Editar imagen</button><label class="btn">Reemplazar imagen<input class="sr" type="file" accept="image/*" data-imgrep="' + esc(x.id) + '"></label></div>' +
       '<div class="ph-meta"><div class="field"><label for="phCap">Descripción</label><input type="text" id="phCap" maxlength="100" autocomplete="off" placeholder="Carro, lugar, evento…" value="' + esc(x.cap || '') + '"></div>' +
       '<div class="f2"><div class="field"><label for="phCam">Cámara</label><input type="text" id="phCam" list="camList" maxlength="60" autocomplete="off" placeholder="Sony A7 IV, iPhone 15 Pro…" value="' + esc(x.cam || '') + '"></div>' +
       '<div class="field"><label for="phLens">Lente</label><input type="text" id="phLens" maxlength="60" autocomplete="off" placeholder="24-70mm f/2.8" value="' + esc(x.lens || '') + '"></div></div>' +
@@ -5069,6 +5077,99 @@ body.zone-home #srchBtn { display: inline-flex; }
     else if (t.dataset.gopen) gOpenSheet(t.dataset.gopen, false);
     else if (t.dataset.resub) { t.disabled = true; t.textContent = 'Enviando…'; gResubmit(t.dataset.resub); }
   }, true);
+
+  /* ================= Editor de imagen del portafolio: girar, encuadrar, ajustes y reemplazar ================= */
+  var IE = { img: null, done: null, limit: 880000, rot: 0, z: 1, x: 50, y: 50, b: 100, k: 100, s: 100, w: 0, e: 0, asp: 'orig', raf: 0, busy: false };
+  var IE_K = [['z', 'Zoom', 1, 3, 0.05], ['x', 'Horizontal', 0, 100, 1], ['y', 'Vertical', 0, 100, 1], ['e', 'Exposición', -1, 1, 0.1], ['b', 'Brillo', 50, 150, 1], ['k', 'Contraste', 50, 150, 1], ['s', 'Saturación', 0, 200, 1], ['w', 'Temperatura', -50, 50, 1]];
+  function ieReset() { IE.rot = 0; IE.z = 1; IE.x = 50; IE.y = 50; IE.b = 100; IE.k = 100; IE.s = 100; IE.w = 0; IE.e = 0; IE.asp = 'orig'; }
+  function ieOpen(src, limit, done) {
+    ieReset(); IE.limit = limit; IE.done = done; IE.img = null;
+    var im = new Image(); im.onload = function () { IE.img = im; ieRender(); }; im.onerror = function () { alert('No se pudo abrir la imagen.'); }; im.src = src;
+  }
+  function ieClose() { var b = $('#ieBox'); if (b) b.remove(); IE.img = null; IE.done = null; }
+  function ieDraw(max) {
+    var im = IE.img, W = im.naturalWidth, H = im.naturalHeight, sc = Math.min(1, 3000 / Math.max(W, H));
+    var w = Math.round(W * sc), h = Math.round(H * sc), rot = ((IE.rot % 360) + 360) % 360, sw = rot % 180 ? h : w, sh = rot % 180 ? w : h;
+    var r = document.createElement('canvas'); r.width = sw; r.height = sh;
+    var g = r.getContext('2d'); g.imageSmoothingQuality = 'high'; g.translate(sw / 2, sh / 2); g.rotate(rot * Math.PI / 180); g.drawImage(im, -w / 2, -h / 2, w, h);
+    var A = IE.asp === '1' ? 1 : IE.asp === '45' ? 0.8 : IE.asp === '169' ? 16 / 9 : sw / sh;
+    var cw = sw, ch = cw / A; if (ch > sh) { ch = sh; cw = ch * A; }
+    cw /= IE.z; ch /= IE.z;
+    var cx = (sw - cw) * IE.x / 100, cy = (sh - ch) * IE.y / 100, k = Math.min(1, max / Math.max(cw, ch));
+    var o = document.createElement('canvas'); o.width = Math.max(1, Math.round(cw * k)); o.height = Math.max(1, Math.round(ch * k));
+    var og = o.getContext('2d'); og.imageSmoothingQuality = 'high'; og.drawImage(r, cx, cy, cw, ch, 0, 0, o.width, o.height);
+    return o;
+  }
+  function ieBake(c) {
+    var br = IE.b / 100 * Math.pow(2, IE.e), ct = IE.k / 100, sa = IE.s / 100, wm = IE.w / 50;
+    if (br === 1 && ct === 1 && sa === 1 && !wm) return c;
+    var g = c.getContext('2d'), im = g.getImageData(0, 0, c.width, c.height), p = im.data, cl = function (v) { return v < 0 ? 0 : v > 255 ? 255 : v; };
+    for (var i = 0; i < p.length; i += 4) {
+      var r = (p[i] * br - 128) * ct + 128, gg = (p[i + 1] * br - 128) * ct + 128, b = (p[i + 2] * br - 128) * ct + 128;
+      var l = 0.2126 * r + 0.7152 * gg + 0.0722 * b;
+      r = l + (r - l) * sa; gg = l + (gg - l) * sa; b = l + (b - l) * sa;
+      if (wm) { r += wm * 30; gg += wm * 6; b -= wm * 30; }
+      p[i] = cl(r); p[i + 1] = cl(gg); p[i + 2] = cl(b);
+    }
+    g.putImageData(im, 0, 0);
+    return c;
+  }
+  function iePreview() {
+    cancelAnimationFrame(IE.raf);
+    IE.raf = requestAnimationFrame(function () {
+      var cv = $('#iePrev'); if (!cv || !IE.img) return;
+      var src = ieBake(ieDraw(720)); cv.width = src.width; cv.height = src.height; cv.getContext('2d').drawImage(src, 0, 0);
+    });
+  }
+  function ieRender() {
+    var box = $('#ieBox'); if (!box) { box = document.createElement('div'); box.id = 'ieBox'; box.className = 'sc-zoom ie-box'; document.body.appendChild(box); }
+    var asp = [['orig', 'Original'], ['1', '1:1'], ['45', '4:5'], ['169', '16:9']];
+    box.innerHTML = '<div class="ie-sheet" role="dialog" aria-modal="true" aria-label="Editar imagen"><b class="ie-title">Editar imagen</b>' +
+      '<div class="ie-stage"><canvas id="iePrev"></canvas></div>' +
+      '<div class="ie-row"><button class="btn" type="button" data-ie="rotL">↺ Girar</button><button class="btn" type="button" data-ie="rotR">Girar ↻</button>' +
+      asp.map(function (a) { return '<button type="button" class="chip" data-ie="asp" data-v="' + a[0] + '" aria-pressed="' + (IE.asp === a[0]) + '">' + a[1] + '</button>'; }).join('') + '</div>' +
+      '<div class="crop-ctl">' + IE_K.map(function (k) { return '<label for="ie_' + k[0] + '">' + k[1] + '</label><input id="ie_' + k[0] + '" type="range" data-iek="' + k[0] + '" min="' + k[2] + '" max="' + k[3] + '" step="' + k[4] + '" value="' + IE[k[0]] + '">'; }).join('') + '</div>' +
+      '<p class="status" id="ieMsg"></p>' +
+      '<div class="actions"><button class="btn" type="button" data-ie="reset">Restablecer</button><button class="btn" type="button" data-ie="cancel">Cancelar</button><button class="btn primary" type="button" data-ie="save">Guardar</button></div></div>';
+    iePreview();
+  }
+  async function ieSave() {
+    if (IE.busy || !IE.img || !IE.done) return;
+    IE.busy = true; var msg = $('#ieMsg'); if (msg) msg.textContent = 'Guardando en alta calidad…';
+    var out = null, sizes = [2600, 2200, 1800, 1400, 1100, 900], qs = [0.92, 0.87, 0.82, 0.76];
+    for (var i = 0; i < sizes.length && !out; i++) { var c = ieBake(ieDraw(sizes[i])); for (var j = 0; j < qs.length; j++) { var u = c.toDataURL('image/jpeg', qs[j]); if (u.length <= IE.limit) { out = u; break; } } }
+    try {
+      if (!out) throw new Error('big');
+      await IE.done(out);
+      ieClose();
+    } catch (e) { if (msg) msg.textContent = 'No se pudo guardar. Intenta otra vez.'; }
+    IE.busy = false;
+  }
+  function iePhotoSave(id) {
+    return function (url) {
+      var px = ph.photos.find(function (q) { return q.id === id; }); if (!px) return Promise.reject(new Error('nf'));
+      var old = px.data; px.data = url;
+      return phPut(px).then(function (ok) { if (ok === false) { px.data = old; throw new Error('save'); } try { renderPhView(); renderPhoto(); } catch (e) {} if (typeof SC !== 'undefined') SC.feed = null; });
+    };
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-ie],[data-imged]'); if (!t) return;
+    if (t.dataset.imged) { e.preventDefault(); var px = ph.photos.find(function (q) { return q.id === t.dataset.imged; }); if (px) ieOpen(px.data, FB.user ? 880000 : 600000, iePhotoSave(px.id)); return; }
+    e.preventDefault();
+    var k = t.dataset.ie;
+    if (k === 'rotL') { IE.rot -= 90; iePreview(); }
+    else if (k === 'rotR') { IE.rot += 90; iePreview(); }
+    else if (k === 'asp') { IE.asp = t.dataset.v; IE.x = 50; IE.y = 50; ieRender(); }
+    else if (k === 'reset') { ieReset(); ieRender(); }
+    else if (k === 'cancel') ieClose();
+    else if (k === 'save') ieSave();
+  }, true);
+  document.addEventListener('input', function (e) { var k = e.target.dataset && e.target.dataset.iek; if (k) { IE[k] = +e.target.value; iePreview(); } });
+  document.addEventListener('change', async function (e) {
+    var id = e.target.dataset && e.target.dataset.imgrep; if (!id || !e.target.files || !e.target.files[0]) return;
+    var f = e.target.files[0]; e.target.value = '';
+    try { var r = await hiq(f, FB.user ? 880000 : 600000, [2600, 2200, 1800, 1400, 1100]); ieOpen(r.url, FB.user ? 880000 : 600000, iePhotoSave(id)); } catch (x) { if (!x || x.message !== 'nsfw') alert('No se pudo usar esa foto.'); }
+  });
 
   /* ================= Buscador: perfiles y contenido ================= */
   var SR = { open: false, seq: 0, t: null, pool: null, poolTs: 0 };
