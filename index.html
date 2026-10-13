@@ -5047,6 +5047,13 @@ body.dash-social .home-tile.seasons { order: 9; }
     var x = svH(seed, mode) % 100, r = x < 50 ? 0 : x < 80 ? 1 : x < 93 ? 2 : x < 99 ? 3 : 4;
     var L = SV_BY[r]; return { rar: r, car: L[svH(seed + '#', mode) % L.length].id };
   }
+  /* misma mezcla que las reglas de Firestore (hora del servidor al crear el pack) */
+  function svRoll2(at, i) {
+    var P = 2147483647, s = ((at % 1000003) * 48271 + 12345) % P;
+    for (var k = 0; k < i; k++) s = (s * 16807) % P;
+    var x = s % 100, r = x < 50 ? 0 : x < 80 ? 1 : x < 93 ? 2 : x < 99 ? 3 : 4;
+    var L = SV_BY[r]; return { rar: r, car: L[((s * 48271) % P) % L.length].id };
+  }
   function svWeek() { return Math.floor(Date.now() / 604800000); }
   function svTs() { return firebase.firestore.FieldValue.serverTimestamp(); }
   function svMs(v) { return v && v.toMillis ? v.toMillis() : (typeof v === 'number' ? v : 0); }
@@ -5392,7 +5399,7 @@ body.dash-social .home-tile.seasons { order: 9; }
     for (var k = 0; k < 2; k++) {
       var mode = modes[k], b = FB.fs.batch(), out = [];
       for (var i = 0; i < 3; i++) {
-        var inst = pid + '_' + i, r = svRoll(inst + '|' + at, mode);
+        var inst = pid + '_' + i, r = svRoll2(at, i);
         out.push({ id: inst, car: r.car, rar: r.rar });
         b.set(svCol('sv_cards').doc(inst), { pack: pid, i: i, car: r.car, rar: r.rar, owner: me, at: svTs() });
       }
