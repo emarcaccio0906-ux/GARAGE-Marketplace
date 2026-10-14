@@ -1190,6 +1190,74 @@ body.is-app .mk-page { padding-top: env(safe-area-inset-top, 0px); }
 body.is-app.has-gnav .sc-nav { top: env(safe-area-inset-top, 0px); }
 body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: none; user-select: none; }
 @media (prefers-reduced-motion: reduce) { body.has-gnav .mk-page, .gn-splash b { animation: none; } }
+/* ---------- Mi cuenta: cartas físicas + GARAGE+ ---------- */
+.gn-me { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0 4px; }
+.gn-me-b { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--fg); font: inherit; text-align: left; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease; }
+.gn-me-b:active { transform: scale(.97); }
+@media (hover: hover) { .gn-me-b:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.15); } }
+.gn-me-b b { display: block; font-size: 14px; }
+.gn-me-b small { display: block; font-size: 12px; color: var(--muted); }
+.gn-me-i { display: grid; place-items: center; flex: 0 0 38px; height: 38px; border-radius: 11px; background: var(--surface-2, rgba(127,127,127,.15)); font-size: 18px; }
+.gn-me-b.plus .gn-me-i { background: linear-gradient(140deg, #F7D774, #B8862B); color: #3A2600; }
+.gn-me-b.plus.on { border-color: #D9A93A; background: linear-gradient(120deg, rgba(247,215,116,.16), transparent 70%), var(--surface); }
+.pc-hero { display: grid; grid-template-columns: minmax(0, 1fr) 170px; gap: 18px; align-items: center; padding: 18px; border-radius: 16px; background: linear-gradient(120deg, #13213A, #1E1430 60%, #2A1B12); color: #fff; margin-bottom: 8px; }
+.pc-hero small { font: 600 11px var(--f-mono, monospace); letter-spacing: .18em; text-transform: uppercase; opacity: .75; }
+.pc-hero h3 { margin: 2px 0 6px; font: 800 26px var(--f-display, inherit); }
+.pc-hero p { margin: 0; opacity: .82; font-size: 14px; }
+.pc-hero-c .svc { transform: perspective(700px) rotateY(-14deg) rotateZ(3deg); box-shadow: 0 18px 40px rgba(0,0,0,.5); }
+@media (max-width: 560px) { .pc-hero { grid-template-columns: 1fr; } .pc-hero-c { max-width: 160px; margin: 0 auto; } }
+.pc-it { position: relative; display: flex; flex-direction: column; gap: 6px; }
+.pc-pick { position: relative; padding: 0; border: 0; background: none; cursor: pointer; border-radius: 16px; }
+.pc-pick .svc { transition: transform .2s ease, box-shadow .2s ease, opacity .2s; }
+.pc-it:not(.on) .pc-pick .svc { opacity: .82; }
+.pc-it.on .pc-pick .svc { box-shadow: 0 0 0 3px var(--accent), 0 10px 26px rgba(0,0,0,.3); }
+.pc-chk { position: absolute; top: -6px; right: -6px; z-index: 3; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: var(--accent-fg, #fff); font-weight: 800; transform: scale(0); transition: transform .25s cubic-bezier(.2,.9,.3,1.5); }
+.pc-it.on .pc-chk { transform: scale(1); }
+.pc-q { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.pc-q .btn { min-height: 32px; min-width: 32px; padding: 0 10px; }
+.pcc-ph img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+.pc-fin { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; margin-bottom: 8px; }
+.pc-f { display: flex; flex-direction: column; gap: 2px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--fg); font: inherit; text-align: left; cursor: pointer; transition: border-color .2s, box-shadow .2s; }
+.pc-f span { font-weight: 700; color: var(--accent); }
+.pc-f small { color: var(--muted); font-size: 12px; }
+.pc-f.on { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent) inset; }
+.pc-f.holo { background: linear-gradient(115deg, var(--surface) 40%, rgba(255,60,200,.12), rgba(60,255,230,.12), rgba(255,240,80,.12)); }
+.pc-f.metal { background: linear-gradient(135deg, var(--surface) 50%, rgba(190,198,210,.25)); }
+.pc-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.pc-form .pc-wide { grid-column: 1 / -1; }
+.pc-sum { display: grid; gap: 6px; margin: 16px 0 10px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.pc-sum > div { display: flex; justify-content: space-between; font-size: 14px; }
+.pc-sum .pc-tot { font-size: 18px; padding-top: 6px; border-top: 1px solid var(--line); }
+.pc-sum .btn.primary { min-height: 46px; font-size: 16px; }
+.pc-orders { display: grid; gap: 10px; }
+.pc-o { padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.pc-o-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.pc-o-it, .pc-o-ship { margin: 4px 0 8px; font-size: 13px; }
+.pc-st { font: 700 11px var(--f-mono, monospace); text-transform: uppercase; letter-spacing: .08em; padding: 4px 8px; border-radius: 99px; background: var(--surface-2, rgba(127,127,127,.15)); }
+.pc-st.confirmado, .pc-st.impreso { background: rgba(61,139,255,.18); color: #3D8BFF; }
+.pc-st.enviado, .pc-st.entregado { background: rgba(47,163,107,.18); color: #2FA36B; }
+.pc-st.cancelado { background: rgba(217,67,74,.15); color: #D9434A; }
+.plus-hero { position: relative; overflow: hidden; padding: 26px 20px; border-radius: 18px; text-align: center; color: #2A1B00; background: linear-gradient(135deg, #F7D774, #E0A92E 45%, #FFF1B8 60%, #C8902A); margin-bottom: 14px; }
+.plus-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,.55) 50%, transparent 65%); background-size: 260% 100%; animation: svShine 3.4s ease-in-out infinite; pointer-events: none; }
+.plus-badge { display: grid; place-items: center; width: 56px; height: 56px; margin: 0 auto 8px; border-radius: 18px; background: #2A1B00; color: #F7D774; font-size: 28px; box-shadow: 0 8px 20px rgba(0,0,0,.25); animation: gnPop .6s cubic-bezier(.2,.9,.3,1.3); }
+.plus-hero small { font: 700 12px var(--f-mono, monospace); letter-spacing: .3em; }
+.plus-hero h3 { margin: 4px 0 10px; font: 900 28px var(--f-display, inherit); }
+.plus-hero p { margin: 0; }
+.plus-price { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.plus-price div { padding: 10px 16px; border-radius: 14px; background: rgba(42,27,0,.12); }
+.plus-price b { display: block; font: 900 26px var(--f-display, inherit); }
+.plus-price span { font-size: 12px; }
+.plus-perks { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin-bottom: 14px; }
+.plus-p { display: flex; gap: 12px; align-items: center; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); animation: svIn .5s cubic-bezier(.2,.8,.2,1) backwards; }
+.plus-p:nth-child(2) { animation-delay: .05s; } .plus-p:nth-child(3) { animation-delay: .1s; } .plus-p:nth-child(4) { animation-delay: .15s; } .plus-p:nth-child(5) { animation-delay: .2s; } .plus-p:nth-child(6) { animation-delay: .25s; }
+.plus-p b { display: block; font-size: 14px; }
+.plus-p small { color: var(--muted); font-size: 12px; }
+.plus-p em { margin-left: auto; font-style: normal; color: #2FA36B; font-weight: 800; }
+.plus-i { display: grid; place-items: center; flex: 0 0 40px; height: 40px; border-radius: 12px; background: linear-gradient(140deg, rgba(247,215,116,.35), rgba(184,134,43,.25)); font-size: 18px; }
+.plus-cta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; text-align: center; }
+.plus-cta .svm-note { flex-basis: 100%; }
+.sv-pk-art.p, .sv-pack.p .sv-pack-top, .sv-pack.p .sv-pack-body { background: linear-gradient(160deg, #F7D774, #B8862B 55%, #5A3D08) !important; }
+.sv-pk.plus { border-color: #D9A93A; }
 </style>
 
 <div class="app">
@@ -5654,7 +5722,7 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
     var h = '<div class="sv-rev" role="dialog" aria-modal="true" aria-label="Abriendo pack"><div class="sv-rev-in"><p class="home-kicker">Season ' + SV_SEASON.n + ' · ' + esc(SV_SEASON.name) + '</p>';
     if (R.stage !== 'cards') {
       return h + '<h3>' + (R.torn ? '…' : 'Desliza o toca el pack para abrirlo') + '</h3><button type="button" class="sv-pack ' + (R.kind || 'w') + (R.torn ? ' torn' : '') + '" data-sv="tear" aria-label="Abrir pack" style="--rc:' + SV_RC[best] + '">' +
-        '<span class="sv-pack-top" style="clip-path:' + SV_ZIG.top + '"></span><span class="sv-pack-body" style="clip-path:' + SV_ZIG.body + '"><b>GARAGE</b><i>S' + SV_SEASON.n + '</i><small>' + esc(SV_SEASON.name) + ' · 3 cartas</small><em>' + ({ w: 'Pack semanal', c: 'Pack de monedas', g: 'Regalo' }[R.kind] || 'Pack') + '</em></span><span class="sv-burst"></span><span class="sv-rays"></span><span class="sv-holo"></span><span class="sv-seam"></span></button></div></div>';
+        '<span class="sv-pack-top" style="clip-path:' + SV_ZIG.top + '"></span><span class="sv-pack-body" style="clip-path:' + SV_ZIG.body + '"><b>GARAGE</b><i>S' + SV_SEASON.n + '</i><small>' + esc(SV_SEASON.name) + ' · 3 cartas</small><em>' + ({ w: 'Pack semanal', c: 'Pack de monedas', g: 'Regalo', p: 'GARAGE+' }[R.kind] || 'Pack') + '</em></span><span class="sv-burst"></span><span class="sv-rays"></span><span class="sv-holo"></span><span class="sv-seam"></span></button></div></div>';
     }
     var all = R.flip.every(Boolean);
     return h + '<h3 id="svRevH">' + (all ? '¡Listo!' : 'Toca cada carta') + '</h3><div class="sv-rev-row' + (R.rise ? ' rise' : '') + '">' +
@@ -5688,8 +5756,9 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
     var next = (wk + 1) * 604800000;
     var h = '<div class="sv-packs">';
     h += '<div class="sv-pk"><div class="sv-pk-art w" aria-hidden="true"><b>S1</b><small>Semanal</small></div><div><h4>Pack semanal · gratis</h4><p>3 cartas. Uno por semana.</p>' + (claimed ? '<p class="svm-note">Ya lo reclamaste. El próximo en <b data-svend="' + next + '">' + svLeft(next) + '</b>.</p>' : '<button class="btn primary" type="button" data-sv="weekly">Reclamar pack gratis</button>') + '</div></div>';
+    if (plusOn()) { var pclaimed = (SV.allPacks || []).indexOf(mkMe() + '_p' + wk) >= 0; h += '<div class="sv-pk plus"><div class="sv-pk-art p" aria-hidden="true"><b>S1</b><small>GARAGE+</small></div><div><h4>Pack GARAGE+ · semanal</h4><p>Tu pack extra de miembro.</p>' + (pclaimed ? '<p class="svm-note">Ya lo reclamaste. El próximo en <b data-svend="' + next + '">' + svLeft(next) + '</b>.</p>' : '<button class="btn primary" type="button" data-sv="pluspack">Reclamar pack GARAGE+</button>') + '</div></div>'; }
     h += '<div class="sv-pk"><div class="sv-pk-art c" aria-hidden="true"><b>S1</b><small>' + SV_PACK_COST + ' monedas</small></div><div><h4>Pack con monedas</h4><p>3 cartas por ' + SV_PACK_COST + ' monedas. Ganas monedas subiendo spots aprobados y vendiendo cartas.</p><button class="btn primary" type="button" data-sv="buypack"' + ((SV.wallet.coins | 0) < SV_PACK_COST ? ' disabled' : '') + '>Comprar pack · ' + SV_PACK_COST + '</button>' + ((SV.wallet.coins | 0) < SV_PACK_COST ? '<p class="svm-note">Te faltan ' + (SV_PACK_COST - (SV.wallet.coins | 0)) + ' monedas.</p>' : '') + '</div></div></div>';
-    if (SV.packs.length) h += '<h4>Packs sin abrir</h4><div class="sv-packs">' + SV.packs.map(function (p) { return '<div class="sv-pk"><div class="sv-pk-art ' + (p.kind || 'w') + '" aria-hidden="true"><b>S1</b><small>' + ({ w: 'Semanal', c: 'Monedas', g: 'Regalo' }[p.kind] || '') + '</small></div><div><h4>' + ({ w: 'Pack semanal', c: 'Pack de monedas', g: 'Pack de regalo de GARAGE' }[p.kind] || 'Pack') + '</h4><button class="btn primary" type="button" data-sv="open" data-id="' + esc(p.id) + '">Abrir</button></div></div>'; }).join('') + '</div>';
+    if (SV.packs.length) h += '<h4>Packs sin abrir</h4><div class="sv-packs">' + SV.packs.map(function (p) { return '<div class="sv-pk"><div class="sv-pk-art ' + (p.kind || 'w') + '" aria-hidden="true"><b>S1</b><small>' + ({ w: 'Semanal', c: 'Monedas', g: 'Regalo', p: 'GARAGE+' }[p.kind] || '') + '</small></div><div><h4>' + ({ w: 'Pack semanal', c: 'Pack de monedas', g: 'Pack de regalo de GARAGE', p: 'Pack GARAGE+' }[p.kind] || 'Pack') + '</h4><button class="btn primary" type="button" data-sv="open" data-id="' + esc(p.id) + '">Abrir</button></div></div>'; }).join('') + '</div>';
     h += '<h4>Probabilidad por carta</h4><div class="sv-odds">' + SV_RN.map(function (n, i) { return '<div style="--rc:' + SV_RC[i] + '"><b>' + SV_ODDS[i] + '%</b><span>' + n + '</span><small>' + SV_BY[i].length + ' carros</small></div>'; }).join('') + '</div>';
     var last = SV.cards.slice().sort(function (a, b) { return svMs(b.at) - svMs(a.at); }).slice(0, 6);
     if (last.length) h += '<h4>Tus últimas cartas</h4><div class="sv-grid">' + last.map(function (c) { return svCardHTML(c.car, { up: c.up }); }).join('') + '</div>';
@@ -5762,7 +5831,7 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
   /* ---------- abrir / cerrar ---------- */
   async function svRefresh() {
     SV.msg = ''; svRender();
-    try { await svLoad(); } catch (e) { SV.msg = 'No se pudo cargar Seasons. ' + svErr(e); SV.loaded = true; }
+    try { await Promise.all([svLoad(), plusLoad()]); } catch (e) { SV.msg = 'No se pudo cargar Seasons. ' + svErr(e); SV.loaded = true; }
     svRender();
   }
   function svOpen(fromHash) {
@@ -5813,7 +5882,7 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
     return svRun(async function () {
       var pid = await getPid();
       var cards = await svOpenPack(pid);
-      SV.reveal = { cards: cards, flip: [false, false, false], stage: 'pack', kind: ((String(pid).match(/_([wcg])[a-z0-9]*$/) || [])[1]) || 'w' };
+      SV.reveal = { cards: cards, flip: [false, false, false], stage: 'pack', kind: ((String(pid).match(/_([wcgp])[a-z0-9]*$/) || [])[1]) || 'w' };
       return '';
     });
   }
@@ -5825,6 +5894,7 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
     if (k === 'af') { SV.filter = +id; return svRender(); }
     if (k === 'tomk' || k === 'mkcar') { svClose(true); MK.tab = 'sx'; SVM.car = k === 'mkcar' ? id : null; return mkOpen(); }
     if (k === 'weekly') return svOpenAndReveal(svClaimWeekly);
+    if (k === 'pluspack') return svOpenAndReveal(svClaimPlus);
     if (k === 'buypack') return svOpenAndReveal(svBuyPack);
     if (k === 'open') return svOpenAndReveal(function () { return id; });
     if (k === 'tear') return svTear(t);
@@ -5902,10 +5972,10 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
     if (c !== GN.last) { GN.last = c; document.querySelectorAll('#gNav .gn-b').forEach(function (b) { var on = b.dataset.gn === c; b.classList.toggle('on', on); b.setAttribute('aria-current', on ? 'page' : 'false'); }); }
     if (GN.booted && !c && !(state.sel) && document.body.classList.contains('zone-home')) gnGo(FB.user ? 'social' : 'me');
   }
-  function gnCloseAll() { if (SV.open) svClose(true); if (MK.open) mkClose(true); if (SC.open) scClose(true); }
+  function gnCloseAll() { if (typeof pcCloseAll === 'function') pcCloseAll(); if (SV.open) svClose(true); if (MK.open) mkClose(true); if (SC.open) scClose(true); }
   function gnGo(z) {
     var cur = gnCur();
-    if (z === cur && z !== 'spot') { var pg = document.querySelector('.mk-page'); if (pg) pg.scrollTo({ top: 0, behavior: 'smooth' }); else window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    if (z === cur && z !== 'spot' && !(z === 'me' && pcAnyOpen())) { var pg = document.querySelector('.mk-page'); if (pg) pg.scrollTo({ top: 0, behavior: 'smooth' }); else window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
     if (z === 'social') { gnCloseAll(); scOpen(); }
     else if (z === 'seasons') { gnCloseAll(); svOpen(); }
     else if (z === 'market') { gnCloseAll(); MK.tab = 'sx'; SVM.car = null; mkOpen(); }
@@ -5944,6 +6014,242 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
   gnBuild();
   setInterval(gnSync, 400);
   setTimeout(function () { var n = 0, iv = setInterval(function () { n++; if (FB.user || n > 8) { clearInterval(iv); gnBoot(); } }, 250); }, 900);
+
+  /* ---------- Mi cuenta: cartas físicas + GARAGE+ ---------- */
+  var PC = { open: false, tab: 'new', src: 'garage', sel: {}, finish: 'std', cars: null, mine: null, orders: null, all: null, msg: '', busy: false };
+  var PC_FIN = [['std', 'Normal', 4, 'Cartulina 350 g, mate'], ['holo', 'Holográfica', 6, 'Brillo arcoíris como las épicas'], ['metal', 'Metal', 15, 'Aluminio grabado, edición de lujo']];
+  var PC_SHIP = 5, PC_FREE = 10;
+  var PC_ST = { nuevo: 'Nuevo', confirmado: 'Confirmado', impreso: 'Impreso', enviado: 'Enviado', entregado: 'Entregado', cancelado: 'Cancelado' };
+  var PLUS = { open: false, me: null, req: null, loaded: false, reqs: null, members: null, msg: '', busy: false };
+  function plusOn() { return !!(PLUS.me && PLUS.me.until > Date.now()); }
+  async function plusLoad() {
+    var me = mkMe(); if (!me || !FB.fs) return;
+    try { var s = await FB.fs.collection('plus').doc(me).get(); PLUS.me = s.exists ? s.data() : null; } catch (e) { PLUS.me = null; }
+    try { var r = await FB.fs.collection('plus_req').doc(me).get(); PLUS.req = r.exists ? r.data() : null; } catch (e) { PLUS.req = null; }
+    PLUS.loaded = true; gnMeStrip(true);
+  }
+  function pcAnyOpen() { return PC.open || PLUS.open; }
+  function pcCloseAll() { if (PC.open) pgClose('pc'); if (PLUS.open) pgClose('plus'); }
+  function pgOpen(key, title, sub) {
+    pcCloseAll();
+    var pg = document.createElement('div');
+    pg.className = 'mk-page pc-page'; pg.id = key + 'Page';
+    pg.setAttribute('role', 'region'); pg.setAttribute('aria-label', title);
+    pg.innerHTML = '<div class="mk-page-in"><div class="mk-head"><button class="btn" type="button" data-pc="close" data-id="' + key + '">← Mi cuenta</button><div class="mk-h"><small>' + sub + '</small><h2>' + title + '</h2></div><span></span></div><div id="' + key + 'Body"></div></div>';
+    document.body.appendChild(pg); document.body.classList.add('mk-on');
+    if (key === 'pc') PC.open = true; else PLUS.open = true;
+  }
+  function pgClose(key) {
+    var pg = $('#' + key + 'Page'); if (pg) pg.remove();
+    if (key === 'pc') PC.open = false; else PLUS.open = false;
+    if (!MK.open && !SC.open && !SV.open && !pcAnyOpen()) document.body.classList.remove('mk-on');
+  }
+  function gnMeStrip(force) {
+    var bar = document.querySelector('.bar'); if (!bar) return;
+    var show = document.body.classList.contains('has-gnav') && state.zone && FB.user;
+    var el = $('#gnMe');
+    if (!show) { if (el) el.remove(); return; }
+    var sig = plusOn() ? 'p' : 'n';
+    if (el && !force && el.dataset.sig === sig) return;
+    if (!el) { el = document.createElement('div'); el.id = 'gnMe'; el.className = 'gn-me'; bar.parentNode.insertBefore(el, bar.nextSibling); }
+    el.dataset.sig = sig;
+    el.innerHTML = '<button type="button" class="gn-me-b" data-pc="open"><span class="gn-me-i">🖨</span><span><b>Cartas físicas</b><small>Imprime tus carros y cartas</small></span></button>' +
+      '<button type="button" class="gn-me-b plus' + (plusOn() ? ' on' : '') + '" data-plus="open"><span class="gn-me-i">★</span><span><b>GARAGE+</b><small>' + (plusOn() ? 'Eres miembro ✓' : 'Packs extra y más') + '</small></span></button>';
+  }
+
+  /* --- cartas físicas --- */
+  function pcKey(src, id) { return src + ':' + id; }
+  function pcItems() {
+    var out = [];
+    if (PC.cars) PC.cars.forEach(function (c) {
+      var src = c.kind === 'garage' ? 'garage' : 'spotted';
+      if (src === 'spotted' && !(c.rev && c.rev.status === 'ok')) return;
+      out.push({ src: src, id: c.id, make: c.make || '', model: c.model || '', year: c.year || '', place: c.place || '', photo: c.photo || '', rar: Math.max(0, Math.min(4, (c.rev && c.rev.rarity != null ? c.rev.rarity : c.rarity) | 0)) });
+    });
+    if (PC.mine) PC.mine.forEach(function (c) { var s = SV_ID[c.car]; if (s) out.push({ src: 'season', id: c.id, car: c.car, make: s.make, model: s.model, rar: c.rar, up: !!c.up }); });
+    return out;
+  }
+  function pcCardHTML(it) {
+    if (it.src === 'season') return svCardHTML(it.car, { up: it.up });
+    return '<div class="svc pcc r' + it.rar + '" style="--h:210;--rc:' + SV_RC[it.rar] + '"><div class="svc-in">' +
+      '<div class="svc-top"><span>GARAGE</span><span class="svc-rar">' + (it.src === 'garage' ? 'Mi carro' : SV_RN[it.rar]) + '</span></div>' +
+      '<div class="svc-art pcc-ph">' + (it.photo ? '<img src="' + esc(it.photo) + '" alt="">' : '') + '</div>' +
+      '<div class="svc-nm"><small>' + esc(it.make) + (it.year ? ' · ' + esc(it.year) : '') + '</small><b>' + esc(it.model) + '</b></div>' +
+      '<div class="svc-ft"><span>' + (it.src === 'garage' ? 'Edición personal' : 'Spot' + (it.place ? ' · ' + esc(it.place) : '')) + '</span></div></div></div>';
+  }
+  function pcSum() {
+    var n = 0; Object.keys(PC.sel).forEach(function (k) { n += PC.sel[k] | 0; });
+    var fin = PC_FIN.filter(function (f) { return f[0] === PC.finish; })[0] || PC_FIN[0];
+    var sub = n * fin[2], ship = n === 0 ? 0 : (n >= PC_FREE ? 0 : PC_SHIP);
+    return { n: n, fin: fin, sub: sub, ship: ship, total: sub + ship };
+  }
+  async function pcLoad() {
+    var me = mkMe(); if (!me) return;
+    var r = await Promise.all([
+      FB.fs.collection('users').doc(me).collection('cars').get(),
+      FB.fs.collection('sv_cards').where('owner', '==', me).get(),
+      FB.fs.collection('pc_orders').where('uid', '==', me).get(),
+      svArtLoad()
+    ]);
+    PC.cars = r[0].docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
+    PC.mine = r[1].docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); });
+    PC.orders = r[2].docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); }).sort(function (a, b) { return (b.ts | 0) - (a.ts | 0); });
+    if (me === MK_ADMIN) { var a = await FB.fs.collection('pc_orders').orderBy('ts', 'desc').limit(100).get(); PC.all = a.docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); }); }
+  }
+  function pcRender() {
+    var box = $('#pcBody'); if (!box) return;
+    if (!FB.user) { box.innerHTML = '<p class="srch-empty">Entra a tu cuenta para pedir cartas.</p>'; return; }
+    if (!PC.cars) { box.innerHTML = '<p class="srch-empty">Cargando…</p>'; return; }
+    var tabs = [['new', 'Pedir cartas'], ['orders', 'Mis pedidos' + (PC.orders && PC.orders.length ? ' (' + PC.orders.length + ')' : '')]];
+    if (mkMe() === MK_ADMIN) tabs.push(['admin', 'Pedidos (admin)']);
+    var h = '<div class="mk-tabs">' + tabs.map(function (t) { return '<button type="button" class="chip" data-pc="tab" data-id="' + t[0] + '" aria-pressed="' + (PC.tab === t[0]) + '">' + t[1] + '</button>'; }).join('') + '</div>';
+    if (PC.msg) h += '<p class="status mk-msg">' + esc(PC.msg) + '</p>';
+    h += PC.tab === 'orders' ? pcOrdersHTML(PC.orders, false) : PC.tab === 'admin' ? pcOrdersHTML(PC.all || [], true) : pcNewHTML();
+    box.innerHTML = h; svStagger(box);
+  }
+  function pcNewHTML() {
+    var items = pcItems(), cnt = { garage: 0, spotted: 0, season: 0 };
+    items.forEach(function (it) { cnt[it.src]++; });
+    var list = items.filter(function (it) { return it.src === PC.src; }), S = pcSum();
+    var h = '<div class="pc-hero"><div><small>Cartas de verdad</small><h3>Tus carros, impresos</h3><p>Tamaño trading card (63 × 88 mm), esquinas redondeadas y código QR atrás que abre la carta en GARAGE. Te llegan a la casa.</p></div><div class="pc-hero-c">' + (list[0] ? pcCardHTML(list[0]) : svCardHTML('supra')) + '</div></div>';
+    h += '<h4>1 · Escoge tus cartas</h4><div class="mk-tabs">' + [['garage', 'Mis carros'], ['spotted', 'Mis spots'], ['season', 'Seasons']].map(function (s) { return '<button type="button" class="chip" data-pc="src" data-id="' + s[0] + '" aria-pressed="' + (PC.src === s[0]) + '">' + s[1] + ' (' + cnt[s[0]] + ')</button>'; }).join('') + '</div>';
+    h += list.length ? '<div class="sv-grid pc-grid">' + list.map(function (it) {
+      var k = pcKey(it.src, it.id), q = PC.sel[k] | 0;
+      return '<div class="pc-it' + (q ? ' on' : '') + '"><button type="button" class="pc-pick" data-pc="pick" data-id="' + esc(k) + '" aria-pressed="' + (q > 0) + '">' + pcCardHTML(it) + '<span class="pc-chk" aria-hidden="true">✓</span></button>' +
+        (q ? '<div class="pc-q"><button type="button" class="btn" data-pc="minus" data-id="' + esc(k) + '" aria-label="Menos">−</button><b>' + q + '</b><button type="button" class="btn" data-pc="plus" data-id="' + esc(k) + '" aria-label="Más">+</button></div>' : '') + '</div>';
+    }).join('') + '</div>' : '<p class="srch-empty">' + (PC.src === 'garage' ? 'Agrega tus carros en Mi cuenta → Mis carros.' : PC.src === 'spotted' ? 'Todavía no tienes spots aprobados.' : 'Abre packs en Seasons para tener cartas.') + '</p>';
+    h += '<h4>2 · Acabado</h4><div class="pc-fin">' + PC_FIN.map(function (f) { return '<button type="button" class="pc-f' + (PC.finish === f[0] ? ' on' : '') + ' ' + f[0] + '" data-pc="fin" data-id="' + f[0] + '"><b>' + f[1] + '</b><span>$' + f[2] + ' por carta</span><small>' + f[3] + '</small></button>'; }).join('') + '</div>';
+    h += '<h4>3 · Envío</h4><div class="pc-form">' +
+      [['pcName', 'Nombre completo', 'name'], ['pcAddr', 'Dirección', 'street-address'], ['pcCity', 'Ciudad', 'address-level2'], ['pcState', 'Estado', 'address-level1'], ['pcZip', 'Código postal', 'postal-code'], ['pcPhone', 'Teléfono (opcional)', 'tel']].map(function (f) {
+        return '<div class="field"><label for="' + f[0] + '">' + f[1] + '</label><input type="text" id="' + f[0] + '" autocomplete="' + f[2] + '" value="' + esc((PC.form || {})[f[0]] || '') + '"></div>';
+      }).join('') + '<div class="field pc-wide"><label for="pcNote">Nota (opcional)</label><input type="text" id="pcNote" maxlength="200" value="' + esc((PC.form || {}).pcNote || '') + '"></div></div>';
+    h += '<div class="pc-sum"><div><span>' + S.n + ' carta' + (S.n === 1 ? '' : 's') + ' · ' + S.fin[1] + '</span><b>$' + S.sub + '</b></div><div><span>Envío' + (S.n && S.n < PC_FREE ? ' (gratis desde ' + PC_FREE + ')' : '') + '</span><b>' + (S.n && !S.ship ? 'Gratis' : '$' + S.ship) + '</b></div><div class="pc-tot"><span>Total estimado</span><b>$' + S.total + '</b></div>' +
+      '<button class="btn primary" type="button" data-pc="send"' + (S.n ? '' : ' disabled') + '>Enviar pedido</button><p class="svm-note">Todavía no se cobra en la app: GARAGE te escribe para confirmar el pedido y el pago.</p></div>';
+    return h;
+  }
+  function pcOrdersHTML(list, admin) {
+    if (!list.length) return '<p class="srch-empty">' + (admin ? 'No hay pedidos.' : 'Todavía no has pedido cartas.') + '</p>';
+    return '<div class="pc-orders">' + list.map(function (o) {
+      var n = 0; (o.items || []).forEach(function (i) { n += i.qty | 0; });
+      var h = '<div class="pc-o"><div class="pc-o-h"><b>' + n + ' carta' + (n === 1 ? '' : 's') + ' · ' + esc((PC_FIN.filter(function (f) { return f[0] === o.finish; })[0] || [0, o.finish])[1]) + '</b><span class="pc-st ' + esc(o.status) + '">' + esc(PC_ST[o.status] || o.status) + '</span></div>' +
+        '<p class="svm-note">$' + o.total + ' · ' + new Date(o.ts || 0).toLocaleDateString('es') + (admin ? ' · ' + svU(o.uid) : '') + '</p>' +
+        '<p class="pc-o-it">' + (o.items || []).map(function (i) { return esc(i.label) + ' ×' + (i.qty | 0); }).join(' · ') + '</p>';
+      if (admin) {
+        var s = o.ship || {};
+        h += '<p class="pc-o-ship">' + esc(s.name) + '<br>' + esc(s.addr) + '<br>' + esc(s.city) + ', ' + esc(s.state) + ' ' + esc(s.zip) + (s.phone ? '<br>' + esc(s.phone) : '') + (o.note ? '<br><i>' + esc(o.note) + '</i>' : '') + '</p>' +
+          '<div class="svd-in"><select data-pcst="' + esc(o.id) + '" aria-label="Estado">' + Object.keys(PC_ST).map(function (k) { return '<option value="' + k + '"' + (o.status === k ? ' selected' : '') + '>' + PC_ST[k] + '</option>'; }).join('') + '</select><button class="btn" type="button" data-pc="setst" data-id="' + esc(o.id) + '">Guardar estado</button></div>';
+      } else if (o.status === 'nuevo') h += '<button class="btn" type="button" data-pc="cancel" data-id="' + esc(o.id) + '">Cancelar pedido</button>';
+      return h + '</div>';
+    }).join('') + '</div>';
+  }
+  function pcSaveForm() {
+    PC.form = PC.form || {};
+    ['pcName', 'pcAddr', 'pcCity', 'pcState', 'pcZip', 'pcPhone', 'pcNote'].forEach(function (k) { var e = $('#' + k); if (e) PC.form[k] = e.value; });
+  }
+  async function pcSend() {
+    pcSaveForm();
+    var f = PC.form, S = pcSum(), items = pcItems(), byKey = {};
+    items.forEach(function (it) { byKey[pcKey(it.src, it.id)] = it; });
+    if (!S.n) throw new Error('Escoge al menos una carta.');
+    if (!f.pcName || !f.pcAddr || !f.pcCity || !f.pcState || !f.pcZip) throw new Error('Completa nombre y dirección de envío.');
+    var list = Object.keys(PC.sel).filter(function (k) { return PC.sel[k] > 0 && byKey[k]; }).map(function (k) { var it = byKey[k]; return { src: it.src, id: it.id, label: (it.make + ' ' + it.model).trim().slice(0, 60), qty: PC.sel[k] | 0 }; });
+    await FB.fs.collection('pc_orders').add({
+      uid: mkMe(), items: list, finish: PC.finish, total: S.total, status: 'nuevo', ts: Date.now(), note: String(f.pcNote || '').slice(0, 200),
+      ship: { name: String(f.pcName).slice(0, 80), addr: String(f.pcAddr).slice(0, 120), city: String(f.pcCity).slice(0, 60), state: String(f.pcState).slice(0, 40), zip: String(f.pcZip).slice(0, 12), phone: String(f.pcPhone || '').slice(0, 24) }
+    });
+    PC.sel = {}; PC.tab = 'orders';
+    return '¡Pedido enviado! GARAGE te va a escribir para confirmarlo.';
+  }
+  async function pcRun(fn) {
+    if (PC.busy) return; PC.busy = true; PC.msg = 'Procesando…'; pcRender();
+    try { PC.msg = (await fn()) || ''; await pcLoad(); }
+    catch (e) { PC.msg = e && e.message && !e.code ? e.message : 'No se pudo. ' + svErr(e); }
+    finally { PC.busy = false; pcRender(); }
+  }
+  async function pcOpen() {
+    pgOpen('pc', 'Cartas físicas', 'Mi cuenta'); PC.msg = ''; pcRender();
+    try { await pcLoad(); } catch (e) { PC.msg = 'No se pudo cargar. ' + svErr(e); PC.cars = PC.cars || []; }
+    if (PC.src === 'garage' && !pcItems().some(function (i) { return i.src === 'garage'; })) PC.src = pcItems().some(function (i) { return i.src === 'spotted'; }) ? 'spotted' : 'season';
+    pcRender();
+  }
+
+  /* --- GARAGE+ --- */
+  var PLUS_PERKS = [['🃏', 'Pack GARAGE+ semanal', 'Un pack extra cada semana en Seasons, además del gratis.'], ['★', 'Perfil dorado', 'Marco y check dorado en tu perfil y tus posts.'], ['📈', 'Mercado Pro', 'Alertas de precio y estadísticas avanzadas de cada carta.'], ['🖼', 'Más espacio', 'Más fotos y videos en tu portfolio.'], ['🖨', '1 carta física gratis al año', 'Tu carro, impreso en holográfico.'], ['⚡', 'Primero en las Seasons', 'Acceso anticipado a las cartas nuevas.']];
+  function plusRender() {
+    var box = $('#plusBody'); if (!box) return;
+    if (!FB.user) { box.innerHTML = '<p class="srch-empty">Entra a tu cuenta para ver GARAGE+.</p>'; return; }
+    var on = plusOn(), h = '';
+    if (PLUS.msg) h += '<p class="status mk-msg">' + esc(PLUS.msg) + '</p>';
+    h += '<div class="plus-hero' + (on ? ' on' : '') + '"><div class="plus-badge">★</div><small>GARAGE+</small><h3>' + (on ? 'Eres miembro' : 'Más packs. Más garage.') + '</h3>' +
+      (on ? '<p>Activo hasta el ' + new Date(PLUS.me.until).toLocaleDateString('es', { day: 'numeric', month: 'long', year: 'numeric' }) + '.</p>' : '<div class="plus-price"><div><b>$3.99</b><span>al mes</span></div><div><b>$35</b><span>al año · 2 meses gratis</span></div></div>') + '</div>';
+    h += '<div class="plus-perks">' + PLUS_PERKS.map(function (p) { return '<div class="plus-p' + (on ? ' on' : '') + '"><span class="plus-i">' + p[0] + '</span><div><b>' + p[1] + '</b><small>' + p[2] + '</small></div>' + (on ? '<em>✓</em>' : '') + '</div>'; }).join('') + '</div>';
+    if (!on) h += PLUS.req ? '<div class="plus-cta"><p class="status">Ya estás en la lista ✓ Te avisamos cuando abramos los pagos.</p><button class="btn" type="button" data-plus="unreq">Salir de la lista</button></div>'
+      : '<div class="plus-cta"><button class="btn primary" type="button" data-plus="req" data-id="mes">Quiero GARAGE+ mensual</button><button class="btn" type="button" data-plus="req" data-id="anual">Quiero el plan anual</button><p class="svm-note">Los pagos todavía no están abiertos: te anotamos en la lista y GARAGE te avisa.</p></div>';
+    if (mkMe() === MK_ADMIN) h += plusAdminHTML();
+    box.innerHTML = h;
+  }
+  function plusAdminHTML() {
+    var h = '<h4>Admin · activar GARAGE+</h4><div class="svd-f"><div class="svd-in"><input type="text" id="plusU" placeholder="usuario (sin @)"><select id="plusD" aria-label="Duración"><option value="7">7 días</option><option value="30" selected>30 días</option><option value="365">1 año</option></select><button class="btn primary" type="button" data-plus="grant">Activar</button><button class="btn" type="button" data-plus="revoke">Quitar</button></div></div>';
+    if (!PLUS.reqs) { plusAdminLoad(); return h + '<p class="svm-note">Cargando lista…</p>'; }
+    h += '<h4>Lista de espera (' + PLUS.reqs.length + ')</h4>' + (PLUS.reqs.length ? PLUS.reqs.map(function (r) { return '<div class="svb-r"><b>' + esc(r.plan) + '</b><span>' + svU(r.uid) + '</span><small>' + new Date(r.ts || 0).toLocaleDateString('es') + '</small></div>'; }).join('') : '<p class="svm-note">Nadie todavía.</p>');
+    h += '<h4>Miembros (' + PLUS.members.length + ')</h4>' + (PLUS.members.length ? PLUS.members.map(function (m) { return '<div class="svb-r"><b>★</b><span>' + svU(m.id) + '</span><small>hasta ' + new Date(m.until).toLocaleDateString('es') + '</small></div>'; }).join('') : '<p class="svm-note">Ningún miembro.</p>');
+    return h;
+  }
+  async function plusAdminLoad() {
+    if (PLUS.adminLoading) return; PLUS.adminLoading = true;
+    try {
+      var r = await Promise.all([FB.fs.collection('plus_req').get(), FB.fs.collection('plus').get()]);
+      PLUS.reqs = r[0].docs.map(function (d) { return d.data(); }).sort(function (a, b) { return (b.ts | 0) - (a.ts | 0); });
+      PLUS.members = r[1].docs.map(function (d) { return Object.assign({ id: d.id }, d.data()); }).filter(function (m) { return m.until > Date.now(); });
+    } catch (e) { PLUS.reqs = []; PLUS.members = []; }
+    PLUS.adminLoading = false; plusRender();
+  }
+  async function plusUid(name) {
+    var u = svNorm(name).replace(/^@/, '').trim(); if (!u) throw new Error('Escribe un usuario.');
+    var s = await FB.fs.collection('usernames').doc(u).get(); if (!s.exists) throw new Error('No existe @' + u);
+    return s.data().uid;
+  }
+  async function plusRun(fn) {
+    if (PLUS.busy) return; PLUS.busy = true; PLUS.msg = 'Procesando…'; plusRender();
+    try { PLUS.msg = (await fn()) || ''; await plusLoad(); PLUS.reqs = null; }
+    catch (e) { PLUS.msg = e && e.message && !e.code ? e.message : 'No se pudo. ' + svErr(e); }
+    finally { PLUS.busy = false; plusRender(); }
+  }
+  async function plusOpen() { pgOpen('plus', 'GARAGE+', 'Mi cuenta'); PLUS.msg = ''; plusRender(); await plusLoad(); plusRender(); }
+  async function svClaimPlus() {
+    if (!plusOn()) throw new Error('Necesitas GARAGE+ para este pack.');
+    var pid = mkMe() + '_p' + svWeek(), r = svCol('sv_packs').doc(pid);
+    var s = await r.get(); if (s.exists) throw new Error('Ya reclamaste tu pack GARAGE+ de esta semana.');
+    await r.set({ uid: mkMe(), kind: 'p', at: svTs() });
+    return pid;
+  }
+
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('[data-pc],[data-plus]'); if (!t || t.disabled) return;
+    var k = t.dataset.pc, p = t.dataset.plus, id = t.dataset.id; e.preventDefault();
+    if (k) {
+      if (k === 'open') return pcOpen();
+      if (k === 'close') return pgClose(id || 'pc');
+      if (k === 'tab') { pcSaveForm(); PC.tab = id; PC.msg = ''; return pcRender(); }
+      if (k === 'src') { pcSaveForm(); PC.src = id; return pcRender(); }
+      if (k === 'pick') { pcSaveForm(); PC.sel[id] = PC.sel[id] ? 0 : 1; if (!PC.sel[id]) delete PC.sel[id]; return pcRender(); }
+      if (k === 'plus') { pcSaveForm(); PC.sel[id] = Math.min(20, (PC.sel[id] | 0) + 1); return pcRender(); }
+      if (k === 'minus') { pcSaveForm(); PC.sel[id] = (PC.sel[id] | 0) - 1; if (PC.sel[id] <= 0) delete PC.sel[id]; return pcRender(); }
+      if (k === 'fin') { pcSaveForm(); PC.finish = id; return pcRender(); }
+      if (k === 'send') return pcRun(pcSend);
+      if (k === 'cancel') return pcRun(async function () { await FB.fs.collection('pc_orders').doc(id).update({ status: 'cancelado' }); return 'Pedido cancelado.'; });
+      if (k === 'setst') return pcRun(async function () { var s = document.querySelector('[data-pcst="' + id + '"]'); await FB.fs.collection('pc_orders').doc(id).update({ status: s.value }); return 'Estado guardado.'; });
+    }
+    if (p) {
+      if (p === 'open') return plusOpen();
+      if (p === 'req') return plusRun(async function () { await FB.fs.collection('plus_req').doc(mkMe()).set({ uid: mkMe(), plan: id, ts: Date.now() }); return '¡Listo! Estás en la lista de GARAGE+.'; });
+      if (p === 'unreq') return plusRun(async function () { await FB.fs.collection('plus_req').doc(mkMe()).delete(); return 'Saliste de la lista.'; });
+      if (p === 'grant') return plusRun(async function () { var uid = await plusUid(($('#plusU') || {}).value), d = svNum(($('#plusD') || {}).value) || 30; await FB.fs.collection('plus').doc(uid).set({ until: Date.now() + d * 86400000, by: mkMe(), ts: Date.now() }); return 'GARAGE+ activado por ' + d + ' días.'; });
+      if (p === 'revoke') return plusRun(async function () { var uid = await plusUid(($('#plusU') || {}).value); await FB.fs.collection('plus').doc(uid).delete(); return 'GARAGE+ quitado.'; });
+    }
+  });
+  setInterval(function () { gnMeStrip(false); }, 600);
+  setTimeout(function () { if (FB.user) plusLoad(); }, 2500);
 
   function scOpen(fromHash) {
     if (SC.open) return;
