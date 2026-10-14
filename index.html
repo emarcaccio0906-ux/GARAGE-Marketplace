@@ -1138,6 +1138,58 @@ body.dash-social .home-tile.seasons { order: 9; }
 .sv-banner { position: fixed; left: 50%; top: 14%; z-index: 96; pointer-events: none; translate: -50% 0; font: 900 clamp(30px, 8vw, 56px) var(--f-display, inherit); letter-spacing: .04em; color: #fff; text-shadow: 0 0 18px var(--c), 0 0 40px var(--c), 0 4px 0 rgba(0,0,0,.35); animation: svBan 2.2s cubic-bezier(.2,.9,.3,1.3) forwards; white-space: nowrap; }
 @keyframes svBan { 0% { opacity: 0; scale: .3; } 18% { opacity: 1; scale: 1.08; } 30% { scale: 1; } 80% { opacity: 1; } 100% { opacity: 0; translate: -50% -20px; } }
 @media (prefers-reduced-motion: reduce) { .svc, .sv-pack, .sv-flip { transition: none; } .sv-grid > .svc, .sva-grid > .sva, .svm-list > .svm-row, .sv-pk-art::after, .sv-flip.on.r3::before, .sv-flip.on.r4::before, .sv-pack { animation: none !important; } }
+/* ---------- barra de zonas tipo app ---------- */
+.gnav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 80; display: flex; justify-content: space-around; align-items: flex-end; height: calc(64px + env(safe-area-inset-bottom, 0px)); padding: 0 4px env(safe-area-inset-bottom, 0px); background: color-mix(in srgb, var(--surface) 86%, transparent); -webkit-backdrop-filter: saturate(1.6) blur(18px); backdrop-filter: saturate(1.6) blur(18px); border-top: 1px solid var(--line); }
+.gn-b { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; height: 64px; padding: 0 0 9px; border: 0; background: none; color: var(--muted); font: 600 10.5px var(--f-body, inherit); letter-spacing: .01em; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: color .2s; }
+.gn-b svg { transition: transform .2s cubic-bezier(.2,.9,.3,1.4); }
+.gn-b.on { color: var(--fg); }
+.gn-b.on svg { transform: translateY(-1px) scale(1.08); stroke-width: 2.4; }
+.gn-b:active svg { transform: scale(.85); }
+.gn-b.on::after { content: ""; display: block; width: 4px; height: 4px; margin-top: 1px; border-radius: 50%; background: var(--accent); }
+.gn-b:not(.on)::after { content: ""; display: block; width: 4px; height: 4px; margin-top: 1px; }
+.gn-plus { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: 2px; border-radius: 18px; color: #fff; background: linear-gradient(140deg, var(--accent), #FF8A3D); box-shadow: 0 8px 22px color-mix(in srgb, var(--accent) 45%, transparent), 0 0 0 5px var(--bg); transition: transform .2s cubic-bezier(.2,.9,.3,1.4); }
+.gn-plus svg { width: 28px; height: 28px; stroke-width: 2.6; }
+.gn-spot { justify-content: flex-end; }
+.gn-spot .gn-plus { transform: translateY(-14px); }
+.gn-spot .gn-l { margin-top: -12px; }
+.gn-spot:active .gn-plus { transform: translateY(-14px) scale(.9); }
+.gn-spot::after { display: none !important; }
+.gn-logo { display: none; }
+body.has-gnav { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
+body.has-gnav .mk-page { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); animation: gnIn .28s cubic-bezier(.2,.8,.2,1); }
+@keyframes gnIn { from { opacity: 0; translate: 0 10px; } }
+body.has-gnav #homeBtn, body.has-gnav #mkBtn, body.has-gnav #scBtn, body.has-gnav #acctBtn { display: none !important; }
+body.has-gnav .mk-head [data-sc="close"], body.has-gnav .mk-head [data-mk="close"], body.has-gnav .mk-head [data-sv="close"] { display: none !important; }
+body.has-gnav #home { display: none !important; }
+body.has-gnav #tabSpotted:not([hidden]), body.has-gnav #tabGarage:not([hidden]), body.has-gnav #tabPhoto:not([hidden]), body.has-gnav #tabBoard:not([hidden]), body.has-gnav #tabAcct:not([hidden]) { display: block !important; }
+body.has-gnav #tabFeed, body.has-gnav #tabSocial, body.has-gnav #tabSpot { display: none !important; }
+body.has-gnav .sc-nav { top: 0; bottom: auto; border-top: 0; border-bottom: 1px solid var(--line); padding: 6px 12px; background: color-mix(in srgb, var(--surface) 90%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+body.has-gnav .sc-page .mk-page-in { padding-top: 66px; padding-bottom: 24px; }
+.sc-sec { display: grid; grid-template-columns: 1fr 1fr; margin: 0 0 12px; border-bottom: 1px solid var(--line); }
+.sc-sec button { padding: 12px 8px 10px; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--muted); font: 700 14px var(--f-body, inherit); letter-spacing: .02em; cursor: pointer; transition: color .2s, border-color .2s; }
+.sc-sec button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--fg); }
+.gn-splash { position: fixed; inset: 0; z-index: 200; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; background: #0F1114; color: #fff; transition: opacity .5s ease; }
+.gn-splash b { font: 900 44px var(--f-display, inherit); letter-spacing: .08em; animation: gnPop .6s cubic-bezier(.2,.9,.3,1.3); }
+.gn-splash span { font: 600 11px var(--f-mono, monospace); letter-spacing: .3em; text-transform: uppercase; opacity: .7; }
+.gn-splash.out { opacity: 0; pointer-events: none; }
+@keyframes gnPop { from { opacity: 0; scale: .7; } }
+@media (min-width: 900px) {
+  .gnav { top: 0; bottom: 0; right: auto; width: 88px; height: auto; flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 4px; padding: 16px 8px; border-top: 0; border-right: 1px solid var(--line); }
+  .gn-logo { display: grid; place-items: center; width: 46px; height: 46px; margin: 0 auto 18px; border: 0; border-radius: 14px; background: var(--fg); color: var(--bg); font: 900 24px var(--f-display, inherit); cursor: pointer; }
+  .gn-b { flex: 0 0 auto; height: auto; justify-content: center; padding: 10px 0 8px; border-radius: 14px; font-size: 11px; }
+  .gn-b:hover { background: var(--surface-2, rgba(127,127,127,.12)); color: var(--fg); }
+  .gn-spot .gn-plus, .gn-spot:active .gn-plus { transform: none; width: 46px; height: 46px; box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 40%, transparent); }
+  .gn-spot .gn-l { margin-top: 2px; }
+  body.has-gnav { padding-bottom: 0; padding-left: 88px; }
+  body.has-gnav .mk-page { bottom: 0; left: 88px; }
+  body.has-gnav .sc-nav { left: 88px; }
+}
+body.is-app { overscroll-behavior-y: none; -webkit-tap-highlight-color: transparent; }
+body.is-app .mast { padding-top: calc(env(safe-area-inset-top, 0px) + 6px); }
+body.is-app .mk-page { padding-top: env(safe-area-inset-top, 0px); }
+body.is-app.has-gnav .sc-nav { top: env(safe-area-inset-top, 0px); }
+body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: none; user-select: none; }
+@media (prefers-reduced-motion: reduce) { body.has-gnav .mk-page, .gn-splash b { animation: none; } }
 </style>
 
 <div class="app">
@@ -4929,8 +4981,8 @@ body.dash-social .home-tile.seasons { order: 9; }
 
   /* ---------- pestañas ---------- */
   function scFeedHTML() {
-    var me = fbMe(), all = SC.feed || [], list = SC.mode === 'follow' ? all.filter(function (p) { return p.owner === me || scFollowing(p.owner); }) : all;
-    var h = '<div class="mk-tabs">' + [['all', 'Para ti'], ['follow', 'Siguiendo'], ['news', 'Noticias']].map(function (m) { return '<button type="button" class="chip" data-sc="mode" data-v="' + m[0] + '" aria-pressed="' + ((SC.mode || 'all') === m[0]) + '">' + m[1] + '</button>'; }).join('') + '</div>';
+    var me = fbMe(), all = SC.feed || [], list = SC.mode === 'follow' ? all.filter(function (p) { return p.owner === me || scFollowing(p.owner); }) : all; var sec = SC.sec || 'fotos'; list = list.filter(function (p) { return sec === 'cartas' ? p.kind === 'card' : p.kind !== 'card'; });
+    var h = '<div class="sc-sec" role="tablist">' + [['fotos', 'Fotos'], ['cartas', 'Cartas']].map(function (m) { return '<button type="button" role="tab" data-sc="sec" data-v="' + m[0] + '" aria-selected="' + ((SC.sec || 'fotos') === m[0]) + '">' + m[1] + '</button>'; }).join('') + '</div><div class="mk-tabs">' + [['all', 'Para ti'], ['follow', 'Siguiendo'], ['news', 'Noticias']].map(function (m) { return '<button type="button" class="chip" data-sc="mode" data-v="' + m[0] + '" aria-pressed="' + ((SC.mode || 'all') === m[0]) + '">' + m[1] + '</button>'; }).join('') + '</div>';
     if (SC.mode === 'news') return h + nwHTML();
     if (!SC.feed) return h + '<p class="srch-empty">Cargando…</p>';
     if (!list.length) return h + '<p class="srch-empty">' + (SC.mode === 'follow' ? 'Las personas que sigues todavía no han publicado. Busca gente en la lupa.' : 'Todavía no hay publicaciones.') + '</p>';
@@ -5821,6 +5873,78 @@ body.dash-social .home-tile.seasons { order: 9; }
     e.preventDefault(); t.click();
   });
 
+  /* ---------- barra de zonas tipo app: Social · Seasons · ＋Spot · Mercado · Mi cuenta ---------- */
+  var GN_IC = {
+    social: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
+    seasons: '<rect x="3.5" y="3" width="11" height="15" rx="2"/><path d="M8.5 21h9a2 2 0 0 0 2-2V7.5"/><path d="M9 8.5l1.2 2.4 2.6.4-1.9 1.8.5 2.6L9 14.4l-2.4 1.3.5-2.6-1.9-1.8 2.6-.4z"/>',
+    spot: '<path d="M12 5v14M5 12h14"/>',
+    market: '<path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/>',
+    me: '<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/>'
+  };
+  var GN = { booted: false, last: '' };
+  function gnIco(p) { return '<svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + '</svg>'; }
+  function gnBuild() {
+    if ($('#gNav') || !document.body) return;
+    var n = document.createElement('nav'); n.id = 'gNav'; n.className = 'gnav'; n.setAttribute('aria-label', 'Zonas');
+    n.innerHTML = '<button type="button" class="gn-logo" data-gn="social" aria-label="GARAGE">G</button>' + [['social', 'Social'], ['seasons', 'Seasons'], ['spot', 'Spot'], ['market', 'Mercado'], ['me', 'Mi cuenta']].map(function (z) {
+      return '<button type="button" class="gn-b gn-' + z[0] + '" data-gn="' + z[0] + '" aria-label="' + z[1] + '">' + (z[0] === 'spot' ? '<span class="gn-plus">' + gnIco(GN_IC.spot) + '</span>' : gnIco(GN_IC[z[0]])) + '<span class="gn-l" data-noi18n="">' + z[1] + '</span></button>';
+    }).join('');
+    document.body.appendChild(n); document.body.classList.add('has-gnav');
+    if (window.matchMedia && (matchMedia('(display-mode: standalone)').matches || navigator.standalone)) {
+      document.body.classList.add('is-app');
+      var sp = document.createElement('div'); sp.className = 'gn-splash'; sp.innerHTML = '<b>GARAGE</b><span>Spot · Trade · Collect</span>';
+      document.body.appendChild(sp); setTimeout(function () { sp.classList.add('out'); }, 650); setTimeout(function () { sp.remove(); }, 1200);
+    }
+  }
+  function gnCur() { return SV.open ? 'seasons' : MK.open ? 'market' : SC.open ? 'social' : (state.zone ? 'me' : ''); }
+  function gnSync() {
+    var c = gnCur();
+    if (c !== GN.last) { GN.last = c; document.querySelectorAll('#gNav .gn-b').forEach(function (b) { var on = b.dataset.gn === c; b.classList.toggle('on', on); b.setAttribute('aria-current', on ? 'page' : 'false'); }); }
+    if (GN.booted && !c && !(state.sel) && document.body.classList.contains('zone-home')) gnGo(FB.user ? 'social' : 'me');
+  }
+  function gnCloseAll() { if (SV.open) svClose(true); if (MK.open) mkClose(true); if (SC.open) scClose(true); }
+  function gnGo(z) {
+    var cur = gnCur();
+    if (z === cur && z !== 'spot') { var pg = document.querySelector('.mk-page'); if (pg) pg.scrollTo({ top: 0, behavior: 'smooth' }); else window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    if (z === 'social') { gnCloseAll(); scOpen(); }
+    else if (z === 'seasons') { gnCloseAll(); svOpen(); }
+    else if (z === 'market') { gnCloseAll(); MK.tab = 'sx'; SVM.car = null; mkOpen(); }
+    else {
+      gnCloseAll();
+      try { if (/^#(social|seasons|mercado|market|spot|cuenta)$/.test(location.hash)) history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+      if (z === 'spot') {
+        state.zone = 'cards'; state.tab = 'spotted'; state.filter = null; render();
+        if (FB.on && !FB.user) { state.tab = 'acct'; render(); } else if (typeof openAdd === 'function') openAdd('spotted');
+      } else {
+        if (state.zone !== 'spot') state.zone = 'cards';
+        if (!state.tab || /^(spot|feed|social|radar|people)$/.test(state.tab)) state.tab = 'spotted';
+        if (FB.on && !FB.user) state.tab = 'acct';
+        render(); window.scrollTo({ top: 0 });
+      }
+    }
+    gnSync();
+  }
+  function gnBoot() {
+    GN.booted = true;
+    var h = location.hash;
+    if (h === '#spot') return gnGo('spot');
+    if (h === '#cuenta') return gnGo('me');
+    if (SV.open || MK.open || SC.open || /^#(social|seasons|mercado|market)$/.test(h)) return gnSync();
+    if (state.zone) return gnSync();
+    gnGo(FB.user ? 'social' : 'me');
+  }
+  document.addEventListener('click', function (e) {
+    var g = e.target.closest && e.target.closest('[data-gn]');
+    if (g) { e.preventDefault(); try { if (navigator.vibrate) navigator.vibrate(8); } catch (x) {} return gnGo(g.dataset.gn); }
+    if (!document.body.classList.contains('has-gnav')) return;
+    var t = e.target.closest && e.target.closest('[data-act="tab"]'); if (!t) return;
+    var tb = t.dataset.tab;
+    if (tb === 'photo') state.zone = 'spot'; else if (tb !== 'acct') state.zone = 'cards'; else if (!state.zone) state.zone = 'cards';
+  }, true);
+  gnBuild();
+  setInterval(gnSync, 400);
+  setTimeout(function () { var n = 0, iv = setInterval(function () { n++; if (FB.user || n > 8) { clearInterval(iv); gnBoot(); } }, 250); }, 900);
+
   function scOpen(fromHash) {
     if (SC.open) return;
     if (MK.open) mkClose(true);
@@ -5965,6 +6089,7 @@ body.dash-social .home-tile.seasons { order: 9; }
     e.preventDefault();
     if (k === 'tab') { if (t.dataset.v === 'prof') { SC.prof = null; SC.plist = ''; } return scGo(t.dataset.v); }
     if (k === 'refresh') { SC.feed = null; SC.counts = {}; SC.usersTs = 0; SC.pstats = {}; return scGo(SC.tab); }
+    if (k === 'sec') { SC.sec = t.dataset.v; SC.n = 12; if (SC.mode === 'news') SC.mode = 'all'; scRender(); return; }
     if (k === 'mode') { SC.mode = t.dataset.v; SC.n = 12; scRender(); if (SC.mode === 'news') { await nwLoad(); scRender(); } return; }
     if (k.indexOf('nw') === 0) return nwAct(t, k, id);
     if (k === 'moreFeed') { SC.n += 12; return scRender(); }
