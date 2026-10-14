@@ -1259,6 +1259,53 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
 .plus-cta .svm-note { flex-basis: 100%; }
 .sv-pk-art.p, .sv-pack.p .sv-pack-top, .sv-pack.p .sv-pack-body { background: linear-gradient(160deg, #F7D774, #B8862B 55%, #5A3D08) !important; }
 .sv-pk.plus { border-color: #D9A93A; }
+/* ---------- Insignias y ranking ---------- */
+.gn-me { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.gn-me-b.bd .gn-me-i { background: linear-gradient(140deg, #8E7CFF, #4A3AB8); color: #fff; }
+.bd-hero { display: flex; gap: 18px; align-items: center; padding: 18px; border-radius: 16px; background: linear-gradient(120deg, #1D1640, #2A1838 55%, #13213A); color: #fff; margin-bottom: 14px; }
+.bd-hero small { font: 600 11px var(--f-mono, monospace); letter-spacing: .18em; text-transform: uppercase; opacity: .75; }
+.bd-hero h3 { margin: 2px 0 4px; font: 800 24px var(--f-display, inherit); }
+.bd-hero p { margin: 0; opacity: .82; font-size: 14px; }
+.bd-ring { flex: 0 0 96px; height: 96px; border-radius: 50%; display: grid; place-content: center; text-align: center; background: radial-gradient(closest-side, #1D1640 76%, transparent 78% 100%), conic-gradient(#F2B33D calc(var(--p) * 1%), rgba(255,255,255,.15) 0); }
+.bd-ring b { font: 900 30px/1 var(--f-display, inherit); }
+.bd-ring span { font-size: 11px; opacity: .8; }
+.bd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+.bd-t { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; padding: 16px 12px 12px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); animation: svIn .5s cubic-bezier(.2,.8,.2,1) backwards; animation-delay: calc(var(--i, 0) * 35ms); }
+.bd-t .bd-ic { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; font-size: 28px; background: var(--surface-2, rgba(127,127,127,.15)); filter: grayscale(1); opacity: .55; }
+.bd-t b { font-size: 14px; }
+.bd-t small { font-size: 12px; color: var(--muted); min-height: 32px; }
+.bd-t em { font: 700 11px var(--f-mono, monospace); font-style: normal; letter-spacing: .06em; color: var(--muted); }
+.bd-t.got { border-color: #D9A93A; background: linear-gradient(180deg, rgba(247,215,116,.14), transparent 60%), var(--surface); }
+.bd-t.got .bd-ic { filter: none; opacity: 1; background: radial-gradient(circle at 35% 30%, #FFF1B8, #F2B33D 55%, #B8862B); box-shadow: 0 6px 18px rgba(242,179,61,.4); animation: bdPop .6s cubic-bezier(.2,.9,.3,1.4) backwards; animation-delay: calc(var(--i, 0) * 35ms + .2s); }
+.bd-t.got em { color: #2FA36B; }
+.bd-t.got::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,.35) 50%, transparent 65%); background-size: 260% 100%; animation: svShine 4s ease-in-out infinite; }
+@keyframes bdPop { from { scale: .3; opacity: 0; } }
+.bd-bar { display: block; width: 100%; height: 6px; border-radius: 99px; background: var(--surface-2, rgba(127,127,127,.18)); overflow: hidden; margin-top: 4px; }
+.bd-bar u { display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, #3D8BFF, #A35BFF); transition: width 1s cubic-bezier(.2,.8,.2,1); }
+.bd-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 10px 0 4px; }
+.bd-mini { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; font-size: 17px; background: radial-gradient(circle at 35% 30%, #FFF1B8, #F2B33D 55%, #B8862B); box-shadow: 0 3px 10px rgba(242,179,61,.35); cursor: default; animation: bdPop .5s cubic-bezier(.2,.9,.3,1.4) backwards; }
+.bd-more { font: 700 12px var(--f-mono, monospace); color: var(--muted); }
+.bd-all { margin-left: 4px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 99px; background: var(--surface); color: var(--fg); font: 600 12px var(--f-body, inherit); cursor: pointer; }
+.bd-load { font-size: 12px; color: var(--muted); }
+.rk-pod { display: grid; grid-template-columns: 1fr 1.15fr 1fr; align-items: end; gap: 10px; margin: 14px 0 16px; }
+.rk-p { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 14px 8px 0; border-radius: 16px 16px 0 0; text-align: center; color: #fff; overflow: hidden; animation: rkUp .7s cubic-bezier(.2,.85,.25,1.1) backwards; animation-delay: calc(var(--i) * .12s); }
+.rk-p.e { visibility: hidden; }
+.rk-p.p1 { min-height: 190px; background: linear-gradient(180deg, #F7D774, #B8862B); color: #2A1B00; }
+.rk-p.p2 { min-height: 150px; background: linear-gradient(180deg, #D9DEE6, #8A93A0); color: #1B1F26; }
+.rk-p.p3 { min-height: 125px; background: linear-gradient(180deg, #E8A06A, #9A5A2A); color: #2A1404; }
+.rk-p.me { box-shadow: 0 0 0 3px var(--accent); }
+.rk-av { font-size: 30px; }
+.rk-p b { font-size: 13px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rk-p em { font: 700 12px var(--f-mono, monospace); font-style: normal; }
+.rk-p i { margin-top: auto; font: 900 40px/1.1 var(--f-display, inherit); font-style: normal; opacity: .35; }
+@keyframes rkUp { from { transform: translateY(60px); opacity: 0; } }
+.rk-list { display: grid; gap: 6px; }
+.rk-r { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); animation: svIn .45s cubic-bezier(.2,.8,.2,1) backwards; animation-delay: calc(var(--i, 0) * 25ms); }
+.rk-r.me { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.rk-n { font: 700 14px var(--f-mono, monospace); color: var(--muted); }
+.rk-u { min-width: 0; font-size: 14px; }
+.rk-u .bd-bar { max-width: 220px; }
+.rk-r b { font: 700 14px var(--f-mono, monospace); }
 </style>
 
 <div class="app">
@@ -5745,11 +5792,11 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
     var h = '<div class="sv-hero"><div><small>Season ' + SV_SEASON.n + '</small><h3>' + esc(SV_SEASON.name) + '</h3><p>30 carros · 5 rarezas · packs gratis cada semana</p></div>' +
       '<div class="sv-prog"><div><span>Colección</span><b>' + nOwn + '/30</b></div><i><em style="width:' + (nOwn / 30 * 100) + '%"></em></i><div><span>Spotted (con tu foto)</span><b>' + nUp + '/30</b></div><i><em class="g" style="width:' + (nUp / 30 * 100) + '%"></em></i></div>' +
       '<div class="mk-bal"><span>Tu saldo</span><b>' + (SV.wallet.coins | 0) + '</b><span>monedas GARAGE</span></div></div>';
-    var tabs = [['packs', 'Packs' + (SV.packs.length ? ' (' + SV.packs.length + ')' : '')], ['album', 'Álbum'], ['up', 'Mejorar con foto']];
+    var tabs = [['packs', 'Packs' + (SV.packs.length ? ' (' + SV.packs.length + ')' : '')], ['album', 'Álbum'], ['up', 'Mejorar con foto'], ['rank', 'Ranking']];
     if (me === MK_ADMIN) tabs.push(['admin', 'Admin']);
     h += '<div class="mk-tabs">' + tabs.map(function (t) { return '<button type="button" class="chip" data-sv="tab" data-id="' + t[0] + '" aria-pressed="' + (SV.tab === t[0]) + '">' + t[1] + '</button>'; }).join('') + '<button type="button" class="chip" data-sv="tomk">Mercado de cartas →</button></div>';
     if (SV.msg) h += '<p class="status mk-msg">' + esc(SV.msg) + '</p>';
-    h += ({ packs: svPacksHTML, album: svAlbumHTML, up: svUpHTML, admin: svAdminHTML }[SV.tab] || svPacksHTML)(owned);
+    h += ({ packs: svPacksHTML, album: svAlbumHTML, up: svUpHTML, rank: svRankHTML, admin: svAdminHTML }[SV.tab] || svPacksHTML)(owned);
     box.innerHTML = h; svStagger(box);
   }
   function svPacksHTML(owned) {
@@ -5967,7 +6014,7 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
       document.body.appendChild(sp); setTimeout(function () { sp.classList.add('out'); }, 650); setTimeout(function () { sp.remove(); }, 1200);
     }
   }
-  function gnCur() { return SV.open ? 'seasons' : MK.open ? 'market' : SC.open ? 'social' : (state.zone ? 'me' : ''); }
+  function gnCur() { return SV.open ? 'seasons' : MK.open ? 'market' : SC.open ? 'social' : (state.zone || (typeof pcAnyOpen === 'function' && pcAnyOpen()) ? 'me' : ''); }
   function gnSync() {
     var c = gnCur();
     if (c !== GN.last) { GN.last = c; document.querySelectorAll('#gNav .gn-b').forEach(function (b) { var on = b.dataset.gn === c; b.classList.toggle('on', on); b.setAttribute('aria-current', on ? 'page' : 'false'); }); }
@@ -6029,8 +6076,8 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
     try { var r = await FB.fs.collection('plus_req').doc(me).get(); PLUS.req = r.exists ? r.data() : null; } catch (e) { PLUS.req = null; }
     PLUS.loaded = true; gnMeStrip(true);
   }
-  function pcAnyOpen() { return PC.open || PLUS.open; }
-  function pcCloseAll() { if (PC.open) pgClose('pc'); if (PLUS.open) pgClose('plus'); }
+  function pcAnyOpen() { return PC.open || PLUS.open || BD.open; }
+  function pcCloseAll() { if (PC.open) pgClose('pc'); if (PLUS.open) pgClose('plus'); if (BD.open) pgClose('bd'); }
   function pgOpen(key, title, sub) {
     pcCloseAll();
     var pg = document.createElement('div');
@@ -6038,11 +6085,11 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
     pg.setAttribute('role', 'region'); pg.setAttribute('aria-label', title);
     pg.innerHTML = '<div class="mk-page-in"><div class="mk-head"><button class="btn" type="button" data-pc="close" data-id="' + key + '">← Mi cuenta</button><div class="mk-h"><small>' + sub + '</small><h2>' + title + '</h2></div><span></span></div><div id="' + key + 'Body"></div></div>';
     document.body.appendChild(pg); document.body.classList.add('mk-on');
-    if (key === 'pc') PC.open = true; else PLUS.open = true;
+    if (key === 'pc') PC.open = true; else if (key === 'bd') BD.open = true; else PLUS.open = true;
   }
   function pgClose(key) {
     var pg = $('#' + key + 'Page'); if (pg) pg.remove();
-    if (key === 'pc') PC.open = false; else PLUS.open = false;
+    if (key === 'pc') PC.open = false; else if (key === 'bd') BD.open = false; else PLUS.open = false;
     if (!MK.open && !SC.open && !SV.open && !pcAnyOpen()) document.body.classList.remove('mk-on');
   }
   function gnMeStrip(force) {
@@ -6055,7 +6102,8 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
     if (!el) { el = document.createElement('div'); el.id = 'gnMe'; el.className = 'gn-me'; bar.parentNode.insertBefore(el, bar.nextSibling); }
     el.dataset.sig = sig;
     el.innerHTML = '<button type="button" class="gn-me-b" data-pc="open"><span class="gn-me-i">🖨</span><span><b>Cartas físicas</b><small>Imprime tus carros y cartas</small></span></button>' +
-      '<button type="button" class="gn-me-b plus' + (plusOn() ? ' on' : '') + '" data-plus="open"><span class="gn-me-i">★</span><span><b>GARAGE+</b><small>' + (plusOn() ? 'Eres miembro ✓' : 'Packs extra y más') + '</small></span></button>';
+      '<button type="button" class="gn-me-b plus' + (plusOn() ? ' on' : '') + '" data-plus="open"><span class="gn-me-i">★</span><span><b>GARAGE+</b><small>' + (plusOn() ? 'Eres miembro ✓' : 'Packs extra y más') + '</small></span></button>' +
+      '<button type="button" class="gn-me-b bd" data-bd="open"><span class="gn-me-i">🏅</span><span><b>Insignias</b><small>Tus logros</small></span></button>';
   }
 
   /* --- cartas físicas --- */
@@ -6251,6 +6299,141 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
   });
   setInterval(function () { gnMeStrip(false); }, 600);
   setTimeout(function () { if (FB.user) plusLoad(); }, 2500);
+
+  /* ---------- Insignias y logros + ranking de la Season ---------- */
+  var BD = { open: false, cache: {}, rank: null, rankT: 0, rankLoading: false, rmode: 'col', me: null };
+  var BD_LIST = [
+    ['spot1', '📸', 'Primer spot', 'Tu primer carro spoteado y aprobado.', function (s) { return [s.spots, 1]; }],
+    ['spot10', '🎯', 'Cazador', '10 spots aprobados.', function (s) { return [s.spots, 10]; }],
+    ['spot50', '🦅', 'Leyenda de la calle', '50 spots aprobados.', function (s) { return [s.spots, 50]; }],
+    ['q90', '🔍', 'Ojo fino', 'Un spot con calidad de foto de 90 o más.', function (s) { return [s.q90, 1]; }],
+    ['rare', '💎', 'Cazador de raras', 'Un spot aprobado de rareza Rara o más.', function (s) { return [s.rareSpot, 1]; }],
+    ['epic', '🔮', 'Épico en la calle', 'Un spot aprobado Épico o Legendario.', function (s) { return [s.epicSpot, 1]; }],
+    ['garage', '🏠', 'Mi garage', 'Agregaste tu propio carro.', function (s) { return [s.garage, 1]; }],
+    ['s10', '🃏', 'Coleccionista S1', '10 carros distintos de la Season 1.', function (s) { return [s.distinct, 10]; }],
+    ['s20', '🔥', 'Fanático S1', '20 carros distintos de la Season 1.', function (s) { return [s.distinct, 20]; }],
+    ['s30', '👑', 'Season completa', 'Los 30 carros de la Season 1.', function (s) { return [s.distinct, 30]; }],
+    ['leg', '🌟', 'Pack legendario', 'Tienes una carta Legendaria.', function (s) { return [s.leg, 1]; }],
+    ['up1', '✨', 'Spotted ✓', 'Mejoraste una carta con tu propia foto.', function (s) { return [s.ups, 1]; }],
+    ['up10', '🏆', 'Maestro spotted', '10 cartas mejoradas con tu foto.', function (s) { return [s.ups, 10]; }],
+    ['sell', '💰', 'Primera venta', 'Vendiste una carta en el mercado.', function (s) { return [s.sells, 1]; }],
+    ['auc', '🔨', 'Martillazo', 'Ganaste una subasta del mercado.', function (s) { return [s.aucWins, 1]; }],
+    ['top3', '🥇', 'Top 3 de la Season', 'Estás entre los 3 primeros del ranking de colección.', function (s) { return [s.top3, 1]; }],
+    ['plus', '★', 'Miembro GARAGE+', 'Tienes GARAGE+ activo.', function (s) { return [s.plus, 1]; }]
+  ];
+  function bdEarned(s) { return BD_LIST.filter(function (b) { var p = b[4](s); return p[0] >= p[1]; }); }
+  async function bdRankLoad(force) {
+    if (BD.rankLoading || (!force && BD.rank && Date.now() - BD.rankT < 120000)) return BD.rank;
+    BD.rankLoading = true;
+    try {
+      var r = await Promise.all([FB.fs.collection('sv_cards').limit(5000).get(), FB.fs.collection('sv_up').limit(5000).get(), SVM.t ? null : svmLoad().catch(function () {})]);
+      var px = {}; SV_CARS.forEach(function (c) { px[c[0]] = SV_GUIDE[c[3]]; });
+      (SVM.tx || []).forEach(function (t) { px[t.car] = t.price; });
+      var by = {};
+      r[0].forEach(function (d) { var c = d.data(), o = by[c.owner] || (by[c.owner] = { uid: c.owner, set: {}, n: 0, val: 0, ups: 0 }); o.set[c.car] = 1; o.n++; o.val += px[c.car] || 0; });
+      r[1].forEach(function (d) { var u = d.data(), o = by[u.uid] || (by[u.uid] = { uid: u.uid, set: {}, n: 0, val: 0, ups: 0 }); o.ups++; });
+      BD.rank = Object.keys(by).map(function (k) { var o = by[k]; o.col = Object.keys(o.set).length; delete o.set; return o; });
+      BD.rankT = Date.now();
+    } finally { BD.rankLoading = false; }
+    return BD.rank;
+  }
+  function bdSorted(mode) {
+    var key = mode === 'val' ? 'val' : mode === 'up' ? 'ups' : 'col';
+    return (BD.rank || []).slice().sort(function (a, b) { return b[key] - a[key] || b.col - a.col || b.n - a.n; });
+  }
+  async function bdStats(uid, force) {
+    var c = BD.cache[uid]; if (c && !force && Date.now() - c.t < 180000) return c.s;
+    var q = function (p) { return p.catch(function () { return null; }); };
+    var r = await Promise.all([
+      q(FB.fs.collection('users').doc(uid).collection('cars').get()),
+      q(FB.fs.collection('sv_cards').where('owner', '==', uid).get()),
+      q(FB.fs.collection('sv_up').where('uid', '==', uid).get()),
+      q(FB.fs.collection('sv_tx').where('from', '==', uid).limit(50).get()),
+      q(FB.fs.collection('sv_tx').where('to', '==', uid).limit(200).get()),
+      q(FB.fs.collection('plus').doc(uid).get()),
+      q(bdRankLoad())
+    ]);
+    var s = { spots: 0, q90: 0, rareSpot: 0, epicSpot: 0, garage: 0, distinct: 0, leg: 0, ups: 0, sells: 0, aucWins: 0, top3: 0, plus: 0 };
+    if (r[0]) r[0].forEach(function (d) {
+      var x = d.data(); if (x.kind === 'garage') { s.garage++; return; }
+      if (!(x.rev && x.rev.status === 'ok')) return;
+      var rr = x.rev.rarity != null ? x.rev.rarity : x.rarity, qq = x.rev.q != null ? x.rev.q : x.q;
+      s.spots++; if (qq >= 90) s.q90 = 1; if (rr >= 2) s.rareSpot = 1; if (rr >= 3) s.epicSpot = 1;
+    });
+    if (r[1]) { var set = {}; r[1].forEach(function (d) { var x = d.data(); set[x.car] = 1; if (x.rar === 4) s.leg = 1; }); s.distinct = Object.keys(set).length; }
+    if (r[2]) s.ups = r[2].size;
+    if (r[3]) s.sells = r[3].size;
+    if (r[4]) r[4].forEach(function (d) { if (d.data().kind === 'auc') s.aucWins++; });
+    if (r[5] && r[5].exists && r[5].data().until > Date.now()) s.plus = 1;
+    var top = bdSorted('col').slice(0, 3); if (top.some(function (o) { return o.uid === uid && o.col > 0; })) s.top3 = 1;
+    BD.cache[uid] = { t: Date.now(), s: s };
+    return s;
+  }
+  function bdTile(b, s, small) {
+    var p = b[4](s), got = p[0] >= p[1], pct = Math.min(100, Math.round(p[0] / p[1] * 100));
+    if (small) return '<span class="bd-mini" title="' + esc(b[2] + ' · ' + b[3]) + '">' + b[1] + '</span>';
+    return '<div class="bd-t' + (got ? ' got' : '') + '"><span class="bd-ic">' + b[1] + '</span><b>' + esc(b[2]) + '</b><small>' + esc(b[3]) + '</small>' +
+      (got ? '<em>Conseguida ✓</em>' : '<i class="bd-bar"><u style="width:' + pct + '%"></u></i><em class="bd-p">' + Math.min(p[0], p[1]) + ' / ' + p[1] + '</em>') + '</div>';
+  }
+  function bdRender() {
+    var box = $('#bdBody'); if (!box) return;
+    if (!FB.user) { box.innerHTML = '<p class="srch-empty">Entra a tu cuenta para ver tus insignias.</p>'; return; }
+    var s = BD.me; if (!s) { box.innerHTML = '<p class="srch-empty">Calculando tus logros…</p>'; return; }
+    var got = bdEarned(s);
+    var h = '<div class="bd-hero"><div class="bd-ring" style="--p:' + Math.round(got.length / BD_LIST.length * 100) + '"><b>' + got.length + '</b><span>de ' + BD_LIST.length + '</span></div><div><small>Insignias y logros</small><h3>' + (got.length ? '¡Vas muy bien!' : 'Empieza a coleccionar') + '</h3><p>Se ven en tu perfil de Social. Spotea, abre packs, mejora cartas y usa el mercado para conseguir más.</p></div></div>';
+    h += '<div class="bd-grid">' + BD_LIST.map(function (b) { return bdTile(b, s); }).join('') + '</div>';
+    box.innerHTML = h;
+    box.querySelectorAll('.bd-t').forEach(function (e, i) { e.style.setProperty('--i', i); });
+  }
+  async function bdOpen() {
+    if (!state.zone) { state.zone = 'cards'; if (!state.tab || /^(spot|feed|social)$/.test(state.tab)) state.tab = 'spotted'; render(); }
+    pgOpen('bd', 'Insignias', 'Mi cuenta'); bdRender();
+    try { BD.me = await bdStats(mkMe(), true); } catch (e) { BD.me = BD.me || { spots: 0 }; }
+    bdRender();
+  }
+  /* insignias en el perfil de Social */
+  setInterval(function () {
+    if (!SC.open) return;
+    var pr = document.querySelector('#scBody .sc-prof'); if (!pr || pr.querySelector('.bd-row')) return;
+    var uid = SC.prof || fbMe(); if (!uid) return;
+    var row = document.createElement('div'); row.className = 'bd-row'; row.dataset.uid = uid; row.innerHTML = '<span class="bd-load">Insignias…</span>';
+    var bio = pr.querySelector('.sc-bio'); if (bio) bio.parentNode.insertBefore(row, bio.nextSibling); else pr.appendChild(row);
+    bdStats(uid).then(function (s) {
+      if (row.dataset.uid !== uid) return;
+      var got = bdEarned(s);
+      row.innerHTML = got.length ? got.slice(0, 9).map(function (b) { return bdTile(b, s, true); }).join('') + (got.length > 9 ? '<span class="bd-more">+' + (got.length - 9) + '</span>' : '') + (uid === fbMe() ? '<button type="button" class="bd-all" data-bd="open">Ver todas</button>' : '')
+        : (uid === fbMe() ? '<button type="button" class="bd-all" data-bd="open">🏅 Consigue tu primera insignia</button>' : '');
+    }).catch(function () { row.remove(); });
+  }, 700);
+
+  /* ranking de la Season (pestaña en Seasons) */
+  function svRankHTML() {
+    if (!BD.rank) { bdRankLoad().then(function () { if (SV.open && SV.tab === 'rank') svRender(); }).catch(function () {}); return '<p class="srch-empty">Cargando ranking…</p>'; }
+    var me = mkMe(), mode = BD.rmode, list = bdSorted(mode), key = mode === 'val' ? 'val' : mode === 'up' ? 'ups' : 'col';
+    var unit = mode === 'val' ? ' monedas' : mode === 'up' ? ' spotted' : '/30';
+    var pos = list.findIndex(function (o) { return o.uid === me; });
+    var h = '<div class="mk-tabs">' + [['col', 'Colección'], ['val', 'Valor'], ['up', 'Spotted']].map(function (m) { return '<button type="button" class="chip" data-bd="rmode" data-id="' + m[0] + '" aria-pressed="' + (mode === m[0]) + '">' + m[1] + '</button>'; }).join('') + '</div>';
+    h += '<p class="svm-note">' + (mode === 'col' ? 'Carros distintos de la Season 1.' : mode === 'val' ? 'Valor de todas tus cartas según el último precio del mercado (o el precio guía).' : 'Cartas que mejoraste con tu propia foto.') + (pos >= 0 ? ' Tu posición: <b>#' + (pos + 1) + '</b>.' : '') + '</p>';
+    if (!list.length) return h + '<p class="srch-empty">Todavía nadie tiene cartas.</p>';
+    var top = list.slice(0, 3), order = [1, 0, 2];
+    h += '<div class="rk-pod">' + order.map(function (i) {
+      var o = top[i]; if (!o) return '<div class="rk-p e"></div>';
+      return '<div class="rk-p p' + (i + 1) + (o.uid === me ? ' me' : '') + '" style="--i:' + i + '"><span class="rk-av">' + (i === 0 ? '👑' : i === 1 ? '🥈' : '🥉') + '</span><b>' + svU(o.uid) + '</b><em>' + o[key].toLocaleString('es') + unit + '</em><i>' + (i + 1) + '</i></div>';
+    }).join('') + '</div>';
+    h += '<div class="rk-list">' + list.slice(3, 50).map(function (o, j) {
+      var n = j + 4, w = mode === 'col' ? Math.round(o.col / 30 * 100) : Math.round(o[key] / Math.max(1, list[0][key]) * 100);
+      return '<div class="rk-r' + (o.uid === me ? ' me' : '') + '" style="--i:' + Math.min(j, 30) + '"><span class="rk-n">#' + n + '</span><span class="rk-u">' + svU(o.uid) + '<i class="bd-bar"><u style="width:' + w + '%"></u></i></span><b>' + o[key].toLocaleString('es') + unit + '</b></div>';
+    }).join('') + '</div>';
+    if (pos >= 50) h += '<div class="rk-r me"><span class="rk-n">#' + (pos + 1) + '</span><span class="rk-u">' + svU(me) + '</span><b>' + list[pos][key].toLocaleString('es') + unit + '</b></div>';
+    return h;
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('[data-bd]'); if (!t) return;
+    e.preventDefault();
+    var k = t.dataset.bd;
+    if (k === 'open') { if (SC.open) scClose(true); return bdOpen(); }
+    if (k === 'rmode') { BD.rmode = t.dataset.id; return svRender(); }
+  });
 
   function scOpen(fromHash) {
     if (SC.open) return;
