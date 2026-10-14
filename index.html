@@ -1158,7 +1158,8 @@ body.dash-social .home-tile.seasons { order: 9; }
 body.has-gnav { padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px)); }
 body.has-gnav .mk-page { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); animation: gnIn .28s cubic-bezier(.2,.8,.2,1); }
 @keyframes gnIn { from { opacity: 0; translate: 0 10px; } }
-body.has-gnav #homeBtn, body.has-gnav #mkBtn, body.has-gnav #scBtn, body.has-gnav #acctBtn { display: none !important; }
+body.has-gnav #homeBtn, body.has-gnav #mkBtn, body.has-gnav #scBtn { display: none !important; }
+body.has-gnav.zone-cards #tabAcct, body.has-gnav.zone-spot #tabAcct, body.has-gnav.zone-cards #tabBoard { display: block !important; }
 body.has-gnav .mk-head [data-sc="close"], body.has-gnav .mk-head [data-mk="close"], body.has-gnav .mk-head [data-sv="close"] { display: none !important; }
 body.has-gnav #home { display: none !important; }
 body.has-gnav #tabSpotted:not([hidden]), body.has-gnav #tabGarage:not([hidden]), body.has-gnav #tabPhoto:not([hidden]), body.has-gnav #tabBoard:not([hidden]), body.has-gnav #tabAcct:not([hidden]) { display: block !important; }
