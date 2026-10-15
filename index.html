@@ -1317,6 +1317,70 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
 .sim-feed { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; }
 .sim-feed li { font-size: 13px; padding: 4px 8px; border-radius: 8px; background: var(--surface); animation: svIn .4s cubic-bezier(.2,.8,.2,1); }
 .sim-feed li:first-child { box-shadow: 0 0 0 1px rgba(163,91,255,.5); }
+/* ---------- Pulido visual (sleek) ---------- */
+#gnMe { margin: 4px 0 14px; }
+.gnav .gn-me { display: flex; gap: 3px; margin: 0; grid-template-columns: none; }
+.me-plus { color: #F2B33D; }
+.svc { will-change: auto; }
+.sv-still .svc, .sv-still .sva, .sv-still .svm-row, .sv-still .sv-pk, .sv-still .sv-odds > div, .sv-still .bd-t, .sv-still .rk-r, .sv-still .rk-p, .sv-still .plus-p, .sv-still .sim-feed li { animation: none !important; }
+.btn, .chip, .gn-b, .gn-me-b, .svm-row, .pc-f, .pc-pick, .sc-sec button { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.btn { transition: transform .12s ease, background-color .15s ease, border-color .15s ease, box-shadow .15s ease, opacity .15s; }
+.btn.is-press, .chip.is-press, .gn-me-b.is-press, .pc-f.is-press, .svm-row.is-press { transform: scale(.96); }
+.btn.primary { box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 28%, transparent); }
+@media (hover: hover) { .btn.primary:hover { filter: brightness(1.06); box-shadow: 0 8px 22px color-mix(in srgb, var(--accent) 38%, transparent); } }
+.btn:focus-visible, .chip:focus-visible, .gn-b:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn.is-ld { position: relative; color: transparent !important; pointer-events: none; }
+.btn.is-ld::after { content: ""; position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; border: 2px solid currentColor; border-color: var(--fg) var(--fg) transparent transparent; animation: uxSpin .7s linear infinite; }
+.btn.primary.is-ld::after { border-color: var(--accent-fg, #fff) var(--accent-fg, #fff) transparent transparent; }
+@keyframes uxSpin { to { transform: rotate(360deg); } }
+
+/* encabezado de cada zona: fijo arriba, tipo vidrio */
+body.has-gnav .mk-page-in { max-width: 1080px; padding-left: 20px; padding-right: 20px; }
+body.has-gnav .mk-head { position: sticky; top: 0; z-index: 6; margin: 0 -20px 14px; padding: 14px 20px 12px; background: color-mix(in srgb, var(--bg) 82%, transparent); -webkit-backdrop-filter: saturate(1.4) blur(16px); backdrop-filter: saturate(1.4) blur(16px); border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent); }
+body.has-gnav .mk-h small { display: block; font: 600 10px var(--f-mono, monospace); letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+body.has-gnav .mk-h h2 { margin: 0; font: 800 30px/1.05 var(--f-display, inherit); letter-spacing: -.01em; }
+body.has-gnav .sc-page .mk-head { top: 54px; }
+@media (max-width: 640px) { body.has-gnav .mk-page-in { padding-left: 14px; padding-right: 14px; } body.has-gnav .mk-head { margin: 0 -14px 12px; padding: 12px 14px 10px; } body.has-gnav .mk-h h2 { font-size: 24px; } }
+
+/* pestañas tipo control segmentado */
+.mk-tabs { display: flex; flex-wrap: nowrap; gap: 4px; padding: 4px; margin: 0 0 14px; width: fit-content; max-width: 100%; overflow-x: auto; scrollbar-width: none; border-radius: 14px; background: var(--surface-2, color-mix(in srgb, var(--surface) 70%, var(--line))); border: 1px solid color-mix(in srgb, var(--line) 60%, transparent); }
+.mk-tabs::-webkit-scrollbar { display: none; }
+.mk-tabs .chip { flex: 0 0 auto; min-height: 34px; padding: 6px 14px; border: 0; border-radius: 10px; background: transparent; color: var(--muted); font: 600 13px var(--f-body, inherit); white-space: nowrap; box-shadow: none; transition: background-color .15s, color .15s, transform .12s; }
+.mk-tabs .chip[aria-pressed="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 2px rgba(0,0,0,.18), 0 0 0 1px color-mix(in srgb, var(--line) 80%, transparent); }
+@media (hover: hover) { .mk-tabs .chip:not([aria-pressed="true"]):hover { color: var(--fg); background: color-mix(in srgb, var(--surface) 50%, transparent); } }
+body.has-gnav .bar .tabs { display: flex; gap: 4px; padding: 4px; width: fit-content; max-width: 100%; overflow-x: auto; scrollbar-width: none; border-radius: 14px; background: var(--surface-2, color-mix(in srgb, var(--surface) 70%, var(--line))); border: 1px solid color-mix(in srgb, var(--line) 60%, transparent); }
+body.has-gnav .bar .tabs::-webkit-scrollbar { display: none; }
+body.has-gnav .bar .tab { flex: 0 0 auto; border: 0 !important; border-radius: 10px; padding: 7px 14px; background: transparent; color: var(--muted); font-weight: 600; white-space: nowrap; }
+body.has-gnav .bar .tab[aria-selected="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 2px rgba(0,0,0,.18), 0 0 0 1px color-mix(in srgb, var(--line) 80%, transparent); }
+body.has-gnav .bar .tab::after { display: none !important; }
+
+/* títulos de sección y tarjetas */
+#svBody h4, #mkBody h4, #pcBody h4, #plusBody h4, #bdBody h4 { display: flex; align-items: center; gap: 10px; margin: 24px 0 10px; font: 700 11px var(--f-mono, monospace); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+#svBody h4::after, #mkBody h4::after, #pcBody h4::after, #plusBody h4::after, #bdBody h4::after { content: ""; flex: 1; height: 1px; background: color-mix(in srgb, var(--line) 70%, transparent); }
+.sv-pk, .svd-f, .svb-r, .pc-o, .sva, .svm-kpis div, .svm-ix, .sv-odds div, .sv-up, .bd-t, .rk-r, .plus-p, .pc-sum, .svd-chart, .svm-list { border-radius: 16px; border-color: color-mix(in srgb, var(--line) 75%, transparent); }
+.svm-kpis div, .svm-ix { background: linear-gradient(180deg, color-mix(in srgb, var(--surface) 100%, transparent), color-mix(in srgb, var(--surface) 80%, var(--bg))); }
+.svm-kpis b, .svm-ix b, .svm-n, .svb-r b, .sva-p b, .rk-r b, .svt b, .pc-sum b { font-variant-numeric: tabular-nums; }
+.svm-row { min-height: 56px; transition: background-color .12s; }
+.svm-row:not(.svm-hd) .svm-c b { font-weight: 700; }
+.svm-list .svm-row:nth-child(even):not(.svm-hd) { background: color-mix(in srgb, var(--surface) 60%, var(--bg)); }
+.sv-hero, .pc-hero, .bd-hero { box-shadow: 0 14px 34px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.08); }
+.sv-hero .sv-tomk { margin-top: 10px; min-height: 36px; padding: 6px 14px; font-size: 13px; background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.2); color: #fff; }
+.mk-bal { border-radius: 16px; }
+
+/* Mi cuenta: encabezado de perfil + accesos */
+.me-head { display: flex; align-items: center; gap: 14px; padding: 16px; margin-bottom: 10px; border-radius: 18px; border: 1px solid color-mix(in srgb, var(--line) 75%, transparent); background: radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 60%), var(--surface); }
+.me-av { display: grid; place-items: center; flex: 0 0 56px; height: 56px; border-radius: 50%; font: 800 22px var(--f-display, inherit); color: #fff; background: linear-gradient(140deg, var(--accent), #FF8A3D); box-shadow: 0 6px 16px color-mix(in srgb, var(--accent) 35%, transparent); }
+.me-av.plus { box-shadow: 0 0 0 3px #F2B33D, 0 6px 16px rgba(242,179,61,.4); }
+.me-id { min-width: 0; flex: 1; }
+.me-id b { display: block; font: 800 20px var(--f-display, inherit); }
+.me-id small { color: var(--muted); font-size: 13px; }
+.me-stats { display: flex; gap: 18px; }
+.me-stats div { text-align: center; }
+.me-stats b { display: block; font: 800 18px var(--f-display, inherit); font-variant-numeric: tabular-nums; }
+.me-stats span { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+@media (max-width: 560px) { .me-head { flex-wrap: wrap; } .me-stats { width: 100%; justify-content: space-around; padding-top: 10px; border-top: 1px solid var(--line); } }
+#gnMe .gn-me-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 560px) { #gnMe .gn-me-row { grid-template-columns: 1fr; } }
 </style>
 
 <div class="app">
@@ -5800,12 +5864,12 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
     if (!SV.loaded) { box.innerHTML = (SV.msg ? '<p class="status mk-msg">' + esc(SV.msg) + '</p>' : '') + '<p class="srch-empty">Cargando…</p>'; return; }
     var owned = {}; SV.cards.forEach(function (c) { owned[c.car] = (owned[c.car] || 0) + 1; });
     var nOwn = Object.keys(owned).length, nUp = Object.keys(SV.ups).length;
-    var h = '<div class="sv-hero"><div><small>Season ' + SV_SEASON.n + '</small><h3>' + esc(SV_SEASON.name) + '</h3><p>30 carros · 5 rarezas · packs gratis cada semana</p></div>' +
+    var h = '<div class="sv-hero"><div><small>Season ' + SV_SEASON.n + '</small><h3>' + esc(SV_SEASON.name) + '</h3><p>30 carros · 5 rarezas · packs gratis cada semana</p><button type="button" class="btn sv-tomk" data-sv="tomk">Mercado de cartas →</button></div>' +
       '<div class="sv-prog"><div><span>Colección</span><b>' + nOwn + '/30</b></div><i><em style="width:' + (nOwn / 30 * 100) + '%"></em></i><div><span>Spotted (con tu foto)</span><b>' + nUp + '/30</b></div><i><em class="g" style="width:' + (nUp / 30 * 100) + '%"></em></i></div>' +
       '<div class="mk-bal"><span>Tu saldo</span><b>' + (SV.wallet.coins | 0) + '</b><span>monedas GARAGE</span></div></div>';
-    var tabs = [['packs', 'Packs' + (SV.packs.length ? ' (' + SV.packs.length + ')' : '')], ['album', 'Álbum'], ['up', 'Mejorar con foto'], ['rank', 'Ranking']];
+    var tabs = [['packs', 'Packs' + (SV.packs.length ? ' (' + SV.packs.length + ')' : '')], ['album', 'Álbum'], ['rank', 'Ranking'], ['up', 'Spotted ✓']];
     if (me === MK_ADMIN) tabs.push(['admin', 'Admin']);
-    h += '<div class="mk-tabs">' + tabs.map(function (t) { return '<button type="button" class="chip" data-sv="tab" data-id="' + t[0] + '" aria-pressed="' + (SV.tab === t[0]) + '">' + t[1] + '</button>'; }).join('') + '<button type="button" class="chip" data-sv="tomk">Mercado de cartas →</button></div>';
+    h += '<div class="mk-tabs">' + tabs.map(function (t) { return '<button type="button" class="chip" data-sv="tab" data-id="' + t[0] + '" aria-pressed="' + (SV.tab === t[0]) + '">' + t[1] + '</button>'; }).join('') + '</div>';
     if (SV.msg) h += '<p class="status mk-msg">' + esc(SV.msg) + '</p>';
     h += ({ packs: svPacksHTML, album: svAlbumHTML, up: svUpHTML, rank: svRankHTML, admin: svAdminHTML }[SV.tab] || svPacksHTML)(owned);
     box.innerHTML = h; svStagger(box);
@@ -6109,13 +6173,18 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
     var show = document.body.classList.contains('has-gnav') && state.zone && FB.user;
     var el = $('#gnMe');
     if (!show) { if (el) el.remove(); return; }
-    var sig = plusOn() ? 'p' : 'n';
+    if (!SV.walletT) { SV.walletT = 1; svWalletGet().then(function () { gnMeStrip(true); }).catch(function () {}); }
+    var P = FB.prof || {}, coins = (SV.wallet && SV.wallet.coins) | 0, on = plusOn();
+    var sig = (on ? 'p' : 'n') + '|' + (P.name || '') + '|' + coins + '|' + (P.cards | 0) + '|' + (P.points | 0);
     if (el && !force && el.dataset.sig === sig) return;
-    if (!el) { el = document.createElement('div'); el.id = 'gnMe'; el.className = 'gn-me'; bar.parentNode.insertBefore(el, bar.nextSibling); }
+    if (!el) { el = document.createElement('div'); el.id = 'gnMe'; el.className = 'me-strip'; bar.parentNode.insertBefore(el, bar); }
     el.dataset.sig = sig;
-    el.innerHTML = '<button type="button" class="gn-me-b" data-pc="open"><span class="gn-me-i">🖨</span><span><b>Cartas físicas</b><small>Imprime tus carros y cartas</small></span></button>' +
-      '<button type="button" class="gn-me-b plus' + (plusOn() ? ' on' : '') + '" data-plus="open"><span class="gn-me-i">★</span><span><b>GARAGE+</b><small>' + (plusOn() ? 'Eres miembro ✓' : 'Packs extra y más') + '</small></span></button>' +
-      '<button type="button" class="gn-me-b bd" data-bd="open"><span class="gn-me-i">🏅</span><span><b>Insignias</b><small>Tus logros</small></span></button>';
+    var nm = String(P.name || 'tu');
+    el.innerHTML = '<div class="me-head"><span class="me-av' + (on ? ' plus' : '') + '">' + esc(nm.charAt(0).toUpperCase()) + '</span><div class="me-id"><b>@' + esc(nm) + (on ? ' <span class="me-plus">★</span>' : '') + '</b><small>Mi cuenta · tu garage, tus cartas y tus fotos</small></div>' +
+      '<div class="me-stats"><div><b>' + (P.cards | 0) + '</b><span>Cartas</span></div><div><b>' + (P.points | 0) + '</b><span>Puntos</span></div><div><b>' + coins + '</b><span>Monedas</span></div></div></div>' +
+      '<div class="gn-me-row"><button type="button" class="gn-me-b" data-pc="open"><span class="gn-me-i">🖨</span><span><b>Cartas físicas</b><small>Imprime tus carros y cartas</small></span></button>' +
+      '<button type="button" class="gn-me-b plus' + (on ? ' on' : '') + '" data-plus="open"><span class="gn-me-i">★</span><span><b>GARAGE+</b><small>' + (on ? 'Eres miembro ✓' : 'Packs extra y más') + '</small></span></button>' +
+      '<button type="button" class="gn-me-b bd" data-bd="open"><span class="gn-me-i">🏅</span><span><b>Insignias</b><small>Tus logros</small></span></button></div>';
   }
 
   /* --- cartas físicas --- */
@@ -6530,7 +6599,7 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
     SIM.asks = SIM.asks.slice(-160); SIM.bids = SIM.bids.slice(-160);
     simMerge();
     var foc = document.activeElement && /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName);
-    if (MK.open && /^(sx|auc|sxme)$/.test(MK.tab) && !foc && !SV.busy) mkRender();
+    if (MK.open && /^(sx|auc|sxme)$/.test(MK.tab) && !foc && !SV.busy && Date.now() - (window.__lastInput || 0) > 4000) mkRender();
     else { var fd = $('#simFeed'); if (fd) fd.innerHTML = simFeedHTML(); }
   }
   function simFeedHTML() { return SIM.feed.length ? SIM.feed.slice(0, 3).map(function (f) { return '<li>' + esc(f.txt) + '</li>'; }).join('') : '<li>Los bots están empezando a jugar…</li>'; }
@@ -6575,6 +6644,30 @@ body.is-app .gnav, body.is-app .mast, body.is-app .tabs { -webkit-user-select: n
     e.preventDefault(); simSet(t.dataset.sim === 'on');
   });
   if (SIM.on) setTimeout(function () { simBuild(); simMerge(); SIM.timer = setInterval(simTick, 3500); }, 1500);
+
+  /* ---------- UX: respuesta inmediata de botones, sin re-animar al refrescar ---------- */
+  window.__lastInput = 0;
+  ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(function (ev) { document.addEventListener(ev, function () { window.__lastInput = Date.now(); }, { passive: true, capture: true }); });
+  document.addEventListener('pointerdown', function (e) {
+    var b = e.target.closest && e.target.closest('button, .btn, .chip, [role="button"]'); if (!b || b.disabled) return;
+    b.classList.add('is-press');
+    var up = function () { setTimeout(function () { b.classList.remove('is-press'); }, 90); document.removeEventListener('pointerup', up, true); document.removeEventListener('pointercancel', up, true); };
+    document.addEventListener('pointerup', up, true); document.addEventListener('pointercancel', up, true);
+  }, true);
+  var UX_ASYNC = /^(buy|bid|unbid|sellbid|ask|unask|auct|abid|aclose|weekly|buypack|pluspack|open|upgrade|gift|art|artdel|send|cancel|setst|req|unreq|grant|revoke)$/;
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('.btn[data-sv], .btn[data-pc], .btn[data-plus]'); if (!b || b.disabled) return;
+    var k = b.dataset.sv || b.dataset.pc || b.dataset.plus;
+    if (!UX_ASYNC.test(k) || b.classList.contains('home-tile')) return;
+    b.classList.add('is-ld'); setTimeout(function () { if (b.isConnected) b.classList.remove('is-ld'); }, 8000);
+  }, true);
+  /* las listas animan solo la primera vez que abres cada página; después todo cambia al instante */
+  setInterval(function () {
+    ['#svBody', '#mkBody', '#pcBody', '#plusBody', '#bdBody', '#scBody'].forEach(function (s) {
+      var el = $(s); if (!el || el.dataset.uxs) return; el.dataset.uxs = '1';
+      setTimeout(function () { el.classList.add('sv-still'); }, 1400);
+    });
+  }, 300);
 
   function scOpen(fromHash) {
     if (SC.open) return;
