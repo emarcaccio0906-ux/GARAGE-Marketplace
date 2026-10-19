@@ -4881,10 +4881,14 @@ body.has-gnav .bar .tab::after { display: none !important; }
   }
   setTimeout(function () { mkAutoCredit(true); }, 8000);
   setInterval(function () { mkAutoCredit(false); }, 60000);
+  /* si se cayó la conexión, al volver (o al regresar a la pestaña) se recarga solo y se quita el aviso */
+  function mkRetryIfFailed() { if (MK.open && navigator.onLine !== false && /^No se pudo cargar el mercado/.test(MK.msg || '')) { MK.msg = ''; mkRefresh(); } }
+  window.addEventListener('online', function () { setTimeout(mkRetryIfFailed, 1500); });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) mkRetryIfFailed(); });
   async function mkRefresh() {
     var s = ++MK.seq;
     if (mkMe() === MK_ADMIN) await mkAutoCredit(true);
-    if (FB.on && FB.fs && mkMe()) { try { await mkLoad(); } catch (e) { MK.msg = 'No se pudo cargar el mercado. ' + (e && e.code === 'permission-denied' ? 'Faltan las reglas del Marketplace en Firebase.' : 'Revisa tu conexión.'); } }
+    if (FB.on && FB.fs && mkMe()) { try { await mkLoad(); if (/^No se pudo cargar el mercado/.test(MK.msg || '')) MK.msg = ''; } catch (e) { MK.msg = 'No se pudo cargar el mercado. ' + (e && e.code === 'permission-denied' ? 'Faltan las reglas del Marketplace en Firebase.' : 'Revisa tu conexión.'); } }
     if (s === MK.seq) mkRender();
   }
   function mkOpen(fromHash) {
@@ -5631,7 +5635,7 @@ body.has-gnav .bar .tab::after { display: none !important; }
     if (SVM.car && SV_ID[SVM.car]) return svCarDetailHTML(SVM.car, me);
     var ix = svIndex();
     var h = (typeof simBarHTML === 'function' ? simBarHTML() : '') + '<div class="svm-top"><div class="svm-ix"><small>Índice S' + SV_SEASON.n + ' · ' + esc(SV_SEASON.name) + '</small><b>' + ix.v.toLocaleString('es') + '</b>' + svPct(ix.chg) + '<span>7 días · suma del último precio de las 30 cartas</span></div>' +
-      '<div class="svm-kpis"><div><small>Ventas 7d</small><b>' + SVM.tx.filter(function (t) { return svMs(t.at) > Date.now() - 604800000; }).length + '</b></div><div><small>En venta</small><b>' + SVM.asks.length + '</b></div><div><small>Órdenes de compra</small><b>' + SVM.bids.length + '</b></div><div><small>Subastas</small><b>' + SVM.auct.length + '</b></div></div></div>';
+      '<div class="svm-kpis"><div><small>Ventas 7d</small><b>' + SVM.tx.filter(function (t) { return svMs(t.at) > Date.now() - 604800000; }).length + '</b></div><div><small>En venta</small><b>' + SVM.asks.length + '</b></div><div><small>Órdenes de compra</small><b>' + SVM.bids.length + '</b></div><div><small>Subastas</small><b>' + SVM.auct.filter(function (u) { return u.end > Date.now(); }).length + '</b></div></div></div>';
     h += '<p class="svm-note">Aquí solo se cambian cartas de los packs de Seasons. Las cartas que tú fotografías (spots) se quedan en tu colección.</p>';
     h += '<div class="mk-tabs svm-f">' + [[-1, 'Todas']].concat(SV_RN.map(function (n, i) { return [i, n]; })).map(function (f) { return '<button type="button" class="chip" data-sv="mf" data-id="' + f[0] + '" aria-pressed="' + (SVM.filter === f[0]) + '">' + f[1] + '</button>'; }).join('') + '</div>';
     h += '<div class="svm-list"><div class="svm-row svm-hd" aria-hidden="true"><span>Carta</span><span>Último</span><span>Cambio</span><span class="svm-hide">7 días</span><span>Venta (ask)</span><span>Compra (bid)</span><span class="svm-hide">Vol 7d</span></div>';
@@ -6523,36 +6527,66 @@ body.has-gnav .bar .tab::after { display: none !important; }
   function simR(a, b) { return a + Math.random() * (b - a); }
   function simPick(a) { return a[Math.floor(Math.random() * a.length)]; }
   function simCarRoll() { var x = Math.random() * 100, r = x < 50 ? 0 : x < 80 ? 1 : x < 93 ? 2 : x < 99 ? 3 : 4; return simPick(SV_BY[r]); }
+  /* banda de precio por rareza: cada rareza tiene su rango y no se cruza con la siguiente */
+  function simBand(rar) { var g = SV_GUIDE[rar]; return [g * 0.7, g * 1.4]; }
+  function simClamp(rar, v) { var b = simBand(rar); return Math.min(b[1], Math.max(b[0], v)); }
+  var SIM_MAX_ORD = 5; /* máximo de órdenes de venta y de compra por carta */
   function simBuild() {
     var now = Date.now(), wk = 7 * 86400000;
     SIM.bots = SIM_NAMES.map(function (n, i) { var uid = 'bot_' + i; SVM.names[uid] = n; SVM.asked[uid] = 1; return { uid: uid, name: n }; });
-    SIM.asks = []; SIM.bids = []; SIM.auct = []; SIM.tx = []; SIM.feed = []; SIM.val = {}; SIM.n = 0;
-    /* valor "justo" de cada carta: precio guía × demanda, con subidas y bajadas durante la semana */
+    SIM.asks = []; SIM.bids = []; SIM.auct = []; SIM.tx = []; SIM.feed = []; SIM.val = {}; SIM.base = {}; SIM.n = 0;
+    /* valor "justo" de cada carta: precio guía × demanda, dentro de la banda de su rareza */
     SV_CARS.forEach(function (r) {
-      var id = r[0], g = SV_GUIDE[r[3]], dem = simR(0.7, 1.7), drift = simR(-0.25, 0.45), vol = [0.05, 0.06, 0.08, 0.1, 0.12][r[3]];
-      var pts = [], v = g * dem * (1 - drift / 2);
-      for (var k = 0; k <= 42; k++) { v = Math.max(1, v * (1 + drift / 42 + simR(-vol, vol))); pts.push(v); }
+      var id = r[0], g = SV_GUIDE[r[3]], dem = simR(0.8, 1.3), drift = simR(-0.15, 0.2), vol = [0.04, 0.05, 0.06, 0.07, 0.08][r[3]];
+      var base = g * dem, pts = [], v = simClamp(r[3], base * (1 - drift / 2));
+      SIM.base[id] = base;
+      for (var k = 0; k <= 42; k++) { v = simClamp(r[3], v * (1 + drift / 42 + simR(-vol, vol))); pts.push(v); }
       SIM.val[id] = pts;
       var nTx = Math.round([22, 14, 8, 4, 1.5][r[3]] * simR(0.6, 1.5));
       for (var j = 0; j < nTx; j++) {
         var t = now - wk + Math.random() * wk, idx = Math.min(42, Math.floor((t - (now - wk)) / wk * 42));
         var a = simPick(SIM.bots), b = simPick(SIM.bots); if (a === b) continue;
-        SIM.tx.push({ id: 'sim_t' + (SIM.n++), sim: 1, inst: 'sim_c' + SIM.n, car: id, rar: r[3], from: a.uid, to: b.uid, price: Math.max(1, Math.round(pts[idx] * simR(0.92, 1.08))), kind: simPick(['ask', 'ask', 'bid', 'auc']), at: Math.round(t) });
+        SIM.tx.push({ id: 'sim_t' + (SIM.n++), sim: 1, inst: 'sim_c' + SIM.n, car: id, rar: r[3], from: a.uid, to: b.uid, price: Math.max(1, Math.round(pts[idx] * simR(0.95, 1.05))), kind: simPick(['ask', 'ask', 'bid', 'auc']), at: Math.round(t) });
       }
       var cur = pts[42];
-      for (var s = 0, ns = Math.floor(simR(1, 4)); s < ns; s++) SIM.asks.push({ id: 'sim_a' + (SIM.n++), sim: 1, seller: simPick(SIM.bots).uid, car: id, rar: r[3], price: Math.max(1, Math.round(cur * simR(1.03, 1.3))), at: now - Math.random() * 86400000 });
-      for (var q = 0, nb = Math.floor(simR(1, 4)); q < nb; q++) SIM.bids.push({ id: 'sim_b' + (SIM.n++), sim: 1, uid: simPick(SIM.bots).uid, car: id, price: Math.max(1, Math.round(cur * simR(0.7, 0.97))), at: now - Math.random() * 86400000 });
+      for (var s = 0, ns = Math.floor(simR(1, 4)); s < ns; s++) SIM.asks.push({ id: 'sim_a' + (SIM.n++), sim: 1, seller: simPick(SIM.bots).uid, car: id, rar: r[3], price: Math.max(1, Math.round(cur * simR(1.03, 1.25))), at: now - Math.random() * 86400000 });
+      for (var q = 0, nb = Math.floor(simR(1, 4)); q < nb; q++) SIM.bids.push({ id: 'sim_b' + (SIM.n++), sim: 1, uid: simPick(SIM.bots).uid, car: id, price: Math.max(1, Math.round(cur * simR(0.75, 0.95))), at: now - Math.random() * 86400000 });
+      simUncross(id, now - 1, true);
     });
     SIM.tx.sort(function (a, b) { return a.at - b.at; });
-    for (var u = 0; u < 7; u++) {
-      var c = simCarRoll(), val = SIM.val[c.id][42], hasBid = Math.random() < 0.75, st = Math.max(1, Math.round(val * simR(0.4, 0.7)));
-      SIM.auct.push({ id: 'sim_u' + (SIM.n++), sim: 1, seller: simPick(SIM.bots).uid, car: c.id, rar: c.rar, start: st, end: now + simR(0.1, 40) * 3600000, top: hasBid ? simPick(SIM.bots).uid : '', bid: hasBid ? Math.round(st * simR(1.05, 1.6)) : 0, at: now });
-    }
+    for (var u = 0; u < 7; u++) simNewAuct(now, true);
     SIM.rank = SIM.bots.map(function (b) {
       var set = {}, n = Math.floor(simR(6, 60)), val = 0;
       for (var i = 0; i < n; i++) { var c = simCarRoll(); set[c.id] = 1; val += Math.round(SIM.val[c.id][42]); }
       return { uid: b.uid, n: n, col: Object.keys(set).length, val: val, ups: Math.floor(simR(0, 7)), sim: 1 };
     });
+  }
+  /* subasta nueva de un bot: cada una tiene un tope oculto (lo máximo que los bots pagarían) */
+  function simNewAuct(now, first) {
+    var c = simCarRoll(), val = SIM.val[c.id][42], st = Math.max(1, Math.round(val * simR(0.4, 0.7)));
+    var cap = Math.max(st + 1, Math.round(val * simR(0.9, 1.3))), hasBid = first && Math.random() < 0.75;
+    SIM.auct.push({ id: 'sim_u' + (SIM.n++), sim: 1, seller: simPick(SIM.bots).uid, car: c.id, rar: c.rar, start: st, cap: cap, end: now + simR(first ? 0.1 : 2, 40) * 3600000, top: hasBid ? simPick(SIM.bots).uid : '', bid: hasBid ? Math.min(cap, Math.round(st * simR(1.05, 1.4))) : 0, at: now });
+  }
+  /* si alguien quiere comprar a un precio igual o mayor que el que otro pide, se cierra la venta */
+  function simUncross(cid, now, quiet) {
+    for (var guard = 0; guard < 10; guard++) {
+      var asks = SIM.asks.filter(function (a) { return a.car === cid; }).sort(function (a, b) { return a.price - b.price; });
+      var bids = SIM.bids.filter(function (b) { return b.car === cid; }).sort(function (a, b) { return b.price - a.price; });
+      if (!asks.length || !bids.length || bids[0].price < asks[0].price) return;
+      var a = asks[0], b = bids[0];
+      if (a.seller === b.uid) { SIM.bids.splice(SIM.bids.indexOf(b), 1); continue; }
+      var older = svMs(a.at) <= svMs(b.at) ? a.price : b.price; /* manda el precio de la orden más vieja */
+      SIM.asks.splice(SIM.asks.indexOf(a), 1); SIM.bids.splice(SIM.bids.indexOf(b), 1);
+      SIM.tx.push({ id: 'sim_t' + (SIM.n++), sim: 1, inst: 'sim_c' + SIM.n, car: cid, rar: SV_ID[cid] ? SV_ID[cid].rar : 0, from: a.seller, to: b.uid, price: older, kind: 'ask', at: now });
+      if (!quiet) simSay('@' + SVM.names[b.uid] + ' compró ' + simCarName(cid) + ' a @' + SVM.names[a.seller] + ' por ' + older);
+    }
+  }
+  /* máximo SIM_MAX_ORD órdenes por carta: se borra la peor (la venta más cara / la compra más barata) */
+  function simTrim(cid) {
+    var asks = SIM.asks.filter(function (a) { return a.car === cid; }).sort(function (a, b) { return a.price - b.price; });
+    while (asks.length > SIM_MAX_ORD) { var wa = asks.pop(); SIM.asks.splice(SIM.asks.indexOf(wa), 1); }
+    var bids = SIM.bids.filter(function (b) { return b.car === cid; }).sort(function (a, b) { return b.price - a.price; });
+    while (bids.length > SIM_MAX_ORD) { var wb = bids.pop(); SIM.bids.splice(SIM.bids.indexOf(wb), 1); }
   }
   function simMerge() {
     if (!SIM.on) return;
@@ -6564,39 +6598,66 @@ body.has-gnav .bar .tab::after { display: none !important; }
   function simRank() { if (SIM.on && BD.rank) { if (!SIM.bots.length) simBuild(); BD.rank = BD.rank.filter(function (o) { return !o.sim; }).concat(SIM.rank); } }
   function simSay(txt) { SIM.feed.unshift({ t: Date.now(), txt: txt }); SIM.feed = SIM.feed.slice(0, 6); }
   function simCarName(id) { var c = SV_ID[id]; return c ? c.make + ' ' + c.model : id; }
+  /* subastas de bots que ya terminaron: se cierran solas y sale una nueva para que siempre haya 5–7 activas */
+  function simAuctHousekeeping(now) {
+    var me = mkMe();
+    SIM.auct = SIM.auct.filter(function (u) {
+      if (u.end > now || u.seller === me || u.top === me) return true; /* las tuyas las cierras tú */
+      if (u.top) {
+        SIM.tx.push({ id: 'sim_t' + (SIM.n++), sim: 1, inst: 'sim_c' + SIM.n, car: u.car, rar: u.rar, from: u.seller, to: u.top, price: u.bid, kind: 'auc', at: now });
+        simSay('Subasta cerrada: @' + SVM.names[u.top] + ' se llevó ' + simCarName(u.car) + ' por ' + u.bid);
+      }
+      return false;
+    });
+    var live = SIM.auct.filter(function (u) { return u.end > now; }).length;
+    while (live < 5) { simNewAuct(now, false); live++; }
+  }
   function simTick() {
     if (!SIM.on || !SIM.bots.length) return;
     var now = Date.now(), r = Math.random(), car = simCarRoll(), cid = car.id;
     var asks = SIM.asks.filter(function (a) { return a.car === cid; }).sort(function (a, b) { return a.price - b.price; });
     var bids = SIM.bids.filter(function (b) { return b.car === cid; }).sort(function (a, b) { return b.price - a.price; });
-    var v = SIM.val[cid]; v[42] = Math.max(1, v[42] * (1 + simR(-0.04, 0.05)));
-    if (r < 0.4 && asks.length) {
-      var a = asks[0], buyer = simPick(SIM.bots); if (buyer.uid === a.seller) return;
-      SIM.asks.splice(SIM.asks.indexOf(a), 1);
-      SIM.tx.push({ id: 'sim_t' + (SIM.n++), sim: 1, inst: 'sim_c' + SIM.n, car: cid, rar: car.rar, from: a.seller, to: buyer.uid, price: a.price, kind: 'ask', at: now });
-      SIM.asks.push({ id: 'sim_a' + (SIM.n++), sim: 1, seller: simPick(SIM.bots).uid, car: cid, rar: car.rar, price: Math.max(1, Math.round(a.price * simR(0.98, 1.15))), at: now });
-      simSay('@' + buyer.name + ' compró ' + simCarName(cid) + ' por ' + a.price);
-    } else if (r < 0.6 && bids.length) {
-      var b = bids[0], seller = simPick(SIM.bots); if (seller.uid === b.uid) return;
-      SIM.bids.splice(SIM.bids.indexOf(b), 1);
-      SIM.tx.push({ id: 'sim_t' + (SIM.n++), sim: 1, inst: 'sim_c' + SIM.n, car: cid, rar: car.rar, from: seller.uid, to: b.uid, price: b.price, kind: 'bid', at: now });
-      SIM.bids.push({ id: 'sim_b' + (SIM.n++), sim: 1, uid: simPick(SIM.bots).uid, car: cid, price: Math.max(1, Math.round(b.price * simR(0.88, 1.03))), at: now });
-      simSay('@' + seller.name + ' le vendió ' + simCarName(cid) + ' a @' + SVM.names[b.uid] + ' por ' + b.price);
+    /* el valor se mueve parejo (sin tendencia a subir) y siempre tiende a volver a su valor base, dentro de su banda */
+    var v = SIM.val[cid], base = SIM.base[cid] || SV_GUIDE[car.rar];
+    v[42] = simClamp(car.rar, v[42] * (1 + simR(-0.04, 0.04)) + (base - v[42]) * 0.05);
+    var fair = v[42];
+    if (r < 0.4 && asks.length && asks[0].price <= fair * 1.3) {
+      var a = asks[0], buyer = simPick(SIM.bots);
+      if (buyer.uid !== a.seller) {
+        SIM.asks.splice(SIM.asks.indexOf(a), 1);
+        SIM.tx.push({ id: 'sim_t' + (SIM.n++), sim: 1, inst: 'sim_c' + SIM.n, car: cid, rar: car.rar, from: a.seller, to: buyer.uid, price: a.price, kind: 'ask', at: now });
+        SIM.asks.push({ id: 'sim_a' + (SIM.n++), sim: 1, seller: simPick(SIM.bots).uid, car: cid, rar: car.rar, price: Math.max(1, Math.round(fair * simR(1.02, 1.2))), at: now });
+        simSay('@' + buyer.name + ' compró ' + simCarName(cid) + ' por ' + a.price);
+      }
+    } else if (r < 0.6 && bids.length && bids[0].price >= fair * 0.75) {
+      var b = bids[0], seller = simPick(SIM.bots);
+      if (seller.uid !== b.uid) {
+        SIM.bids.splice(SIM.bids.indexOf(b), 1);
+        SIM.tx.push({ id: 'sim_t' + (SIM.n++), sim: 1, inst: 'sim_c' + SIM.n, car: cid, rar: car.rar, from: seller.uid, to: b.uid, price: b.price, kind: 'bid', at: now });
+        SIM.bids.push({ id: 'sim_b' + (SIM.n++), sim: 1, uid: simPick(SIM.bots).uid, car: cid, price: Math.max(1, Math.round(fair * simR(0.8, 0.97))), at: now });
+        simSay('@' + seller.name + ' le vendió ' + simCarName(cid) + ' a @' + SVM.names[b.uid] + ' por ' + b.price);
+      }
     } else if (r < 0.75) {
-      var p = Math.max(1, Math.round(v[42] * simR(1.02, 1.25))), bt = simPick(SIM.bots);
+      var p = Math.max(1, Math.round(fair * simR(1.02, 1.25))), bt = simPick(SIM.bots);
       SIM.asks.push({ id: 'sim_a' + (SIM.n++), sim: 1, seller: bt.uid, car: cid, rar: car.rar, price: p, at: now });
       simSay('@' + bt.name + ' puso a la venta ' + simCarName(cid) + ' en ' + p);
     } else if (r < 0.9) {
-      var pb = Math.max(1, Math.round(v[42] * simR(0.75, 0.97))), bb = simPick(SIM.bots);
+      var pb = Math.max(1, Math.round(fair * simR(0.75, 0.97))), bb = simPick(SIM.bots);
       SIM.bids.push({ id: 'sim_b' + (SIM.n++), sim: 1, uid: bb.uid, car: cid, price: pb, at: now });
       simSay('@' + bb.name + ' quiere comprar ' + simCarName(cid) + ' en ' + pb);
     } else {
-      var live = SIM.auct.filter(function (u) { return u.end > now; }); if (!live.length) return;
-      var u = simPick(live), who = simPick(SIM.bots); if (who.uid === u.seller || who.uid === u.top) return;
-      u.bid = u.top ? u.bid + Math.max(1, Math.ceil(u.bid * simR(0.05, 0.15))) : u.start; u.top = who.uid;
-      simSay('@' + who.name + ' pujó ' + u.bid + ' por ' + simCarName(u.car));
+      var live = SIM.auct.filter(function (u) { return u.end > now; });
+      if (live.length) {
+        var u = simPick(live), who = simPick(SIM.bots);
+        var next = u.top ? u.bid + Math.max(1, Math.ceil(u.bid * simR(0.05, 0.12))) : u.start;
+        if (who.uid !== u.seller && who.uid !== u.top && next <= (u.cap || Infinity)) {
+          u.bid = next; u.top = who.uid;
+          simSay('@' + who.name + ' pujó ' + u.bid + ' por ' + simCarName(u.car));
+        }
+      }
     }
-    SIM.asks = SIM.asks.slice(-160); SIM.bids = SIM.bids.slice(-160);
+    simUncross(cid, now); simTrim(cid); simAuctHousekeeping(now);
+    if (SIM.tx.length > 4000) SIM.tx = SIM.tx.slice(-4000);
     simMerge();
     var foc = document.activeElement && /INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName);
     if (MK.open && /^(sx|auc|sxme)$/.test(MK.tab) && !foc && !SV.busy && Date.now() - (window.__lastInput || 0) > 4000) mkRender();
@@ -6628,6 +6689,12 @@ body.has-gnav .bar .tab::after { display: none !important; }
       if (x < u.start || x <= u.bid) { MK.msg = 'Tu puja tiene que ser mayor.'; mkRender(); return true; }
       u.top = me; u.bid = x; simSay('Tú pujaste ' + x + ' por ' + simCarName(u.car) + ' (simulado)');
       MK.msg = 'Puja simulada: no se apartaron monedas.';
+    } else if (k === 'aclose') {
+      var uc = SIM.auct.filter(function (x) { return x.id === id; })[0]; if (!uc) return true;
+      SIM.auct.splice(SIM.auct.indexOf(uc), 1);
+      if (uc.top) SIM.tx.push({ id: 'sim_t' + (SIM.n++), sim: 1, inst: 'sim_c' + SIM.n, car: uc.car, rar: uc.rar, from: uc.seller, to: uc.top, price: uc.bid, kind: 'auc', at: now });
+      simSay(uc.top === me ? 'Ganaste ' + simCarName(uc.car) + ' por ' + uc.bid + ' (simulado)' : 'Subasta de ' + simCarName(uc.car) + ' cerrada (simulado)');
+      MK.msg = 'Subasta simulada cerrada: no se movieron monedas ni cartas reales.';
     } else return false;
     simMerge(); mkRender(); return true;
   }
