@@ -1381,6 +1381,50 @@ body.has-gnav .bar .tab::after { display: none !important; }
 @media (max-width: 560px) { .me-head { flex-wrap: wrap; } .me-stats { width: 100%; justify-content: space-around; padding-top: 10px; border-top: 1px solid var(--line); } }
 #gnMe .gn-me-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 @media (max-width: 560px) { #gnMe .gn-me-row { grid-template-columns: 1fr; } }
+/* ---------- Modo holográfico: carta estilo trading card física (63 × 88 mm) ---------- */
+.fv-actions { flex-wrap: wrap; justify-content: center; }
+.fv-holo-b.is-holo { border-color: #6A9CFF; box-shadow: 0 0 0 1px #6A9CFF inset, 0 0 18px -6px #6A9CFF; }
+.fv-card.holo { --u: calc(min(320px, 80vw, calc((100vh - 210px) * 63 / 88)) / 100); width: calc(var(--u) * 100); aspect-ratio: 63 / 88; }
+.fv-card.holo .hc { --u: inherit; aspect-ratio: auto; }
+.hc { --u: 3.2px; position: relative; display: flex; flex-direction: column; box-sizing: border-box; aspect-ratio: 63 / 88; padding: calc(var(--u) * 3.4); gap: calc(var(--u) * 2.4); border-radius: calc(var(--u) * 5); overflow: hidden; color: #fff; text-align: left; font-family: var(--f-body, sans-serif);
+  background:
+    repeating-linear-gradient(118deg, transparent 0 calc(var(--u) * 3.2), rgba(150,185,255,.10) calc(var(--u) * 4), transparent calc(var(--u) * 5.6)),
+    repeating-linear-gradient(118deg, transparent 0 calc(var(--u) * 9), rgba(255,255,255,.06) calc(var(--u) * 10), transparent calc(var(--u) * 12)),
+    linear-gradient(118deg, #020308 0%, #0c1629 22%, #02040a 40%, #142443 58%, #03050b 74%, #0d1830 90%, #020308 100%);
+  box-shadow: 0 0 0 1px rgba(170,195,255,.35) inset, 0 40px 80px -30px rgba(0,0,0,.85); }
+.hc::before { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 3; border-radius: inherit;
+  background: radial-gradient(circle at var(--mx, 50%) var(--my, 30%), rgba(170,200,255,.28), transparent 42%), linear-gradient(118deg, transparent 35%, rgba(200,220,255,.16) 48%, transparent 60%);
+  background-size: 100% 100%, 250% 100%; mix-blend-mode: screen; }
+@media (prefers-reduced-motion: no-preference) { .hc::before { animation: hcSweep 5.5s ease-in-out infinite; } @keyframes hcSweep { 0%, 100% { background-position: 0 0, 100% 0; } 50% { background-position: 0 0, 0 0; } } }
+.hc::after { content: ''; position: absolute; inset: calc(var(--u) * 1.6); pointer-events: none; z-index: 2; border-radius: calc(var(--u) * 3.6); border: 1px solid rgba(190,210,255,.28); }
+.hc-top { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: calc(var(--u) * 2); padding: 0 calc(var(--u) * 1.6); font: 600 calc(var(--u) * 3.2)/1 var(--f-mono, monospace); letter-spacing: .06em; text-transform: uppercase; color: #dfe7ff; }
+.hc-top > :last-child { text-align: right; }
+.hc-logo { font: italic 800 calc(var(--u) * 7.4)/1 var(--f-display, sans-serif); letter-spacing: .04em; color: #fff; text-shadow: 0 0 calc(var(--u) * 3) rgba(106,156,255,.55); }
+.hc-win { position: relative; z-index: 1; flex: 1 1 auto; min-height: 0; padding: calc(var(--u) * .9); border-radius: calc(var(--u) * 3); background: linear-gradient(135deg, #e9eef8, #6c7a96 30%, #f5f8ff 50%, #4f5d7a 70%, #c9d3e6); box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 0 calc(var(--u) * 6) -calc(var(--u) * 2) var(--rc); }
+.hc-win > .art { aspect-ratio: auto !important; height: 100%; width: 100%; border-radius: calc(var(--u) * 2.4); background: radial-gradient(ellipse 80% 60% at 50% 40%, #1b2a4a, #05070d 75%); }
+.hc-win > .art::after { background: linear-gradient(180deg, rgba(255,255,255,.08), transparent 30%), radial-gradient(ellipse 120% 90% at 50% 50%, transparent 62%, rgba(0,0,0,.35)); }
+.hc-plate { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; padding: calc(var(--u) * 2.2) calc(var(--u) * 4) calc(var(--u) * 2.4); clip-path: polygon(calc(var(--u) * 4) 0, calc(100% - calc(var(--u) * 4)) 0, 100% 50%, calc(100% - calc(var(--u) * 4)) 100%, calc(var(--u) * 4) 100%, 0 50%); background: linear-gradient(180deg, #0d1424, #05070d); box-shadow: 0 0 0 1px rgba(106,156,255,.5) inset; }
+.hc-make { font: 600 calc(var(--u) * 3)/1 var(--f-mono, monospace); letter-spacing: .14em; text-transform: uppercase; color: #9fb3d9; }
+.hc-model { max-width: 100%; margin-top: calc(var(--u) * 1); font: italic 800 calc(var(--u) * 8.6)/1 var(--f-display, sans-serif); text-transform: uppercase; letter-spacing: .02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hc-sub { margin-top: calc(var(--u) * 1); font: 700 calc(var(--u) * 3.4)/1 var(--f-mono, monospace); letter-spacing: .08em; color: var(--rc); text-transform: uppercase; }
+.hc-bot { position: relative; z-index: 1; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: calc(var(--u) * 2); padding: 0 calc(var(--u) * 1) calc(var(--u) * 1); }
+.hc-gem { display: grid; place-items: center; width: calc(var(--u) * 22); height: calc(var(--u) * 13); clip-path: polygon(14% 0, 86% 0, 100% 50%, 86% 100%, 14% 100%, 0 50%); background: linear-gradient(160deg, color-mix(in srgb, var(--rc) 85%, #fff), var(--rc) 45%, color-mix(in srgb, var(--rc) 45%, #000)); font: 800 calc(var(--u) * 3.6)/1 var(--f-display, sans-serif); letter-spacing: .06em; text-transform: uppercase; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+.hc-place { text-align: center; font: 500 calc(var(--u) * 3.1)/1.2 var(--f-body, sans-serif); color: #c9d4ea; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hc-score { display: grid; place-items: center; width: calc(var(--u) * 14); height: calc(var(--u) * 14); border-radius: 50%; background: radial-gradient(circle at 35% 30%, #22304d, #070a12 70%); box-shadow: 0 0 0 calc(var(--u) * .7) #c8d2e6, 0 0 0 calc(var(--u) * 1.2) #4f5d7a, 0 0 calc(var(--u) * 4) -calc(var(--u) * 1) var(--rc); font: 800 calc(var(--u) * 5.6)/1 var(--f-display, sans-serif); }
+.hc-score small { display: block; margin-top: -calc(var(--u) * .6); font: 600 calc(var(--u) * 2.2)/1 var(--f-mono, monospace); letter-spacing: .08em; color: #9fb3d9; }
+.hc-score i { font-style: normal; color: var(--rc); font-size: calc(var(--u) * 4); margin-right: calc(var(--u) * .4); }
+.hc-panel { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; min-height: 0; padding: calc(var(--u) * 5) calc(var(--u) * 5) calc(var(--u) * 4); border-radius: calc(var(--u) * 3.4); background: rgba(8,12,24,.92); box-shadow: 0 0 0 1px rgba(106,156,255,.55) inset; }
+.hc-title { text-align: center; font: italic 800 calc(var(--u) * 6.6)/1.05 var(--f-display, sans-serif); text-transform: uppercase; }
+.hc-title small { display: block; margin-top: calc(var(--u) * 1.4); font: 600 calc(var(--u) * 3)/1 var(--f-mono, monospace); letter-spacing: .1em; color: #9fb3d9; font-style: normal; }
+.hc-rule { height: 1px; margin: calc(var(--u) * 3.4) 0 calc(var(--u) * 1.6); background: linear-gradient(90deg, transparent, #6A9CFF, transparent); }
+.hc-specs { display: flex; flex-direction: column; margin: 0; }
+.hc-specs > .hc-row { display: grid; grid-template-columns: 44% 1fr; align-items: center; padding: calc(var(--u) * 2.5) calc(var(--u) * .5); border-bottom: 1px solid rgba(106,156,255,.28); }
+.hc-specs dt { font: 600 calc(var(--u) * 3.4)/1.1 var(--f-mono, monospace); letter-spacing: .08em; text-transform: uppercase; color: #b9c6e0; }
+.hc-specs dd { margin: 0; padding-left: calc(var(--u) * 3); border-left: 1px solid rgba(106,156,255,.35); font: 700 calc(var(--u) * 4.4)/1.15 var(--f-display, sans-serif); overflow-wrap: anywhere; }
+.hc-none { margin: auto 0; text-align: center; font-size: calc(var(--u) * 4); color: #9fb3d9; }
+.fv-face.hc { position: absolute; inset: 0; padding: calc(var(--u) * 3.4) !important; gap: calc(var(--u) * 2.4); }
+.fv-back.hc { transform: rotateY(180deg); }
+.pcc-holo .hc-win > .art { aspect-ratio: auto !important; }
 </style>
 
 <div class="app">
@@ -3534,6 +3578,7 @@ body.has-gnav .bar .tab::after { display: none !important; }
 
   /* ================= idioma (español / english) ================= */
   var EN = {
+    '✦ Modo holográfico': '✦ Hologram mode', 'Vista normal': 'Normal view', 'Edición personal': 'Personal edition', 'Visto en la calle': 'Spotted on the street', 'Mi garage': 'My garage',
     '+ Agregar carro': '+ Add car', '+ Crear cuenta nueva': '+ Create new account', '+ Subir fotos': '+ Upload photos',
     '(la IA puede subir o bajar la nota al evaluar el encuadre)': '(the AI may raise or lower the score after judging the framing)',
     '(principal)': '(main)', '(sin fotos extra).': '(no extra photos).', 'No se puede deshacer.': 'This can’t be undone.',
@@ -4408,7 +4453,38 @@ body.has-gnav .bar .tab::after { display: none !important; }
   }
 
   /* ================= carta en grande (flota y gira) ================= */
-  var fv = { id: null, flip: false, angle: 0 };
+  var fv = { id: null, flip: false, angle: 0, holo: false };
+  try { fv.holo = localStorage.getItem('fvHolo') === '1'; } catch (e) {}
+  /* carta en modo holográfico (el diseño de la carta física) */
+  function hcSpecRows(sp) {
+    sp = sp || {};
+    var row = function (k, v) { return v ? '<span class="hc-row"><dt>' + k + '</dt><dd>' + v + '</dd></span>' : ''; };
+    return row('Potencia', sp.hp ? fmtR(sp.hp, sp.hp2) + ' hp' : '') + row('Torque', sp.tq ? fmtR(sp.tq, sp.tq2) + ' lb-ft' : '') + row('0–60 mph', sp.zs ? fmtR(sp.zs, sp.zs2) + ' s' : '') +
+      row('Vel. máx.', sp.vmax ? fmtR(sp.vmax, sp.vmax2) + ' mph' : '') + row('Motor', esc(sp.engine || '')) + row('Transmisión', esc(sp.trans || '')) + row('Tracción', esc(sp.drive || ''));
+  }
+  function hcFrontHTML(c, artInner, cls) {
+    var r = clamp(c.rarity | 0, 0, 4), spotted = c.kind !== 'garage';
+    var sub = [yearOf(c), c.color || ''].filter(Boolean).join(' · ');
+    var nm = (c.mods || []).filter(function (m) { return m && m.name; }).length;
+    return '<span class="hc hc-front r' + r + (cls ? ' ' + cls : '') + '">' +
+      '<span class="hc-top"><span>' + esc(serialOf(c)) + '</span><span class="hc-logo">GARAGE</span><span>' + (spotted ? 'Street spot' : 'Mi garage') + '</span></span>' +
+      '<span class="hc-win"><span class="art">' + artInner + '</span></span>' +
+      '<span class="hc-plate"><span class="hc-make">' + esc(c.make) + '</span><span class="hc-model">' + esc(c.model) + '</span>' + (sub ? '<span class="hc-sub">' + esc(sub) + '</span>' : '') + '</span>' +
+      '<span class="hc-bot"><span class="hc-gem">' + RAR[r].n + '</span><span class="hc-place">' + esc(spotted ? 'Visto en ' + (c.place || 'la calle') : 'Edición personal') + '</span>' +
+      '<span class="hc-score">' + (spotted ? '<span><i>★</i>' + cardPts(c) + '</span>' : '<span>' + nm + '<small>MODS</small></span>') + '</span></span>' +
+    '</span>';
+  }
+  function hcBackHTML(c, cls) {
+    var r = clamp(c.rarity | 0, 0, 4), rows = hcSpecRows(c.specs);
+    return '<span class="hc hc-back r' + r + (cls ? ' ' + cls : '') + '"><span class="hc-panel">' +
+      '<span class="hc-title">' + esc((c.make + ' ' + c.model).trim()) + (yearOf(c) ? '<small>' + esc(yearOf(c)) + '</small>' : '') + '</span><span class="hc-rule"></span>' +
+      (rows ? '<dl class="hc-specs">' + rows + '</dl>' : '<span class="hc-none">Sin specs todavía. Edita la carta para agregarlos.</span>') +
+    '</span></span>';
+  }
+  function fvSetHolo(on) {
+    fv.holo = !!on; try { localStorage.setItem('fvHolo', fv.holo ? '1' : '0'); } catch (e) {}
+    renderFv();
+  }
   function fvModsHTML(c) {
     var ms = (c.mods || []).filter(function (m) { return m && m.name; });
     if (!ms.length) return c.kind === 'garage' ? '<span class="fv-mods"><span class="fv-mods-h">Mods</span><span class="fv-mod none">Todavía sin mods.</span></span>' : '';
@@ -4434,7 +4510,8 @@ body.has-gnav .bar .tab::after { display: none !important; }
     }
     return '<div class="fv-scrim" data-act="fvClose"></div>' +
       '<div class="fv" role="dialog" aria-modal="true" aria-label="Carta ' + esc(c.make + ' ' + c.model) + '">' +
-      '<div class="fv-float"><div class="fv-tilt" id="fvTilt"><button type="button" class="fv-card r' + r + '" id="fvCard" aria-label="Carta. Desliza o toca para girarla" style="transform:rotateY(' + fv.angle + 'deg)">' +
+      '<div class="fv-float"><div class="fv-tilt" id="fvTilt"><button type="button" class="fv-card r' + r + (fv.holo ? ' holo' : '') + '" id="fvCard" aria-label="Carta. Desliza o toca para girarla" style="transform:rotateY(' + fv.angle + 'deg)">' +
+      (fv.holo ? hcFrontHTML(c, fvArtHTML(c), 'fv-face fv-front') + hcBackHTML(c, 'fv-face fv-back') : (
       '<span class="fv-face fv-front card big r' + r + '">' +
         '<span class="c-top"><span>' + esc(serialOf(c)) + '</span><span class="rar"><i></i>' + RAR[r].n + '</span></span>' +
         '<span class="art">' + fvArtHTML(c) + '</span><span class="c-bar"></span>' +
@@ -4448,9 +4525,9 @@ body.has-gnav .bar .tab::after { display: none !important; }
         (specs ? '<dl class="fv-specs">' + specs + '</dl>' + bars : '<span class="fv-none">Sin specs todavía. Edita la carta para agregarlos.</span>') +
         '<span class="c-bar"></span><dl class="fv-specs small">' + extra + '</dl>' +
         fvModsHTML(c) +
-      '</span>' +
+      '</span>')) +
       '</button></div></div>' +
-      '<span class="fv-hint2">Desliza la carta para girarla</span><div class="fv-actions"><button class="btn" type="button" data-act="home">Inicio</button><button class="btn" type="button" data-act="fvFlip">' + (fv.flip ? 'Ver frente' : 'Girar · ver specs') + '</button>' + (carById(c.id) && !c.demo ? '<button class="btn" type="button" data-fvedit="' + esc(c.id) + '">Editar fotos</button>' : '') + '' + (carById(c.id) && c._st === 'rejected' ? '<button class="btn primary" type="button" data-resub="' + esc(c.id) + '">Reenviar a revisión</button>' : '') + '<button class="btn" type="button" data-act="fvClose">Cerrar</button></div>' +
+      '<span class="fv-hint2">Desliza la carta para girarla</span><div class="fv-actions"><button class="btn" type="button" data-act="home">Inicio</button><button class="btn" type="button" data-act="fvFlip">' + (fv.flip ? 'Ver frente' : 'Girar · ver specs') + '</button><button class="btn fv-holo-b' + (fv.holo ? ' is-holo' : '') + '" type="button" data-act="fvHolo">' + (fv.holo ? 'Vista normal' : '✦ Modo holográfico') + '</button>' + (carById(c.id) && !c.demo ? '<button class="btn" type="button" data-fvedit="' + esc(c.id) + '">Editar fotos</button>' : '') + '' + (carById(c.id) && c._st === 'rejected' ? '<button class="btn primary" type="button" data-resub="' + esc(c.id) + '">Reenviar a revisión</button>' : '') + '<button class="btn" type="button" data-act="fvClose">Cerrar</button></div>' +
       '</div>';
   }
   function renderFv() {
@@ -7480,6 +7557,7 @@ body.has-gnav .bar .tab::after { display: none !important; }
     else if (a === 'fvOpen') { fv.id = state.sel; fv.car = null; fv.flip = false; fv.angle = 0; var oc1 = carById(state.sel); fv.photos = null; fv.pi = 0; renderFv(); if (oc1) fvLoadPhotos(oc1, FB.user ? fbMe() : 'local'); }
     else if (a === 'fvPhoto') { e.stopPropagation(); fvPhoto(+t.dataset.v); }
     else if (a === 'fvFlip') fvFlip();
+    else if (a === 'fvHolo') fvSetHolo(!fv.holo);
     else if (a === 'fvClose') { fv.id = null; fv.car = null; fv.flip = false; renderFv(); }
     else if (a === 'photoOpen') { state.photoView = true; state.edit = false; state.confirmDel = false; state.crop = null; state.cropDirty = false; renderSheet(); var sh0 = document.querySelector('.sheet'); if (sh0) sh0.scrollTop = 0; }
     else if (a === 'photoBack') { state.photoView = false; state.crop = null; state.cropDirty = false; renderSheet(); }
