@@ -1,4 +1,4 @@
-# GARAGE · Marketplace
+# GARAGE 
 
 **Spot · Trade · Collect**
 
